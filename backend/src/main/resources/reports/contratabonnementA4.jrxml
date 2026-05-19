@@ -1,0 +1,1832 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="demandeabonnementv2" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ae5a08d2-0e85-49a1-8c35-3969b3599fe4">
+	<subDataset name="Abonnement" uuid="086f8f46-67cf-40d0-bce1-169fd6fbb218">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="firstName" class="java.lang.String"/>
+		<field name="lastName" class="java.lang.String"/>
+		<field name="fax" class="java.lang.Long"/>
+		<field name="cin" class="java.lang.String"/>
+		<field name="adresse" class="java.lang.String"/>
+		<field name="ville.villeName" class="java.lang.String"/>
+		<field name="gouvernorat.gouvernoratName" class="java.lang.String"/>
+		<field name="codePostale.code" class="java.lang.String"/>
+		<field name="telFixe" class="java.lang.Long"/>
+		<field name="telMobile" class="java.lang.Long"/>
+		<field name="telMobile2" class="java.lang.Long"/>
+		<field name="email" class="java.lang.String"/>
+		<field name="profession.name" class="java.lang.String"/>
+		<field name="pack.debitPack" class="java.lang.String"/>
+		<field name="pack.categoriePack.categorieProduitInternetCode" class="java.lang.String"/>
+		<field name="withIpFix" class="java.lang.Boolean"/>
+		<field name="typePaiement.nombreMoisTypePaiement" class="java.lang.Integer"/>
+		<field name="user.firstName" class="java.lang.String"/>
+		<field name="user.codeUser" class="java.lang.String"/>
+		<field name="pack.title" class="java.lang.String"/>
+		<field name="user.lastName" class="java.lang.String"/>
+		<field name="referenceClient" class="java.lang.String"/>
+		<field name="trancheRaccordementSelected" class="java.lang.Integer"/>
+		<field name="hasRaccordement" class="java.lang.Boolean"/>
+		<field name="modem.numSerie" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="prixttcByRacordement" class="java.lang.Double"/>
+	<parameter name="produitCode" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="abonnement" class="java.util.Collection"/>
+	<field name="entryAbonnement" class="java.util.Collection"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="176" y="30" width="218" height="21" forecolor="#59049D" uuid="d2104a89-5766-4e31-b15f-2d1d0439f2ab">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="15" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CONTRAT D'ABONNEMENT]]></text>
+			</staticText>
+			<image>
+				<reportElement x="7" y="-10" width="89" height="70" uuid="bbbfda3b-c3f4-4d3c-9c98-4ded18979d89">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["reports/netylogo.png"]]></imageExpression>
+			</image>
+			<ellipse>
+				<reportElement x="-6" y="75" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="d03cecca-e8a6-40cb-9ffc-8b3215afa98b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="3" y="80" width="70" height="21" forecolor="#59049D" uuid="e549badb-3ef9-4ae1-8892-86e6a8fddebf">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="11"/>
+				</textElement>
+				<text><![CDATA[Revendeur :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="75" y="83" width="65" height="15" uuid="35f16f78-e306-4b4f-b0cb-1a02a0367b10"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Point de vente :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="83" width="60" height="15" uuid="437f33d3-2309-4145-b655-dfb0dc97ffda"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Référence :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="127" y="80" width="188" height="19" uuid="60700727-e08b-4508-9691-64e80b9ef545"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="cfaf4e00-fd81-4571-8d95-f589231a6b0d">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="188">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="ce87f8e7-22b1-44d1-bc86-ae99e64e587d"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{user.firstName}+" "+$F{user.lastName}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="179" height="1" uuid="3985768b-1dcd-48eb-b648-dbb1d84c4150">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted" lineColor="rgba(0, 0, 0, 0.45882353)"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="359" y="79" width="189" height="19" uuid="50ae5535-6227-4a22-ac0a-15bbc0d24aa3"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="f383da0d-cbc9-4d50-bcee-92cf88ec6904">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="189">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="1c738f76-bbbf-4b08-beb4-09f4cf808557"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{user.codeUser}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="179" height="1" uuid="5b44fddf-1321-4889-853a-71ab4ab75f2a">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted" lineColor="rgba(0, 0, 0, 0.45882353)"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="181" splitType="Stretch">
+			<staticText>
+				<reportElement x="223" y="30" width="100" height="21" uuid="f8949f9b-ed1b-421e-8447-ab4a8acec277"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°CIN / Carte de séjour : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-8" y="50" width="41" height="20" uuid="82dcd16f-2d4f-482e-9dc1-ad96b2ffd393"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Adresse : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-7" y="69" width="26" height="20" uuid="d26ba059-9619-43f6-85d0-003025682851">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ville : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="69" width="60" height="20" uuid="88943157-1c5b-429f-8a21-dc487bb155a8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Code postal : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-7" y="90" width="22" height="18" uuid="c3b1116f-342b-4c4c-a2fa-51c4db4fa981">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tél : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="226" y="89" width="24" height="20" uuid="dded32eb-9a79-4a9e-b6bc-7874fa27b621"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GSM : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="90" width="20" height="19" uuid="53aa8f10-0fcd-4f66-97af-f994937e07e2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fax : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-4" y="109" width="48" height="19" uuid="f68d4d03-d7e4-43c5-9d14-27d8db6decbb">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Profession : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-13" y="30" width="75" height="20" uuid="62cdefd7-7784-432c-86fa-abc81e50cdc7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nom et prénom : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="245" height="14" forecolor="#59049D" uuid="bc0125a2-9cb2-48ec-ae67-d030bbde70bc"/>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="8"/>
+				</textElement>
+				<text><![CDATA[Si vous êtes déjà abonné chez Nety, précisez votre code client :]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="-6" y="4" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="5fb0d911-5b7f-4757-b539-3f1b47b0842d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="3" y="9" width="124" height="21" forecolor="#59049D" uuid="15d0749b-39cd-41f1-aa68-4c4ad1695eb3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="11"/>
+				</textElement>
+				<text><![CDATA[Coordonnées]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="142" width="75" height="21" uuid="fd604c6a-85e0-4547-a989-5524b635e465">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail principal : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="165" width="354" height="14" forecolor="#59049D" uuid="f2de422a-f1f6-4a55-96f8-7394980c9d17"/>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="8"/>
+				</textElement>
+				<text><![CDATA[Cette adresse e-mail vous permettra de recevoir les courriers de Nety]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="" x="56" y="31" width="163" height="19" isPrintInFirstWholeBand="true" uuid="59fc4592-f3dc-48ce-a3eb-d089a034d3a1"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="42d14851-5996-47bf-8c10-776c925b7a1c">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="163">
+						<textField>
+							<reportElement x="11" y="1" width="79" height="15" uuid="2d4e4107-6e5d-43f4-af27-d3b5d9517b6e"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{firstName}+" "+$F{lastName}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="154" height="1" uuid="683960be-44f9-476e-a90e-03abbe66eced">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted" lineColor="rgba(0, 0, 0, 0.45882353)"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="316" y="32" width="232" height="19" uuid="259d19e4-0dd3-4c82-8d60-59711a7114cd"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="8d348e77-5862-4c2b-aad1-ec42645d1d48">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="232">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="afa737fe-ec4f-4984-8ac3-0e9d8de92941"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{cin}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="223" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="6ed4c8ce-4003-40ab-8ca8-c7c4e86ec480">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="26" y="51" width="524" height="19" uuid="3edcf40f-0d08-4b06-918b-b117859d8621"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="0a530740-6eca-4c3d-8638-0f1510d898bb">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="524">
+						<textField>
+							<reportElement x="11" y="2" width="499" height="15" uuid="47ec1111-d026-4a31-9475-1c60d08d0c2e"/>
+							<textElement>
+								<font fontName="SansSerif" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{adresse}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="515" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="743b1661-0182-4e29-899b-c4b88ea476ce">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="13" y="70" width="203" height="19" uuid="b8066b91-a275-4d6a-a0aa-955e8575b204"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="c6fc9e1f-3489-44a7-b6d9-800f3a426c34">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="203">
+						<textField>
+							<reportElement x="11" y="2" width="189" height="15" uuid="bd8d8dca-0fb4-4953-9000-1f32c21667a3"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{gouvernorat.gouvernoratName}+" - "+$F{ville.villeName}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="194" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="ae083e4a-7ee8-4b08-bccd-915d2154934f">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="267" y="70" width="281" height="19" uuid="67c6e96a-c8b1-40e3-8744-349634972637"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="a98b64bc-5a9d-4dbd-a119-093d97f04aed">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="281">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="601301e0-7bc3-40fb-8da5-b80c9f31a127"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{codePostale.code}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="272" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="feefcbde-d747-4553-9e5c-68bc3437e949">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="7" y="90" width="215" height="19" uuid="4b717656-262b-4bb2-a21c-ffabfd608d7f"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="66484cd2-307d-4e9b-999a-07f33207d816">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="215">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="4ec1ca92-c307-4ec1-bf3a-1898d9ba54cf"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{telMobile}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="206" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="83cafd64-ce7b-49a6-80f2-5eb3400fd2cb">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="36" y="109" width="205" height="19" uuid="057e6c8f-beab-4845-bcfa-012425710317"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="5e60ff06-3544-4686-8c99-c2c52de167b2">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="205">
+						<textField>
+							<reportElement x="11" y="2" width="194" height="15" uuid="18162bc4-9b12-4fb6-9254-1f3adc51eab0"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{profession.name}==null?"":$F{profession.name})]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="17" width="196" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="a428b871-8ec4-4df1-a782-92ac2b06310d">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="59" y="143" width="487" height="19" uuid="41308f06-89b1-4f56-bed8-9a40be6cb42a"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="bdf5a4e7-2097-4fcc-9333-3a94b70809fb">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="487">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="f7e26912-ec56-4a8c-9077-9f8a5450bed1"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="478" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="4c30338e-8e62-4f73-9edf-57c1882c4c6f">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="242" y="91" width="128" height="19" uuid="09980c06-589c-4578-a661-7661aa21f858"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="fcc65322-dde1-4045-9fbd-024794b21c15">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="128">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="8585655b-fde6-4b3c-81db-a5c7747bc92a"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{telMobile2}==null?"":$F{telMobile2}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="119" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="e90a9c0e-eecd-4051-85cd-02b0a16a8972">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="386" y="90" width="161" height="19" uuid="bd662c13-7761-40a7-8d8f-f9314f7a6d56"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="513aad11-78a7-4b42-975d-aebf78b172a7">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="161">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="aea4108d-ef7f-4b2d-a6b1-6b473f50d4fc"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{fax}==null?"":$F{fax}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="152" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="78f44ff8-c5e1-4366-b3d8-e4de900d21bf">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="232" y="126" width="311" height="19" uuid="d1f81161-3b7d-459b-a0ac-a5260fccca93"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="795c18f2-2a84-405b-b05e-12985d6895eb">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="311">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="785e0e6f-64be-4d27-9994-661ae9ea7ce7"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{referenceClient}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="302" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="a8939155-b4b3-48b8-8cc7-f9103227c6c5">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="327" y="109" width="205" height="18" uuid="450997cb-61ab-4fdf-a777-37a3323676c0"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="fb7eae52-6a80-4715-9ab2-b25cc8ef63a2">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="18" width="205">
+						<textField>
+							<reportElement x="11" y="2" width="194" height="15" uuid="64ad7766-50b1-4672-8535-43c6d4a46d61"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{modem.numSerie}==null?"":$F{modem.numSerie})]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="17" width="181" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="7503357e-26fe-428a-965e-17f693b8236d">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="278" y="109" width="48" height="19" uuid="af7c4d52-82ed-4e1b-b6a5-5ec5a75ec8d9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Modem ref]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="49" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<ellipse>
+				<reportElement x="-6" y="0" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="50798109-5f8f-473e-9c13-39b6d6cb7c67">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="3" y="6" width="124" height="20" forecolor="#59049D" uuid="907d4a98-9e78-4457-addd-bf67d0f5ef81">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="11"/>
+				</textElement>
+				<text><![CDATA[Offre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="27" width="44" height="20" uuid="37850ad0-e171-4ece-9f69-46a505d95871"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pack :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="21" y="23" width="263" height="19" uuid="8543f862-9df0-47fb-bd90-9ebfa536d4e9"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="60b76305-8df2-457a-9605-6ab8a8594716">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="263">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="ee430e76-c3a0-4122-a220-dcbd1f194a4c"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{pack.title}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="12" width="254" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="617518a1-1e8f-4858-8628-c90e8df62b20">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="227" splitType="Stretch">
+			<rectangle radius="2">
+				<reportElement x="2" y="68" width="13" height="13" forecolor="#FF147A" uuid="e0920b18-2ab3-46fe-9aea-3e4cd7502ade">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="27" y="69" width="60" height="19" uuid="3aa86c75-1727-469b-b13c-4e8d640a0a4c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 10 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="112" y="68" width="13" height="13" forecolor="#1A3B63" uuid="e9819050-238b-495e-998a-04c758a6e120">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="137" y="69" width="60" height="19" uuid="6bc234f2-5f5a-4c0a-93ab-79af88315208">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 12 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="221" y="68" width="13" height="13" forecolor="#1A3B63" uuid="83d2c599-c476-472c-b383-253d32f4b297">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="247" y="70" width="60" height="19" uuid="06e136a8-e797-4788-9594-3bd2ea93816f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 20 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="1" y="91" width="13" height="13" forecolor="#1A3B63" uuid="fcc07130-1c61-433e-85fc-bc887eeaa5af">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="24" y="89" width="60" height="14" uuid="24c901e6-f956-4827-ab9f-a0f20a7f55d3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 20 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="111" y="91" width="13" height="13" forecolor="#1A3B63" uuid="31a6bd4a-52e4-4482-890b-0969c4d66c4a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="136" y="91" width="60" height="13" uuid="bdf0f599-89a7-4ec7-a08d-1b8e8e63fee6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 30 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="220" y="91" width="13" height="13" forecolor="#1A3B63" uuid="bd8792f2-0885-42a1-a171-df9724f89a04">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="245" y="91" width="60" height="14" uuid="17b39f40-2611-41f1-8df6-2bb4eebe35a1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 50 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="332" y="96" width="13" height="13" forecolor="#1A3B63" uuid="8a436029-d546-4771-ac6e-08f44044ec4b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="358" y="97" width="60" height="19" uuid="639df084-8c8a-4835-992f-1611a41aaae6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 100 Méga]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="3" y="171" width="18" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="33b87f22-cb98-4cd7-8456-d183db58cd6c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="11" y="171" width="124" height="21" forecolor="#59049D" uuid="429fb9b8-887c-45f2-8698-53b66f8b630d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Services optionnels]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="3" y="197" width="13" height="13" forecolor="#1A3B63" uuid="6542be51-054d-41fa-aac0-57ea26b5be1d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="28" y="197" width="72" height="19" uuid="d2b94a9b-aee9-4635-9706-14639a537579">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Nom de domaine]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="122" y="197" width="13" height="13" forecolor="#1A3B63" uuid="fae6614a-1982-4d2b-b525-21b692052f6f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="147" y="197" width="72" height="19" uuid="a8278bf2-e1f4-48b8-9a2b-cce0703bdb85">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Pack Antivirus]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="360" y="200" width="13" height="13" forecolor="#1A3B63" uuid="0324c582-20ce-4a6f-b782-234152268493">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="251" y="198" width="90" height="27" uuid="4606ffe6-be32-4258-99aa-12d66d02af64">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Office 365 , Serveur VPS 
+et Certification SSL]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="463" y="201" width="13" height="13" forecolor="#1A3B63" uuid="731c6385-3403-4d2c-acb0-e4e0983e4a33">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="385" y="200" width="72" height="19" uuid="3631d4fc-c673-4b83-b267-aafcc1b5e1c2">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Hébergement]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="226" y="199" width="13" height="13" forecolor="#1A3B63" uuid="d018a1d9-5239-4606-b1f1-d681637aa734">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="491" y="187" width="72" height="19" uuid="ccd56618-849f-4838-9bbe-a2e72817e05b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[IP Fixe]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="-7" y="35" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="f0a081d1-2bbc-4cce-81d0-c8286e064ef0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="2" y="41" width="124" height="21" forecolor="#59049D" uuid="6282ffac-3a24-45d8-978c-13e0ea005f47">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Débit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="-4" width="114" height="20" uuid="5cf38b20-12c5-4ca2-9f5d-30a365e61f57"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° de téléphone de la ligne :]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="3" y="15" width="13" height="13" forecolor="#1A3B63" uuid="444eea2c-2a01-4bdc-9740-b34960b51df2">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="29" y="16" width="60" height="19" uuid="b805c474-f25a-406e-8c95-ba684e3fb17e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[nouvel abonné]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="6" y="17" width="18" height="16" isPrintWhenDetailOverflows="true" uuid="c966f80c-eafe-4a49-b327-6f28a29c587e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="102" y="15" width="13" height="13" forecolor="#1A3B63" uuid="51e36e2b-e672-44ad-abd8-00bab3345e9e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="128" y="16" width="60" height="19" uuid="066a519c-10ca-400a-821f-2c0f54affc62">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Migration]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="122" y="153" width="13" height="13" forecolor="#1A3B63" uuid="a1c75699-4197-4a3a-902a-819614e6aaf6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="143" y="152" width="60" height="15" uuid="ba3357eb-0fba-4fd9-b0af-88b116786f1c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[12 Mois]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="229" y="151" width="13" height="13" forecolor="#1A3B63" uuid="28e199ce-c832-45b6-9da4-a2ab39245f72">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="247" y="152" width="60" height="15" uuid="dda4aac5-0ca9-4991-a00c-51bddc3a835a">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[24 Mois]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-3" y="151" width="100" height="20" uuid="ada7dba7-fe03-431b-a44f-dcd20d22cf82"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Durée d'engagement :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="1" y="68" width="15" height="15" uuid="6774eaa5-211d-4741-a257-0e94cb54eb32"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="29b1ecc3-bb60-4b43-bc10-43aabd94a909">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="7fcf11bd-3fd2-4444-aaa9-935c1dbc8c7d"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "ADSL" )&&
+$F{pack.debitPack}.equals("10" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="114" y="68" width="15" height="15" uuid="d49be3f0-3ed6-4e80-ae10-b0c74dbcc4bc"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="3af21732-1e23-4218-95ff-82dd43463f82">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="7c788c0e-9d44-4436-b48c-a0d6b1970638"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "ADSL" )&&
+$F{pack.debitPack}.equals("12" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="222" y="67" width="15" height="15" uuid="5f3d0f34-ace2-4eb8-8db6-180176ed5a2b"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="f4d546c1-c2dc-4afb-aa03-b2d523b4d209">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" isRemoveLineWhenBlank="true" uuid="4d9d5081-33db-4c17-839c-8e0cf833a4d1"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "ADSL" )&&
+$F{pack.debitPack}.equals("20" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="1" y="89" width="15" height="15" uuid="f2a0b66c-e4c1-4b80-a692-940ab8cea1d9"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="bb7e8d1d-003d-4559-b7d9-317508a741d8">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="0c289298-526b-4e4e-b592-50bd35543809"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "VDSL" )&&
+$F{pack.debitPack}.equals("20" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="113" y="91" width="15" height="15" uuid="901bed8c-db5a-4585-a283-73cf2906a099"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="89b8214c-43a2-4bb5-b7f6-58f2c1ffc2b6">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="ba6cc0aa-3e18-4de9-bb7b-5b472696da40"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "VDSL" )&&
+$F{pack.debitPack}.equals("30" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="221" y="90" width="15" height="15" uuid="c8b8550d-81bd-463f-aaa5-f62154ae42b1"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="380596ff-052e-4379-a881-5e103d3eadef">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="6ad3836b-d2ea-4165-895d-694257ad0bc6"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "VDSL" )&&
+$F{pack.debitPack}.equals("50" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="335" y="96" width="15" height="15" uuid="d32daddb-cf12-4ea5-abca-f696f79f5c4b"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="212747d9-15af-499c-9d38-bdcd61b71bb9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="26d51a29-2874-4735-85ab-14617bf2bb84"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "VDSL" )&&
+$F{pack.debitPack}.equals("100" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="108" y="-7" width="175" height="17" uuid="6a174399-9204-42ac-b8b4-18cff4f1fc95"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="505527b0-52d8-431b-9c12-fc51b8df996c">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="17" width="175">
+						<textField>
+							<reportElement x="11" y="2" width="79" height="15" uuid="df24dee4-7d63-4d50-9207-715276de6857"/>
+							<textElement>
+								<font fontName="Open Sans" size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{telFixe}]]></textFieldExpression>
+						</textField>
+						<line>
+							<reportElement positionType="FixRelativeToBottom" x="9" y="11" width="166" height="1" forecolor="rgba(0, 0, 0, 0.45882353)" uuid="40ea5945-5af6-4a4a-b60e-a9762558865d">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<graphicElement>
+								<pen lineStyle="Dotted"/>
+							</graphicElement>
+						</line>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement x="8" y="198" width="14" height="14" uuid="b1f89200-9a0d-4b43-a70c-f266c1f53ffb"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{produitCode}.indexOf(",NOM_DE_DOMAINE,")==-1?"":"X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="198" width="14" height="14" uuid="b4589f2f-58f4-467e-a865-ea66d3498697"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{produitCode}.indexOf(",ANTIVIRUS,")==-1?"":"X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="231" y="199" width="14" height="14" uuid="18d401f6-9ae1-4ed4-b2a3-d37472e223cd"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{produitCode}.indexOf(",OFFICE_VPS_SSL,")==-1?"":"X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="364" y="200" width="14" height="14" uuid="3f530ed5-c097-48e6-ab9e-15f6e334235b"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{produitCode}.indexOf(",HEBERGEMENT,")==-1?"":"X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="201" width="14" height="14" uuid="874eacc3-4e41-49c1-b045-8376435dd620"/>
+				<textElement>
+					<font fontName="Open Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{produitCode}.indexOf(",IP_FIXE,")==-1?"":"X"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="25" y="110" width="60" height="14" uuid="d10a8e91-c280-4949-8e75-a2fbfd2cdf8c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[GPON 20 Méga ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="109" width="60" height="16" uuid="238c09df-ae8f-4234-b63a-0b0ad128bc04">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[GPON 50 Méga ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="247" y="109" width="60" height="16" uuid="dd97f1a6-3c31-495d-921b-09e5231248fa">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[GPON 100 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="1" y="109" width="13" height="13" forecolor="#1A3B63" uuid="cd6cafd4-e7c5-4be2-8a03-c08e95d35259">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="2" y="110" width="15" height="15" uuid="461e987c-b76e-4b57-a1ee-736a17ad11ce"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="dffb9f26-1c0d-451c-b00e-a70095c91996">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="57df1125-cbc1-4b67-a635-23e5fbe84d68"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "GPON" )&&
+$F{pack.debitPack}.equals("20" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<rectangle radius="2">
+				<reportElement x="112" y="109" width="13" height="13" forecolor="#1A3B63" uuid="7eb8e724-d937-4327-a4c0-18c619b0e891">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="111" y="110" width="15" height="15" uuid="aab56453-ae84-49a2-a267-58fa02f171c2"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="3d103e75-0b31-4884-9733-00c71e210475">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="adcfd5a9-3911-4194-bf27-818a2424e617"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "GPON" )&&
+$F{pack.debitPack}.equals("50" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<rectangle radius="2">
+				<reportElement x="221" y="109" width="13" height="13" forecolor="#1A3B63" uuid="d7943bcb-2590-44bf-91dc-bafea7c6b0da">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="220" y="110" width="15" height="15" uuid="e542ea23-1f21-4722-9126-c97d3ba122b2"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="70bfea9a-c6f9-4b54-8d5c-cde7a2009316">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="ff47e2a5-d1f0-485d-9812-1e5d3778c7a2"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "GPON" )&&
+$F{pack.debitPack}.equals("100" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<rectangle radius="2">
+				<reportElement x="322" y="153" width="13" height="13" forecolor="#1A3B63" uuid="1f12bd44-462d-4246-ae89-dd73ca977083">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="346" y="154" width="60" height="15" uuid="77826354-c7cd-49c9-afbd-be535c985ced">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[36 Mois]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="130" width="65" height="19" uuid="ed11028f-6e45-4ccb-8bdd-61db2873945e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Box 5G 30 Méga]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="139" y="130" width="68" height="19" uuid="a69d1f36-a68f-41ad-b1b4-826cdbcdab03">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Box 5G 50 Még]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="128" width="68" height="19" uuid="7d78241d-b887-4f77-81b5-1f63cfa3a7ca">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Box 5G 100 Méga
+]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="220" y="131" width="13" height="13" forecolor="#1A3B63" uuid="11c7bdb3-b2dd-4dbb-835d-cd7d481426b1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle radius="2">
+				<reportElement x="3" y="128" width="13" height="13" forecolor="#1A3B63" uuid="1537d777-64d0-4ae1-be89-d3af35a7f16b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="3" y="128" width="12" height="13" uuid="b33e27e3-69e2-4996-bebd-15dd77b5c6b8">
+					<property name="com.jaspersoft.studio.unit.CONTENTS.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.CONTENTS.width" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="41e3586e-8ce6-4150-b9ef-567ecc7d2cd2">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="9" height="13" uuid="b073bc9e-3f74-4015-92ae-1ffa1d865454"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "5G" ) &&
+$F{pack.debitPack}.equals("30" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<rectangle radius="2">
+				<reportElement x="111" y="133" width="13" height="13" forecolor="#1A3B63" uuid="681397e5-2dee-4e4d-8c48-037ab445c37f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="112" y="132" width="11" height="15" uuid="29147f9a-4b5d-4258-9933-1e9e0f7ad9e1"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="2c7b60d0-230b-4f2e-afe1-73777fb763cd">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="11">
+						<textField>
+							<reportElement x="0" y="0" width="9" height="15" uuid="ea932dd8-368a-4f69-91a7-126b0acc9666"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "5G" ) &&
+$F{pack.debitPack}.equals("50" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="222" y="130" width="11" height="15" uuid="42ee639d-74e7-494a-bb99-ffe843b96162"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="5990c50b-8b0d-4310-babc-56106309a7b1">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="11">
+						<textField>
+							<reportElement x="0" y="0" width="9" height="15" uuid="45fa7a01-aaf4-4fa2-8bb8-24d3d181d6d5"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "5G" ) &&
+$F{pack.debitPack}.equals("100" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="321" y="154" width="15" height="15" uuid="0e5e1b2b-ae50-4ec5-83f1-d4536486240d"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="d44dc18a-3a84-460f-b47e-466a9690f018">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="a62ec52e-c7ff-45db-86ac-a3ca21e77fb7"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{pack.categoriePack.categorieProduitInternetCode}.equals( "5G" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="121" y="152" width="15" height="15" uuid="96632e26-273f-4927-81fa-cc034a008283"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="a05a4bec-2d6b-4218-9ae2-c6027ab1f6d9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="397e5423-6e98-434f-904a-64d82f54a24b"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[(!$F{pack.categoriePack.categorieProduitInternetCode}.equals( "5G" )?"X":" ")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="244" splitType="Stretch">
+			<ellipse>
+				<reportElement x="-4" y="58" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="779febaf-9007-4836-97d6-b46084206499">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="5" y="64" width="81" height="21" forecolor="#59049D" uuid="240d11dc-3622-42f8-abe4-a30494e567bd">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Paiement]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="203" y="67" width="13" height="13" forecolor="#1A3B63" uuid="014f6b80-e959-49c2-9178-a2fb70aff8d0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="228" y="68" width="110" height="19" uuid="37e7ea2e-3f5d-49e0-8bf4-63f7b4c52de9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[A la réception d’une facture]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="143" y="34" width="13" height="13" forecolor="#1A3B63" uuid="e779df90-c7ac-4e67-84eb-45edee84501b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="163" y="35" width="51" height="19" uuid="2590823c-8342-4e95-8542-7883ac847e6b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Mensuelle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="225" y="34" width="13" height="13" forecolor="#1A3B63" uuid="c58dceb6-f5c2-4bea-aa91-60cfbdfc5d95">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="245" y="35" width="60" height="19" uuid="40ece489-1e10-4af5-a80a-ca2e92ef7151">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Trimestrielle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="335" y="34" width="13" height="13" forecolor="#1A3B63" uuid="5d12724f-adb6-4582-bf3c-01f5f19993b1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="355" y="35" width="60" height="19" uuid="45368e9a-cf9c-4216-a377-d6aa01646eec">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Semestrielle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="422" y="34" width="13" height="13" forecolor="#1A3B63" uuid="068d3ccf-b88f-4299-8551-dcd59461f9c8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="442" y="35" width="100" height="19" uuid="30848221-cb22-4dfc-9069-3d4065ece138">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Annuelle ]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="352" y="68" width="13" height="13" forecolor="#1A3B63" uuid="07376c9d-01fc-4c78-9654-b1e2b4dd01c0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="377" y="68" width="102" height="19" uuid="c71235b7-0e2d-4a2b-ab0f-a761ee06c1b9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Prélèvement automatique]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="97" width="494" height="20" uuid="31afb9b1-10d2-41e6-8b77-dea183872584">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="6"/>
+				</textElement>
+				<text><![CDATA[* Si vous optez pour le paiement par prélèvement automatique, veuillez remplir le formulaire « Autorisation de rélèvement automatique» disponible dans les agence Nety]]></text>
+			</staticText>
+			<image>
+				<reportElement x="52" y="115" width="470" height="13" uuid="98cdca52-3f56-4c9b-bf3d-71e94d620e22">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA["reports/A_Plan_de_travail_1_netty.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="13" y="128" width="504" height="20" uuid="75c74f42-ad03-495c-aa7c-7496a388bef1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="6.5"/>
+				</textElement>
+				<text><![CDATA[Par la signature de ce présent contrat j’atteste avoir lu et approuvé sans réserves les conditions générales d’utilisation du service Nety et déclare accepter toutes clausses]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="157" width="218" height="20" uuid="f0860809-70e9-4471-a1d1-c86f14fee9c7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Fait à ........................................ le ......................................]]></text>
+			</staticText>
+			<image>
+				<reportElement x="284" y="126" width="260" height="60" uuid="8d553c5d-926e-4c45-8999-adabc11be388"/>
+				<imageExpression><![CDATA["reports/signature_Plan_de_travail_1.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Transparent" x="62" y="207" width="429" height="11" uuid="3c72de20-922c-4ac9-a341-0b96b8b1ead8"/>
+				<imageExpression><![CDATA["reports/Ligne_3_Plan_de_travail_1_netty.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="250" y="218" width="144" height="26" uuid="63765e57-de2c-4a3e-beea-da4577483e4d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[MF : 1209580T RC : D275462011
+2, rue de l’indépendance Sousse Tunisie
+Tél : +216 73 820 930 Fax : +216 73 820 390
+E-Mail : contact@nety.fr
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="-10" y="87" width="210" height="153" uuid="9a1487b1-cdac-4fb1-b20a-052389ee40e2"/>
+				<imageExpression><![CDATA["reports/NetyPlanDeTravail.png"]]></imageExpression>
+			</image>
+			<ellipse>
+				<reportElement x="-3" y="26" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="35844aec-54a5-4678-9612-62f7cb8f3c8e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="32" width="130" height="21" forecolor="#59049D" uuid="05e9822c-fb3a-4458-bd35-690016e674c6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Période de facturation : ]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="95" y="67" width="13" height="13" forecolor="#1A3B63" uuid="c270dc59-1acd-4fa1-ae40-14b976a59726">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="120" y="68" width="52" height="19" uuid="29071d39-450a-4c59-9907-c57d3d9b8ee6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Pré payé]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="-3" y="-4" width="21" height="21" forecolor="#FDEC25" backcolor="#FDEC25" uuid="683180e7-cfd6-47e1-9e14-877cd5955375"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="1" width="81" height="21" forecolor="#59049D" uuid="29da4617-92b8-4e4c-9ed8-6acd1068a6e0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Installation]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="109" y="5" width="13" height="13" forecolor="#1A3B63" uuid="8269abe0-5013-4a05-99d8-5e9e806f5f6c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#59049D"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="113" y="5" width="15" height="15" uuid="cc1b116e-32fc-48fe-82f5-941bc267ace2"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="3a095c08-c158-48db-8a9a-122d034099c8">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="56018e36-0930-49a0-baf4-d3f30f552ed1"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{hasRaccordement}==true    && $F{pack.categoriePack.categorieProduitInternetCode} != "5G"?"X":""]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement x="135" y="5" width="126" height="30" uuid="23c49821-763d-460d-ade2-7657f79d4cbe"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###").format($P{prixttcByRacordement}).toString()+" Dinars "]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="146" y="35" width="15" height="15" uuid="41e395aa-00f6-4dec-b831-71151d9b12f0"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="54252459-ba19-4cd4-9f37-2d7f7cd4a3fd">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="a94c1faa-482d-4308-ac7f-0cb7d47d9f5b"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{typePaiement.nombreMoisTypePaiement}==1?"X":"")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="228" y="35" width="15" height="15" uuid="794a586c-3c92-4e55-870b-3afb4cf25d37"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="77236c85-5491-4aed-8add-54eb303912dc">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="30242719-341f-42b7-897c-e29dadd26de8"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{typePaiement.nombreMoisTypePaiement}==3?"X":"")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="338" y="35" width="15" height="15" uuid="1295843e-103a-4ec3-a6e9-fecf4c6fe4a4"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="47bf5bd3-4dda-4165-9e98-2db41494bac5">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="3bc01e3d-23a7-4d0f-9690-3e4c57d2d9be"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{typePaiement.nombreMoisTypePaiement}==6?"X":"")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="425" y="35" width="15" height="15" uuid="ac55273a-200a-4c69-ad0e-4514e7dd9a55"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Abonnement" uuid="5f41eb1b-de60-4531-9dca-447ad2317d6c">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{abonnement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="15" width="15">
+						<textField>
+							<reportElement x="0" y="0" width="15" height="15" uuid="2aaf7b10-877a-4b7c-874b-d38d63a11263"/>
+							<textElement>
+								<font fontName="Open Sans" size="8" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{typePaiement.nombreMoisTypePaiement}==12?"X":"")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement mode="Transparent" x="99" y="68" width="18" height="16" isPrintWhenDetailOverflows="true" uuid="7c7c8c9d-9d47-45f3-986c-8feb2ae05f79">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

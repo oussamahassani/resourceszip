@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="demandeabonnementv2" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ae5a08d2-0e85-49a1-8c35-3969b3599fe4">
+	<parameter name="image1" class="java.io.InputStream"/>
+	<parameter name="image2" class="java.io.InputStream"/>
+	<parameter name="image3" class="java.io.InputStream"/>
+	<parameter name="image4" class="java.io.InputStream"/>
+	<parameter name="image5" class="java.io.InputStream"/>
+	<field name="firstName" class="java.lang.String"/>
+	<field name="lastName" class="java.lang.String"/>
+	<field name="fax" class="java.lang.Long"/>
+	<field name="cin" class="java.lang.String"/>
+	<field name="adresse" class="java.lang.String"/>
+	<field name="ville.gouvernoratName" class="java.lang.String"/>
+	<field name="codePostale" class="java.lang.String"/>
+	<field name="telFixe" class="java.lang.Long"/>
+	<field name="telMobile" class="java.lang.Long"/>
+	<field name="profession.name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="123" splitType="Stretch">
+			<staticText>
+				<reportElement x="-5" y="80" width="170" height="21" forecolor="#1A3B63" uuid="d2104a89-5766-4e31-b15f-2d1d0439f2ab">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[DEMANDE D'ABONNEMENT]]></text>
+			</staticText>
+			<image>
+				<reportElement x="-10" y="0" width="330" height="80" uuid="bbbfda3b-c3f4-4d3c-9c98-4ded18979d89">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{image1}]]></imageExpression>
+			</image>
+			<ellipse>
+				<reportElement x="-3" y="97" width="21" height="21" forecolor="#A5BE19" backcolor="#A5BE19" uuid="5fb0d911-5b7f-4757-b539-3f1b47b0842d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="102" width="124" height="21" forecolor="#1A3B63" uuid="15d0749b-39cd-41f1-aa68-4c4ad1695eb3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Coordonnées]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="181" splitType="Stretch">
+			<staticText>
+				<reportElement x="-5" y="0" width="65" height="20" uuid="62cdefd7-7784-432c-86fa-abc81e50cdc7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Nom et prénom]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="90" height="21" uuid="f8949f9b-ed1b-421e-8447-ab4a8acec277"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[N°CIN / Carte de séjour]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="20" width="35" height="20" uuid="82dcd16f-2d4f-482e-9dc1-ad96b2ffd393"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Adresse]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="40" width="24" height="20" uuid="d26ba059-9619-43f6-85d0-003025682851">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Ville]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="40" width="50" height="20" uuid="88943157-1c5b-429f-8a21-dc487bb155a8"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Code postal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="60" width="15" height="20" uuid="c3b1116f-342b-4c4c-a2fa-51c4db4fa981">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Tél]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="60" width="20" height="20" uuid="dded32eb-9a79-4a9e-b6bc-7874fa27b621"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[GSM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="60" width="20" height="19" uuid="53aa8f10-0fcd-4f66-97af-f994937e07e2"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Fax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="80" width="45" height="20" uuid="f68d4d03-d7e4-43c5-9d14-27d8db6decbb">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Profession]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="100" width="105" height="20" uuid="63197444-35ae-47a6-84a1-89840a56e458">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[N° de téléphone de la ligne]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="100" width="460" height="20" uuid="c976fa27-19ec-4d15-90ca-70cae9dd72e6"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[........................................................................................................................................................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="120" width="284" height="20" forecolor="#1A3B63" uuid="95fa9b2b-8e63-449f-8636-9835da29f971">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="8"/>
+				</textElement>
+				<text><![CDATA[Si vous êtes déjà abonné chez Chifco internet, précisez votre code client]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="120" width="282" height="21" uuid="1052420a-4052-43b9-8b2a-e3380833bf72"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[...................................................................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="140" width="65" height="21" uuid="fd604c6a-85e0-4547-a989-5524b635e465">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[E-mail principal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="140" width="500" height="21" uuid="f0db6876-3cd2-428f-a3a4-6c07080ed1b2"/>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[.......................................................................@......................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="160" width="315" height="21" forecolor="#1A3B63" uuid="f2de422a-f1f6-4a55-96f8-7394980c9d17"/>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="8"/>
+				</textElement>
+				<text><![CDATA[Cette adresse e-mail vous permettra de recevoir les courriers de Chifco Internet]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="0" width="220" height="20" uuid="380abd7f-3960-44ce-93df-3044bdf10031">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{firstName}+" "+ $F{lastName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="190" height="20" uuid="708f515c-db47-499f-981d-bb46dac7027e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cin}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="30" y="20" width="530" height="20" uuid="4cfe32ac-9a92-4926-986a-10a82525d555">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{adresse}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="20" y="40" width="290" height="20" uuid="21bc8109-a792-4269-9ab3-bb7498cc806c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ville.gouvernoratName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="360" y="40" width="200" height="20" uuid="d59f0028-4c29-4544-8ac3-414174413725">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codePostale}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="60" width="160" height="20" uuid="dca6790b-e028-4bd5-a358-e08e273571b8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telFixe}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="60" width="200" height="20" uuid="52b9ee11-0be7-4ddd-b823-b72901f77d46">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telMobile}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="59" width="150" height="20" uuid="419f2ee6-725a-4aa3-ab55-241e0ba633ba">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fax}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="80" width="520" height="20" uuid="19129259-5b6b-43ee-8fb1-88a3d25372a0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{profession.name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<ellipse>
+				<reportElement x="-3" y="-2" width="21" height="21" forecolor="#A5BE19" backcolor="#A5BE19" uuid="f0a081d1-2bbc-4cce-81d0-c8286e064ef0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="4" width="124" height="21" forecolor="#1A3B63" uuid="6282ffac-3a24-45d8-978c-13e0ea005f47">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Débit]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="228" splitType="Stretch">
+			<rectangle radius="2">
+				<reportElement x="-5" y="0" width="13" height="13" forecolor="#1A3B63" uuid="994aea33-011e-4d84-8b3c-a55d8b277e31">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="1" width="51" height="19" uuid="1746eecc-4a2b-4ef9-a7a5-b50a19c59bf4">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 4 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="105" y="0" width="13" height="13" forecolor="#1A3B63" uuid="2ca51876-000b-419f-b610-b02e96ef154f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="130" y="1" width="51" height="19" uuid="7e288829-865b-4cff-8ecd-460c0b81ce21">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 8 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="215" y="0" width="13" height="13" forecolor="#1A3B63" uuid="e0920b18-2ab3-46fe-9aea-3e4cd7502ade">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="240" y="1" width="60" height="19" uuid="3aa86c75-1727-469b-b13c-4e8d640a0a4c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 10 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="325" y="0" width="13" height="13" forecolor="#1A3B63" uuid="e9819050-238b-495e-998a-04c758a6e120">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="350" y="1" width="60" height="19" uuid="6bc234f2-5f5a-4c0a-93ab-79af88315208">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 12 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="435" y="0" width="13" height="13" forecolor="#1A3B63" uuid="83d2c599-c476-472c-b383-253d32f4b297">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="460" y="1" width="60" height="19" uuid="06e136a8-e797-4788-9594-3bd2ea93816f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ADSL 20 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="28" width="13" height="13" forecolor="#1A3B63" uuid="fcc07130-1c61-433e-85fc-bc887eeaa5af">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="28" width="60" height="19" uuid="24c901e6-f956-4827-ab9f-a0f20a7f55d3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 20 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="105" y="28" width="13" height="13" forecolor="#1A3B63" uuid="31a6bd4a-52e4-4482-890b-0969c4d66c4a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="130" y="28" width="60" height="19" uuid="bdf0f599-89a7-4ec7-a08d-1b8e8e63fee6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 30 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="215" y="28" width="13" height="13" forecolor="#1A3B63" uuid="bd8792f2-0885-42a1-a171-df9724f89a04">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="240" y="28" width="60" height="19" uuid="17b39f40-2611-41f1-8df6-2bb4eebe35a1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 50 Méga]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="325" y="28" width="13" height="13" forecolor="#1A3B63" uuid="8a436029-d546-4771-ac6e-08f44044ec4b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="350" y="28" width="60" height="19" uuid="639df084-8c8a-4835-992f-1611a41aaae6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[VDSL 100 Méga]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="-3" y="48" width="21" height="21" forecolor="#A5BE19" backcolor="#A5BE19" uuid="33b87f22-cb98-4cd7-8456-d183db58cd6c"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="53" width="124" height="21" forecolor="#1A3B63" uuid="429fb9b8-887c-45f2-8698-53b66f8b630d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Services optionnels]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="78" width="13" height="13" forecolor="#1A3B63" uuid="6542be51-054d-41fa-aac0-57ea26b5be1d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="78" width="72" height="19" uuid="d2b94a9b-aee9-4635-9706-14639a537579">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Nom de domaine]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="98" width="13" height="13" forecolor="#1A3B63" uuid="fae6614a-1982-4d2b-b525-21b692052f6f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="98" width="72" height="19" uuid="a8278bf2-e1f4-48b8-9a2b-cce0703bdb85">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Pack Antivirus]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="138" width="13" height="13" forecolor="#1A3B63" uuid="0324c582-20ce-4a6f-b782-234152268493">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="118" width="90" height="19" uuid="4606ffe6-be32-4258-99aa-12d66d02af64">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Pack contrôle parental]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="158" width="13" height="13" forecolor="#1A3B63" uuid="731c6385-3403-4d2c-acb0-e4e0983e4a33">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="138" width="72" height="19" uuid="3631d4fc-c673-4b83-b267-aafcc1b5e1c2">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Hébergement]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="119" width="13" height="13" forecolor="#1A3B63" uuid="d018a1d9-5239-4606-b1f1-d681637aa734">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="158" width="72" height="19" uuid="ccd56618-849f-4838-9bbe-a2e72817e05b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[IP Fixe]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="209" width="13" height="13" forecolor="#1A3B63" uuid="8269abe0-5013-4a05-99d8-5e9e806f5f6c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="209" width="72" height="19" uuid="0321320f-a3d3-4bf0-b153-8e128b4edde1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[20 DT]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="-3" y="177" width="21" height="21" forecolor="#A5BE19" backcolor="#A5BE19" uuid="683180e7-cfd6-47e1-9e14-877cd5955375"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="182" width="81" height="21" forecolor="#1A3B63" uuid="29da4617-92b8-4e4c-9ed8-6acd1068a6e0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Installation]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="242" splitType="Stretch">
+			<ellipse>
+				<reportElement x="-3" y="-4" width="21" height="21" forecolor="#A5BE19" backcolor="#A5BE19" uuid="779febaf-9007-4836-97d6-b46084206499">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="6" y="2" width="81" height="21" forecolor="#1A3B63" uuid="240d11dc-3622-42f8-abe4-a30494e567bd">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans SemiBold" size="12"/>
+				</textElement>
+				<text><![CDATA[Paiement]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="27" width="13" height="13" forecolor="#1A3B63" uuid="014f6b80-e959-49c2-9178-a2fb70aff8d0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="28" width="110" height="19" uuid="37e7ea2e-3f5d-49e0-8bf4-63f7b4c52de9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[A la réception d’une facture :]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="140" y="27" width="13" height="13" forecolor="#1A3B63" uuid="e779df90-c7ac-4e67-84eb-45edee84501b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="160" y="28" width="51" height="19" uuid="2590823c-8342-4e95-8542-7883ac847e6b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Mensuelle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="240" y="27" width="13" height="13" forecolor="#1A3B63" uuid="c58dceb6-f5c2-4bea-aa91-60cfbdfc5d95">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="260" y="28" width="60" height="19" uuid="40ece489-1e10-4af5-a80a-ca2e92ef7151">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Trimestrielle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="350" y="27" width="13" height="13" forecolor="#1A3B63" uuid="5d12724f-adb6-4582-bf3c-01f5f19993b1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="370" y="28" width="60" height="19" uuid="45368e9a-cf9c-4216-a377-d6aa01646eec">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Semestrielle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="450" y="27" width="13" height="13" forecolor="#1A3B63" uuid="068d3ccf-b88f-4299-8551-dcd59461f9c8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="470" y="28" width="100" height="19" uuid="30848221-cb22-4dfc-9069-3d4065ece138">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Annuelle (1 mois gratuit)]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="-5" y="57" width="13" height="13" forecolor="#1A3B63" uuid="07376c9d-01fc-4c78-9654-b1e2b4dd01c0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="57" width="160" height="19" uuid="c71235b7-0e2d-4a2b-ab0f-a761ee06c1b9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Paiement par prélèvement automatique*]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="240" y="57" width="13" height="13" forecolor="#1A3B63" uuid="5eb819ee-8bdf-481f-96c4-1c01832f81aa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="260" y="57" width="60" height="19" uuid="a2d56995-2f23-441e-a7b7-650c4b1f031c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Mensuelle]]></text>
+			</staticText>
+			<rectangle radius="2">
+				<reportElement x="350" y="57" width="13" height="13" forecolor="#1A3B63" uuid="1da2a929-91a0-4b39-8bc1-b2afeeada220">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="370" y="57" width="60" height="19" uuid="2eb2db90-9fe9-403a-9783-694b5f0b5e5e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Trimestrielle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-5" y="77" width="574" height="20" uuid="31afb9b1-10d2-41e6-8b77-dea183872584">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="6"/>
+				</textElement>
+				<text><![CDATA[* Si vous optez pour le paiement par prélèvement automatique, veuillez remplir le formulaire « Autorisation de rélèvement automatique» disponible dans les agence chifco internet]]></text>
+			</staticText>
+			<image>
+				<reportElement x="50" y="90" width="470" height="20" uuid="98cdca52-3f56-4c9b-bf3d-71e94d620e22">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{image2}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="-5" y="103" width="574" height="20" uuid="75c74f42-ad03-495c-aa7c-7496a388bef1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="6.5"/>
+				</textElement>
+				<text><![CDATA[Par la signature de ce présent contrat j’atteste avoir lu et approuvé sans réserves les conditions générales d’utilisation du service Chifco internet et déclare accepter toutes clausses
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-4" y="132" width="218" height="20" uuid="f0860809-70e9-4471-a1d1-c86f14fee9c7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Fait à ........................................ le ......................................]]></text>
+			</staticText>
+			<image>
+				<reportElement x="284" y="117" width="260" height="60" uuid="8d553c5d-926e-4c45-8999-adabc11be388"/>
+				<imageExpression><![CDATA[$P{image3}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="293" y="118" width="106" height="21" forecolor="#1A3B63" uuid="0fe62ad9-ff2a-4b2b-8376-f5f5ffdc7f27">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CHIFCO INTERNET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="431" y="118" width="48" height="21" forecolor="#1A3B63" uuid="1ccd0848-845b-4488-8096-f5df74fc36c9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Open Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CLIENT]]></text>
+			</staticText>
+			<image>
+				<reportElement mode="Transparent" x="60" y="182" width="429" height="11" uuid="3c72de20-922c-4ac9-a341-0b96b8b1ead8"/>
+				<imageExpression><![CDATA[$P{image4}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="181" y="200" width="144" height="32" uuid="63765e57-de2c-4a3e-beea-da4577483e4d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[MF : 1209580T RC : D275462011
+2, rue de l’indépendance Sousse Tunisie
+Tél : 930 820 73 216+ Fax : 390 820 73 216+
+E-Mail : contact@chifco.com]]></text>
+			</staticText>
+			<image>
+				<reportElement x="-15" y="2" width="524" height="239" uuid="7bdfd516-2702-49b5-8e87-8340a8e6aac9"/>
+				<imageExpression><![CDATA[$P{image5}]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

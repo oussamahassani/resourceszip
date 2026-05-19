@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+	<fontFamily name="Open Sans">
+		<normal><![CDATA[fonts/OpenSans/OpenSans-Regular.ttf]]></normal>
+		<bold><![CDATA[fonts/OpenSans/OpenSans-Bold.ttf]]></bold>
+		<italic><![CDATA[fonts/OpenSans/OpenSans-Italic.ttf]]></italic>
+		<boldItalic><![CDATA[fonts/OpenSans/OpenSans-BoldItalic.ttf]]></boldItalic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans ExtraBold">
+		<normal><![CDATA[fonts/OpenSansExtraBold/OpenSans-ExtraBold.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansExtraBold/OpenSans-ExtraBoldItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Light">
+		<normal><![CDATA[fonts/OpenSansLight/OpenSans-Light.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansLight/OpenSans-LightItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Medium">
+		<normal><![CDATA[fonts/OpenSansMedium/OpenSans-Medium.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansMedium/OpenSans-MediumItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans SemiBold">
+		<normal><![CDATA[fonts/OpenSansSemiBold/OpenSans-SemiBold.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansSemiBold/OpenSans-SemiBoldItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Condensed">
+		<normal><![CDATA[fonts/OpenSansCondensed/OpenSans_Condensed-Regular.ttf]]></normal>
+		<bold><![CDATA[fonts/OpenSansCondensed/OpenSans_Condensed-Bold.ttf]]></bold>
+		<italic><![CDATA[fonts/OpenSansCondensed/OpenSans_Condensed-Italic.ttf]]></italic>
+		<boldItalic><![CDATA[fonts/OpenSansCondensed/OpenSans_Condensed-BoldItalic.ttf]]></boldItalic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Condensed ExtraBold">
+		<normal><![CDATA[fonts/OpenSansCondensedExtraBold/OpenSans_Condensed-ExtraBold.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansCondensedExtraBold/OpenSans_Condensed-ExtraBoldItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Condensed Light">
+		<normal><![CDATA[fonts/OpenSansCondensedLight/OpenSans_Condensed-Light.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansCondensedLight/OpenSans_Condensed-LightItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Condensed Medium">
+		<normal><![CDATA[fonts/OpenSansCondensedMedium/OpenSans_Condensed-Medium.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansCondensedMedium/OpenSans_Condensed-MediumItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans Condensed SemiBold">
+		<normal><![CDATA[fonts/OpenSansCondensedSemiBold/OpenSans_Condensed-SemiBold.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansCondensedSemiBold/OpenSans_Condensed-SemiBoldItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans SemiCondensed">
+		<normal><![CDATA[fonts/OpenSansSemiCondensed/OpenSans_SemiCondensed-Regular.ttf]]></normal>
+		<bold><![CDATA[fonts/OpenSansSemiCondensed/OpenSans_SemiCondensed-Bold.ttf]]></bold>
+		<italic><![CDATA[fonts/OpenSansSemiCondensed/OpenSans_SemiCondensed-Italic.ttf]]></italic>
+		<boldItalic><![CDATA[fonts/OpenSansSemiCondensed/OpenSans_SemiCondensed-BoldItalic.ttf]]></boldItalic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans SemiCondensed ExtraBold">
+		<normal><![CDATA[fonts/OpenSansSemiCondensedExtraBold/OpenSans_SemiCondensed-ExtraBold.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansSemiCondensedExtraBold/OpenSans_SemiCondensed-ExtraBoldItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans SemiCondensed Light">
+		<normal><![CDATA[fonts/OpenSansSemiCondensedLight/OpenSans_SemiCondensed-Light.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansSemiCondensedLight/OpenSans_SemiCondensed-LightItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans SemiCondensed Medium">
+		<normal><![CDATA[fonts/OpenSansSemiCondensedMedium/OpenSans_SemiCondensed-Medium.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansSemiCondensedMedium/OpenSans_SemiCondensed-MediumItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+	<fontFamily name="Open Sans SemiCondensed SemiBold">
+		<normal><![CDATA[fonts/OpenSansSemiCondensedSemiBold/OpenSans_SemiCondensed-SemiBold.ttf]]></normal>
+		<italic><![CDATA[fonts/OpenSansSemiCondensedSemiBold/OpenSans_SemiCondensed-SemiBoldItalic.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+	</fontFamily>
+</fontFamilies>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="515c52f1-c43f-42e5-9266-3181e9a13df1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="Dataset1" uuid="67383e60-18e2-4346-94c5-546551c95304">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<subDataset name="Bordereau" uuid="2d20faa6-61a0-40d8-8728-679163353636">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="montant" class="java.lang.Double"/>
+		<field name="user.firstName" class="java.lang.String"/>
+		<field name="user.lastName" class="java.lang.String"/>
+		<field name="user.adresse" class="java.lang.String"/>
+		<field name="user.gouvernorat.gouvernoratName" class="java.lang.String"/>
+		<field name="user.ville.villeName" class="java.lang.String"/>
+		<field name="user.telephone" class="java.lang.String"/>
+		<field name="user.codePostale" class="java.lang.Long"/>
+		<field name="numfacure" class="java.lang.Long"/>
+		<field name="createdDate" class="java.util.Date"/>
+		<field name="referenceBordereau" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="EntryBordereau" uuid="2d20faa6-61a0-40d8-8728-679163353636">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="encaissement.facture.ref_facture" class="java.lang.String"/>
+		<field name="encaissement.typeDePayment" class="java.lang.String"/>
+		<field name="encaissement.numeroCheque" class="java.lang.String"/>
+		<field name="encaissement.nomBank" class="java.lang.String"/>
+		<field name="encaissement.montantFacture" class="java.lang.Double"/>
+		<field name="encaissement.date" class="java.util.Date"/>
+		<field name="createdDate" class="java.util.Date"/>
+		<field name="encaissement.avoirClient.refAvoirClient" class="java.lang.String"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="bordereaus" class="java.util.Collection"/>
+	<field name="entryBordereaus" class="java.util.Collection"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="240" splitType="Stretch">
+			<frame>
+				<reportElement x="13" y="70" width="278" height="93" uuid="250bb035-9e74-4f5f-8430-17377bdaa5c4"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#F8AD3B"/>
+					<topPen lineWidth="1.25" lineStyle="Solid" lineColor="#FCEB25"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineColor="#F4F4F5"/>
+					<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+				</box>
+				<staticText>
+					<reportElement x="5" y="11" width="154" height="30" uuid="ee30c79f-6f70-42e9-a6e1-8a30c96e3cbe"/>
+					<textElement>
+						<font size="18" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[REVENDEUR]]></text>
+				</staticText>
+				<componentElement>
+					<reportElement x="5" y="31" width="264" height="60" uuid="554480af-99f4-4275-9f2c-406ba3bac923"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="Bordereau" uuid="10220ebb-ba39-4d58-999c-ac3ffb4cdebd">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{bordereaus})]]></dataSourceExpression>
+						</datasetRun>
+						<jr:listContents height="60" width="264">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="7" width="230" height="15" uuid="52212c32-f7a9-4170-999d-386abf52b11e">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<textFieldExpression><![CDATA[$F{user.lastName} +"  "+$F{user.firstName}]]></textFieldExpression>
+							</textField>
+							<frame>
+								<reportElement x="0" y="18" width="190" height="21" uuid="a9e2599f-9a19-49a0-8b39-59e09ccc3201"/>
+								<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+									<reportElement positionType="Float" x="0" y="3" width="190" height="14" uuid="e508d11f-bac2-4dd2-9e76-39194252fdb5"/>
+									<textFieldExpression><![CDATA[($F{user.adresse}==null  ?"":  $F{user.adresse}+"  " ) +($F{user.ville.villeName}==null  ?"":  $F{user.ville.villeName} )+($F{user.gouvernorat.gouvernoratName}==null  ?"": $F{user.gouvernorat.gouvernoratName}+"  " )
++($F{user.codePostale}==null  ?"  ": " - "+$F{user.codePostale})]]></textFieldExpression>
+								</textField>
+							</frame>
+							<frame>
+								<reportElement positionType="Float" x="0" y="39" width="229" height="16" uuid="30f43b16-4dda-4f1b-af53-5a05634b8470"/>
+								<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+									<reportElement positionType="Float" x="0" y="-3" width="210" height="14" uuid="af48948f-f5ea-4efa-9cbf-139b9f0fb0c8"/>
+									<textFieldExpression><![CDATA["Téléphone : " +($F{user.telephone}==null  ?"  ":String.valueOf($F{user.telephone}).replaceFirst( "(\\d{2})(\\d{3})(\\d+)", "$1 $2 $3"))]]></textFieldExpression>
+								</textField>
+							</frame>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</frame>
+			<componentElement>
+				<reportElement x="13" y="170" width="369" height="65" uuid="aaa9a88f-b36f-4ab5-914e-89f4bd30d21c"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Bordereau" uuid="1bd78f05-84ab-418a-969b-7bc8d1f5fa57">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{bordereaus})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="65" width="369">
+						<frame>
+							<reportElement mode="Opaque" x="0" y="0" width="368" height="65" backcolor="rgba(201, 201, 201, 0.38039216)" uuid="763e9ae2-edee-40e3-bf7d-ef7d971d3a6f"/>
+							<staticText>
+								<reportElement x="11" y="13" width="110" height="17" uuid="18829f73-5e3c-4858-8dd7-d4eabb44386c"/>
+								<textElement>
+									<font isBold="false"/>
+								</textElement>
+								<text><![CDATA[Date :]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="11" y="30" width="110" height="16" uuid="5309db0d-1edf-48c5-8e9e-8a63a9b551c2"/>
+								<text><![CDATA[Montant :]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="11" y="47" width="110" height="20" uuid="a52a949d-71f8-46b1-9a91-753d974a68e0"/>
+								<text><![CDATA[Nombre des factures :]]></text>
+							</staticText>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="130" y="12" width="141" height="18" uuid="8c2b6a41-cced-41d0-bc65-430ce56c312e"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[($F{createdDate}==null?"__/__/____ ":new SimpleDateFormat("dd/MM/yyyy").format($F{createdDate}))]]></textFieldExpression>
+							</textField>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="130" y="30" width="141" height="18" uuid="01f5fb5b-cdc5-4cd8-8cc8-d3a175402055"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[($F{montant}==null?"-------- ":new DecimalFormat("#,###.000").format($F{montant}.doubleValue()).toString()+" TND")]]></textFieldExpression>
+							</textField>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="130" y="48" width="142" height="16" uuid="eb038ec5-a0d8-40eb-9933-5933f1a27259"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{numfacure}]]></textFieldExpression>
+							</textField>
+						</frame>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="-10" y="24" width="582" height="30" uuid="fb370af7-d57c-4189-8b83-7ee1d14d1b9e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Bordereau" uuid="9049efb4-c1df-437b-b545-498e9bbb2108">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{bordereaus})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="30" width="582">
+						<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+							<reportElement x="0" y="0" width="582" height="30" forecolor="#59049D" uuid="b4251e63-cc5c-4380-a8f0-a5c5f1d81c34"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="22" isBold="true" isItalic="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA["BORDEREAU DE VERSEMENT N° "+($F{referenceBordereau}==null ?"-------":$F{referenceBordereau})]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33">
+			<frame>
+				<reportElement mode="Transparent" x="10" y="3" width="540" height="28" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="4574a4ec-6206-49dc-bdc1-ad75103e3684"/>
+				<box>
+					<pen lineWidth="2.25" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineColor="#9A06D0"/>
+					<bottomPen lineWidth="1.0" lineColor="#C9C9C9"/>
+				</box>
+				<staticText>
+					<reportElement mode="Transparent" x="446" y="8" width="76" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="23982c53-c747-4199-a7da-f99ca9f1965f"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Montant TTC]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="7" y="8" width="113" height="20" uuid="b2c0efb4-b649-4ed9-bb2e-23a3481ffcd4"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Numero facture]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="112" y="9" width="106" height="20" uuid="93cdb122-4c18-4909-9f9a-797a54e9f350"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date de paiement]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="211" y="8" width="116" height="20" uuid="ad6d18ae-a72e-416a-a544-3e55da91ebed"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mode de paiement]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="322" y="8" width="66" height="20" uuid="1c23d628-9853-49df-b04c-4c3f38ecd6a2"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[N°Chéque]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="392" y="8" width="49" height="20" forecolor="#000000" uuid="4f2da464-1761-4554-b622-c5c0643ebcdd"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Banque]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="517" y="14" width="20" height="10" uuid="96835a55-49b0-4c63-8f0f-a1d59a81c8e9"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<componentElement>
+				<reportElement x="10" y="1" width="550" height="20" uuid="734b4012-dd93-4e4c-a15d-d5ea1df79249"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="EntryBordereau" uuid="2c27ed49-153c-4f62-b12f-6860accdda16">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{entryBordereaus})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="550">
+						<textField isBlankWhenNull="true">
+							<reportElement x="110" y="1" width="110" height="19" uuid="dc444c2f-9e45-4a13-9ec3-20e1338872f7">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[($F{encaissement.date}==null?"  __/__/____ ":"   "+new SimpleDateFormat("dd/MM/yyyy").format($F{encaissement.date}))]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="0" y="0" width="120" height="20" uuid="02adc30a-6faf-4422-b3bd-fb3c5fbb4832">
+								<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+							</reportElement>
+							<box>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<paragraph firstLineIndent="13"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{encaissement.facture.ref_facture}==null? $F{encaissement.avoirClient.refAvoirClient} :$F{encaissement.facture.ref_facture}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="220" y="0" width="94" height="20" uuid="d6be3cb9-c763-4d70-9fcd-ce5a7fd5e765"/>
+							<box>
+								<pen lineColor="rgba(201, 201, 201, 0.38039216)"/>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[($F{encaissement.typeDePayment}==null?"   ":$F{encaissement.typeDePayment})]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="300" y="1" width="107" height="19" uuid="7bf54064-d805-4942-aea3-e8677871a9cc"/>
+							<box>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[($F{encaissement.numeroCheque}==null?"   ":$F{encaissement.numeroCheque})]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="400" y="2" width="78" height="18" uuid="473e4b87-4b87-420e-bee9-716a044a99a3"/>
+							<box>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[($F{encaissement.nomBank}==null?"   ":$F{encaissement.nomBank})]]></textFieldExpression>
+						</textField>
+						<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+							<reportElement x="460" y="2" width="90" height="18" uuid="4d1252c9-effa-4aa0-a315-0942447a3934"/>
+							<box>
+								<pen lineColor="#C9C9C9"/>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[
+$F{encaissement.facture.ref_facture}==null? 
+"-"+new DecimalFormat("#,###.000").format($F{encaissement.montantFacture}.doubleValue()).toString() 
+:new DecimalFormat("#,###.000").format($F{encaissement.montantFacture}.doubleValue()).toString()]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="34">
+			<componentElement>
+				<reportElement x="322" y="10" width="229" height="20" uuid="d99fb941-3142-46ac-8f58-f8dfb65ef878"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Bordereau" uuid="057b2624-f648-45c2-a2aa-ab93daa2df1e">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{bordereaus})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="229">
+						<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+							<reportElement x="136" y="0" width="89" height="20" uuid="fc04d213-620d-4c36-973d-4c9a6a9197ff"/>
+							<box>
+								<pen lineColor="#000000"/>
+								<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+								<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#C9C9C9"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[($F{montant}==null?"-------- ":new DecimalFormat("#,##0.000").format($F{montant}.doubleValue()).toString()+" TND")]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="0" y="0" width="140" height="19" uuid="9c4ab8d4-aef6-4047-8180-1009f3b5bd6a"/>
+							<textElement verticalAlignment="Middle">
+								<font isBold="true"/>
+							</textElement>
+							<text><![CDATA[TOTAL MONTANT T.T.C : ]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<line>
+				<reportElement x="18" y="4" width="520" height="1" uuid="3d8e23e7-1bf5-4a08-87d4-68132daa2d28"/>
+				<graphicElement>
+					<pen lineWidth="1.5" lineColor="#59049D"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="184">
+			<frame>
+				<reportElement x="-20" y="0" width="592" height="183" uuid="b3b92033-3105-4ce7-8287-9ce6cb93068b"/>
+				<line>
+					<reportElement positionType="Float" x="30" y="158" width="540" height="1" forecolor="#59049D" backcolor="#59049D" uuid="6f859a95-6acf-469b-9988-161ccaddaaaa"/>
+					<graphicElement>
+						<pen lineWidth="15.0"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" x="51" y="87" width="268" height="60" uuid="cbae8648-5c81-45ee-bfd6-d133b9aa2911"/>
+					<text><![CDATA[Bureau de tunis immeuble alwafa
+1053 les berges du Lac, Tunis
+www.chifco.com]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="52" y="66" width="220" height="20" uuid="5f00c1da-a588-4574-ad12-b666a24a6bed"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Siège social]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="302" y="67" width="220" height="20" uuid="bd84398c-6d3f-4186-b010-2ca65249945f"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Détails bancaires]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="301" y="86" width="260" height="60" uuid="b0769081-f915-407c-814d-e407ef34bdf9"/>
+					<text><![CDATA[Banque : Banque National Agricole
+Agence : SUC. TUNIS
+N° de compte :03 135 120 0115 006358 09 CHIFCO SA]]></text>
+				</staticText>
+				<line>
+					<reportElement x="30" y="61" width="540" height="1" uuid="8a15270c-e129-4a88-adec-f204e3991b73"/>
+					<graphicElement>
+						<pen lineWidth="0.2" lineColor="#C9C9C9"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement mode="Opaque" x="370" y="4" width="166" height="22" uuid="e69b085a-8596-40a2-9d12-740d3f950942"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Cachet et Signature ]]></text>
+				</staticText>
+				<rectangle radius="7">
+					<reportElement mode="Transparent" x="369" y="0" width="167" height="50" uuid="fe8ed47a-beb6-4e22-84ab-9f6c98c43b7c"/>
+				</rectangle>
+			</frame>
+		</band>
+	</pageFooter>
+</jasperReport>

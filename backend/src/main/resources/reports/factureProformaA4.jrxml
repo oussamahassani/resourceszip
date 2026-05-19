@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="515c52f1-c43f-42e5-9266-3181e9a13df1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="Dataset1" uuid="67383e60-18e2-4346-94c5-546551c95304">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<subDataset name="Entriesfactures" uuid="2d20faa6-61a0-40d8-8728-679163353636">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="productName" class="java.lang.String"/>
+		<field name="pourcentageTva" class="java.lang.Long"/>
+		<field name="prixTotalHT" class="java.lang.Double"/>
+		<field name="quantiter" class="java.lang.Integer"/>
+		<field name="prixUnitaireHT" class="java.lang.Double"/>
+	</subDataset>
+	<subDataset name="Facture" uuid="2d20faa6-61a0-40d8-8728-679163353636">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="abonnement.referenceClient" class="java.lang.String"/>
+		<field name="abonnement.firstName" class="java.lang.String"/>
+		<field name="abonnement.lastName" class="java.lang.String"/>
+		<field name="abonnement.cin" class="java.lang.String"/>
+		<field name="abonnement.telFixe" class="java.lang.Long"/>
+		<field name="abonnement.gouvernorat.gouvernoratName" class="java.lang.String"/>
+		<field name="abonnement.codePostale.code" class="java.lang.String"/>
+		<field name="abonnement.adresse" class="java.lang.String"/>
+		<field name="factureId" class="java.lang.Long"/>
+		<field name="montant_payer" class="java.lang.Double"/>
+		<field name="montantHt" class="java.lang.Double"/>
+		<field name="prixBaseTva" class="java.lang.Double"/>
+		<field name="montantTva" class="java.lang.Double"/>
+		<field name="date_echeance" class="java.util.Date"/>
+		<field name="createdDate" class="java.util.Date"/>
+		<field name="dateDeFin" class="java.util.Date"/>
+		<field name="ref_facture" class="java.lang.String"/>
+		<field name="dateDeDebut" class="java.util.Date"/>
+		<field name="abonnement.typePaiement.referenceTypePaiement" class="java.lang.String"/>
+		<field name="abonnement.ville.villeName" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="EntryTvaFacture" uuid="db64ef3b-005a-44df-9842-f6967d421ae6">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="base" class="java.lang.Double"/>
+		<field name="montant" class="java.lang.Double"/>
+		<field name="tauxTva" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="timbrefiscal" class="java.lang.String"/>
+	<parameter name="isset_tva" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="entriesfactures" class="java.util.Collection"/>
+	<field name="entryTvaFactures" class="java.util.Collection"/>
+	<field name="factures" class="java.util.Collection"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="218" splitType="Stretch">
+			<image hAlign="Left" vAlign="Bottom">
+				<reportElement x="-11" y="-10" width="251" height="110" uuid="c1bd443b-3d2d-41c0-9150-c31f67f6f8fd"/>
+				<imageExpression><![CDATA["reports/netylogo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="301" y="10" width="244" height="30" forecolor="#59049D" uuid="2962fe75-ec6d-48bf-9312-ab9c1ec90976"/>
+				<box>
+					<pen lineColor="#9400FF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facture proforma]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="25" y="111" width="232" height="93" uuid="250bb035-9e74-4f5f-8430-17377bdaa5c4"/>
+				<box>
+					<pen lineWidth="1.25" lineColor="#F4F4F5"/>
+					<topPen lineWidth="3.0" lineStyle="Solid" lineColor="#59049D"/>
+					<bottomPen lineColor="#F4F4F5"/>
+					<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+				</box>
+				<staticText>
+					<reportElement x="7" y="11" width="100" height="30" forecolor="#000000" uuid="ee30c79f-6f70-42e9-a6e1-8a30c96e3cbe"/>
+					<box>
+						<pen lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[CLIENT]]></text>
+				</staticText>
+				<componentElement>
+					<reportElement x="5" y="35" width="220" height="45" uuid="554480af-99f4-4275-9f2c-406ba3bac923"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="Facture" uuid="66ce451d-d159-4e44-a044-76ed0150c5a5">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{factures})]]></dataSourceExpression>
+						</datasetRun>
+						<jr:listContents height="45" width="220">
+							<textField>
+								<reportElement x="108" y="0" width="112" height="15" uuid="52212c32-f7a9-4170-999d-386abf52b11e">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{abonnement.firstName}+ "  "+$F{abonnement.lastName}]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="0" y="10" width="100" height="15" forecolor="#59049D" uuid="a5959b38-0897-4766-80d4-8ec590eba6a5"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[Code Client :]]></text>
+							</staticText>
+							<textField>
+								<reportElement x="54" y="10" width="166" height="14" uuid="e508d11f-bac2-4dd2-9e76-39194252fdb5"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{abonnement.referenceClient}]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="0" y="0" width="127" height="13" forecolor="#59049D" uuid="58d90da9-fb95-4c80-bb9b-125e787cadd9"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[Nom et Prénom du Client :]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="0" y="20" width="100" height="15" forecolor="#59049D" uuid="957a9dd9-51d5-4af2-a72e-86e0266cef89"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[N Ligne :]]></text>
+							</staticText>
+							<textField>
+								<reportElement x="58" y="20" width="162" height="14" uuid="a590283b-dbbf-42bd-9abd-9b2af90eb84f"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[String.valueOf($F{abonnement.telFixe}).replaceFirst( "(\\d{2})(\\d{3})(\\d+)", "$1 $2 $3")]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="0" y="30" width="100" height="15" forecolor="#59049D" uuid="2e89320c-229a-46fd-b938-8ab129a457c7"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[Adresse :]]></text>
+							</staticText>
+							<textField textAdjust="StretchHeight">
+								<reportElement x="39" y="31" width="178" height="14" uuid="af48948f-f5ea-4efa-9cbf-139b9f0fb0c8"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[($F{abonnement.adresse}==null?" ":$F{abonnement.adresse})+
+($F{abonnement.ville.villeName}==null?" ":" "+$F{abonnement.ville.villeName})+
+($F{abonnement.codePostale.code}==null?" ":" "+$F{abonnement.codePostale.code})+
+($F{abonnement.gouvernorat.gouvernoratName}==null?" ":" "+$F{abonnement.gouvernorat.gouvernoratName})]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</frame>
+			<frame>
+				<reportElement x="368" y="112" width="170" height="60" uuid="2fea857f-c13d-47d0-b48b-1ace446eb966"/>
+				<box>
+					<pen lineWidth="1.25" lineColor="#F4F4F5"/>
+					<topPen lineWidth="3.0" lineStyle="Solid" lineColor="#59049D"/>
+					<bottomPen lineColor="#F4F4F5"/>
+					<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+				</box>
+				<componentElement>
+					<reportElement x="2" y="7" width="168" height="53" uuid="a1d79d3a-fd4c-48ab-9bc4-be664824b548"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="Facture" uuid="f15ed36d-c863-495d-9d5c-2a1b91c595d7">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{factures})]]></dataSourceExpression>
+						</datasetRun>
+						<jr:listContents height="53" width="168">
+							<staticText>
+								<reportElement x="0" y="0" width="135" height="18" forecolor="#59049D" uuid="201af8f8-1eae-4e3c-86ed-f9587cd2e07c"/>
+								<textElement>
+									<font fontName="SansSerif" size="9"/>
+								</textElement>
+								<text><![CDATA[Date de création :]]></text>
+							</staticText>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="73" y="0" width="80" height="17" uuid="a819c9bc-739b-4e33-82e6-e3717bd8e1f6"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[($F{createdDate}==null?"__/__/____ ":new SimpleDateFormat("dd/MM/yyyy").format($F{createdDate}))]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</frame>
+			<componentElement>
+				<reportElement x="383" y="40" width="140" height="20" uuid="1aef58c1-0bfc-4761-9ae5-3b2dc9c3c484"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Facture" uuid="e0bc883c-d527-4b8f-8d90-f2bc6b303fb0">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{factures})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="140">
+						<textField textAdjust="StretchHeight">
+							<reportElement x="0" y="0" width="140" height="20" uuid="946527fd-3a28-40df-b01a-81c561d04c07"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA["N° "+($F{ref_facture}==null ?"  ":$F{ref_facture})]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33">
+			<frame>
+				<reportElement mode="Opaque" x="29" y="3" width="221" height="28" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="4574a4ec-6206-49dc-bdc1-ad75103e3684">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="2.25"/>
+					<topPen lineColor="#59049D"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<staticText>
+					<reportElement x="7" y="5" width="130" height="20" uuid="b2c0efb4-b649-4ed9-bb2e-23a3481ffcd4"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Description]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement mode="Opaque" x="250" y="3" width="65" height="28" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="ee1e8d21-5dd1-4532-9950-43a0ce06d3ca"/>
+				<box>
+					<pen lineColor="#59049D"/>
+					<topPen lineWidth="2.25" lineColor="#59049D"/>
+				</box>
+				<staticText>
+					<reportElement x="2" y="5" width="50" height="20" uuid="93cdb122-4c18-4909-9f9a-797a54e9f350"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Quantité]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement mode="Opaque" x="315" y="3" width="92" height="28" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="00e296db-a577-45c7-8cc2-725dc9e5b822"/>
+				<box>
+					<pen lineWidth="2.25" lineColor="#9A06D0"/>
+					<topPen lineWidth="2.25" lineStyle="Solid" lineColor="#59049D"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement x="2" y="5" width="38" height="20" uuid="ad6d18ae-a72e-416a-a544-3e55da91ebed"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PU HT (TND
+)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="33" y="9" width="20" height="10" uuid="f0d33a86-d04b-4f04-b112-538b4fcb7ecd"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement mode="Opaque" x="407" y="3" width="53" height="28" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="047e7272-e00b-4e3c-927c-d2895c9a5beb"/>
+				<box>
+					<pen lineWidth="2.25" lineColor="#59049D"/>
+					<topPen lineWidth="2.25" lineStyle="Solid" lineColor="#59049D"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement x="2" y="5" width="23" height="20" uuid="4f2da464-1761-4554-b622-c5c0643ebcdd"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TVA ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="24" y="9" width="20" height="10" uuid="be8eeb15-0345-4cdd-9668-678622a773f5"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement mode="Opaque" x="460" y="3" width="81" height="28" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="376cbec6-ba08-4943-ae56-954097fa9511"/>
+				<box>
+					<pen lineWidth="2.25" lineColor="#59049D"/>
+					<topPen lineWidth="2.25" lineStyle="Solid" lineColor="#59049D"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement x="2" y="5" width="52" height="20" uuid="23982c53-c747-4199-a7da-f99ca9f1965f"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total HT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="43" y="9" width="20" height="10" uuid="b0aa2884-e5b4-47a5-8c39-2e717d6c2b69"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<componentElement>
+				<reportElement positionType="Float" x="29" y="-2" width="512" height="19" uuid="94dda677-20da-4e7c-b91a-618ae95c3ddc">
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Entriesfactures" uuid="5d41dcea-988b-475e-8976-91f396dfe08d">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{entriesfactures})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="512">
+						<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+							<reportElement positionType="Float" x="6" y="0" width="215" height="15" uuid="fdbebc21-4505-424f-b5ec-48ebb3598bc4"/>
+							<textElement textAlignment="Left" markup="styled">
+								<font size="9" isItalic="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="379" y="1" width="55" height="16" uuid="3f038cbd-734d-44cf-bf25-d0a5ad743ed3">
+								<printWhenExpression><![CDATA[!$F{pourcentageTva}.equals( 0L )]]></printWhenExpression>
+							</reportElement>
+							<textElement>
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{pourcentageTva}.toString()+" %"]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="433" y="1" width="79" height="16" uuid="a8d9caeb-4a67-4847-bbfd-e6e13a9a81c4"/>
+							<box>
+								<pen lineWidth="1.25" lineColor="#F4F4F5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0" lineColor="#F4F4F5"/>
+							</box>
+							<textElement>
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#,##0.000").format($F{prixTotalHT}.doubleValue()).toString()]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="224" y="0" width="50" height="14" uuid="6d9316b7-70f6-43b0-8a4b-a33d68bc687b"/>
+							<textElement>
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{quantiter}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="288" y="1" width="91" height="14" uuid="230ff4e7-6677-4ce0-b7da-cda12fa8cedc"/>
+							<textElement>
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#,##0.000").format($F{prixUnitaireHT}.doubleValue()).toString()]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="201">
+			<frame>
+				<reportElement mode="Opaque" x="76" y="11" width="210" height="28" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="d089c17a-4aeb-4cc1-9ed8-c876749e80ab">
+					<printWhenExpression><![CDATA[$P{isset_tva}.equals(true )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="2.25" lineColor="#59049D"/>
+				</box>
+				<staticText>
+					<reportElement x="11" y="4" width="41" height="21" uuid="fe777417-b6a4-4682-9405-69501d7dd727"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TVA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="33" y="9" width="20" height="10" uuid="cae64f86-c940-4d18-ace2-4334a789ced6"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="58" y="4" width="53" height="20" uuid="e9aad77b-00dc-41e3-8c77-caabe917a4de"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Base]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="85" y="8" width="20" height="10" uuid="8734733b-1464-420a-9bc5-4ac6e65b81be"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="122" y="4" width="60" height="16" uuid="b615123d-4e47-4fc9-b305-0f0593b3cda6"/>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Montant]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="162" y="8" width="20" height="10" uuid="eea3988e-2404-4a86-881e-9612fabfaa0a"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[(TND)]]></text>
+				</staticText>
+			</frame>
+			<componentElement>
+				<reportElement positionType="Float" mode="Transparent" x="76" y="39" width="210" height="19" forecolor="#FBF5FD" backcolor="rgba(89, 4, 157, 0.0627451)" uuid="73f8c8cf-5e63-4818-8c58-82d23cdde890">
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="EntryTvaFacture" uuid="720f2e0f-d455-439e-9de1-1511ce0415ec">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{entryTvaFactures})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="210">
+						<frame>
+							<reportElement mode="Opaque" x="0" y="0" width="210" height="19" backcolor="rgba(89, 4, 157, 0.0627451)" uuid="d0798114-3a17-4247-a796-e90195c5981a"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement positionType="Float" x="61" y="1" width="62" height="15" uuid="ab4b6723-db45-4761-b0d5-d1a6caa5d50c"/>
+								<textElement textAlignment="Left" markup="styled">
+									<font size="9" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new DecimalFormat("#,###.000").format($F{base}.doubleValue()).toString()]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="125" y="1" width="81" height="15" uuid="b304a0d6-9215-4388-9632-168e3ae66e26"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new DecimalFormat("#,###.000").format($F{montant}.doubleValue()).toString()]]></textFieldExpression>
+							</textField>
+							<textField textAdjust="StretchHeight">
+								<reportElement positionType="Float" x="12" y="1" width="47" height="15" uuid="ad719d4a-a2f7-49cf-9d7b-3b5a97cd76de"/>
+								<textElement textAlignment="Left" markup="styled">
+									<font size="9" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new DecimalFormat("0.#").format($F{tauxTva}.doubleValue()).toString()+ " %"]]></textFieldExpression>
+							</textField>
+						</frame>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="301" y="11" width="238" height="129" uuid="efa614b7-701a-43ba-a8d4-0ef374d04fb4"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Facture" uuid="6659b4a4-eab0-48ae-8609-19a84219aa8d">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{factures})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="129" width="239">
+						<frame>
+							<reportElement mode="Opaque" x="0" y="100" width="238" height="29" forecolor="#F1DCF8" backcolor="rgba(89, 4, 157, 0.4117647)" uuid="65eab65a-e5b6-4c6a-b662-8c28c637977b"/>
+							<box>
+								<topPen lineWidth="2.25" lineColor="#59049D"/>
+							</box>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="121" y="4" width="114" height="20" uuid="11cac852-00a0-4b95-8f91-5a1d26157383"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new DecimalFormat("#,###.000").format($F{montant_payer}.doubleValue()).toString()+" TND"]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="10" y="4" width="80" height="20" uuid="6ecdc681-354c-49d2-ae84-952c5b7ab2f3"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[ NET A PAYER  ]]></text>
+							</staticText>
+						</frame>
+						<frame>
+							<reportElement mode="Transparent" x="0" y="0" width="236" height="91" forecolor="#F1DCF8" backcolor="#F1DCF8" uuid="af852f7a-4f28-4b24-813d-1c6d75fe2f99"/>
+							<box>
+								<pen lineWidth="1.25"/>
+								<topPen lineWidth="2.25" lineColor="#59049D"/>
+								<leftPen lineWidth="0.0" lineColor="#F4F4F5"/>
+								<bottomPen lineWidth="0.0" lineColor="#F4F4F5"/>
+								<rightPen lineWidth="0.0" lineColor="#F4F4F5"/>
+							</box>
+							<frame>
+								<reportElement mode="Transparent" x="1" y="5" width="235" height="20" backcolor="#FBF5FD" uuid="51c6a733-d7d1-4686-bb0f-f1a4c620c5db"/>
+								<box>
+									<pen lineColor="#F4F4F5"/>
+									<leftPen lineWidth="1.25"/>
+									<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+								</box>
+								<textField isBlankWhenNull="true">
+									<reportElement x="120" y="-1" width="114" height="22" uuid="279aae51-4a02-41fe-829e-b9a35aae7cb7"/>
+									<textElement verticalAlignment="Middle">
+										<font size="9"/>
+									</textElement>
+									<textFieldExpression><![CDATA[new DecimalFormat("#,###.000").format($F{montantHt}.doubleValue()).toString()+" TND"]]></textFieldExpression>
+								</textField>
+								<staticText>
+									<reportElement x="8" y="0" width="80" height="20" uuid="20b1770e-a664-42cf-b816-d552a11dd207"/>
+									<textElement verticalAlignment="Middle">
+										<font size="9"/>
+									</textElement>
+									<text><![CDATA[ TOTAL HT             ]]></text>
+								</staticText>
+							</frame>
+							<frame>
+								<reportElement mode="Opaque" x="1" y="26" width="235" height="20" backcolor="rgba(89, 4, 157, 0.0627451)" uuid="0b9bc9f3-48b1-40e1-a8f0-6208a06d59de"/>
+								<box>
+									<pen lineWidth="1.25" lineColor="#F4F4F5"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.25"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+								</box>
+								<textField isBlankWhenNull="true">
+									<reportElement x="120" y="-1" width="114" height="22" uuid="97cb9ced-1177-4c7d-8607-f07cf2d5c84a"/>
+									<textElement verticalAlignment="Middle">
+										<font size="9"/>
+									</textElement>
+									<textFieldExpression><![CDATA[new DecimalFormat("#,###.000").format($F{prixBaseTva}.doubleValue()).toString()+" TND"]]></textFieldExpression>
+								</textField>
+								<staticText>
+									<reportElement x="8" y="-1" width="80" height="20" uuid="92c40d3d-6238-4de9-9f10-7a60c497f4af"/>
+									<textElement verticalAlignment="Middle">
+										<font size="9"/>
+									</textElement>
+									<text><![CDATA[ BASES TVA            ]]></text>
+								</staticText>
+							</frame>
+							<frame>
+								<reportElement mode="Opaque" x="1" y="69" width="234" height="22" backcolor="rgba(89, 4, 157, 0.0627451)" uuid="9f9f2a61-b6ae-469c-bc10-dc16a3c4acad">
+									<property name="com.jaspersoft.studio.layout"/>
+								</reportElement>
+								<box>
+									<pen lineColor="#F4F4F5"/>
+									<leftPen lineWidth="1.25" lineColor="#F4F4F5"/>
+									<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+								</box>
+							</frame>
+							<frame>
+								<reportElement mode="Transparent" x="1" y="48" width="235" height="22" backcolor="#FBF5FD" uuid="121e13e3-9abd-4af6-9984-7f0d2d16d781">
+									<property name="com.jaspersoft.studio.layout"/>
+								</reportElement>
+								<box>
+									<pen lineColor="#F4F4F5"/>
+									<leftPen lineWidth="1.25" lineColor="#F4F4F5"/>
+									<rightPen lineWidth="1.25" lineColor="#F4F4F5"/>
+								</box>
+								<textField isBlankWhenNull="true">
+									<reportElement x="120" y="-2" width="114" height="22" uuid="556ea6d0-cf8c-4068-a1d8-82d88c9e3035"/>
+									<textElement verticalAlignment="Middle">
+										<font size="9"/>
+									</textElement>
+									<textFieldExpression><![CDATA[new DecimalFormat("#,###.000").format($F{montantTva}.doubleValue()).toString()+" TND"]]></textFieldExpression>
+								</textField>
+								<staticText>
+									<reportElement x="8" y="-1" width="80" height="20" uuid="7208b1af-4947-4468-84aa-b90dfd2d2bc8"/>
+									<textElement verticalAlignment="Middle">
+										<font size="9"/>
+									</textElement>
+									<text><![CDATA[ TOTAL TVA             ]]></text>
+								</staticText>
+							</frame>
+						</frame>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement x="423" y="81" width="114" height="20" uuid="e52b2536-42d6-43ad-a4d2-713f01377750"/>
+				<textFieldExpression><![CDATA[$P{timbrefiscal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="312" y="79" width="90" height="20" uuid="cdb9ed12-0601-4e77-99fa-5ae26727e83d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Timbre fiscal ]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="6" y="110" width="217" height="20" uuid="e8dc21f8-a972-4e09-b410-bd8a2095a389"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Facture" uuid="d6690c33-61f2-4b31-a354-3020f286253a">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{factures})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="217">
+						<textField textAdjust="StretchHeight">
+							<reportElement x="10" y="3" width="178" height="14" uuid="f574eacb-ff2d-42be-abf5-8eca7d8e615d"/>
+							<textElement>
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{abonnement.typePaiement.referenceTypePaiement}.startsWith( "ref_1an" )?"":"")]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="5"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="150">
+			<frame>
+				<reportElement x="-20" y="-1" width="592" height="151" uuid="b3b92033-3105-4ce7-8287-9ce6cb93068b"/>
+				<line>
+					<reportElement positionType="Float" x="45" y="10" width="513" height="1" forecolor="#59049D" backcolor="#59049D" uuid="6f859a95-6acf-469b-9988-161ccaddaaaa"/>
+					<graphicElement>
+						<pen lineWidth="3.0"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" x="49" y="40" width="490" height="111" forecolor="#1A1717" uuid="cbae8648-5c81-45ee-bfd6-d133b9aa2911"/>
+					<text><![CDATA[
+
+Réglement par virement bancaire au compte de CHIFCO SA, domicilié auprés de :
+Banque : Banque National Agricole
+Agence : SUC. TUNIS
+RIB : : 03 135 120 0115 006358 09  CHIFCO SA 
+Bureau de Tunis : Tunis : 30, rue Socrate Zone d’Activité
+Keïreddine LAC 3, Tunis 2060, Tunis  n°: +216 70282000 -   www.chifco.com RC : B27134602011 MF : 1209580T/A/M/000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="49" y="38" width="365" height="21" uuid="345ea177-e2ee-4681-a6aa-c46d5d282315"/>
+					<textElement>
+						<font size="12" isBold="false"/>
+					</textElement>
+					<text><![CDATA[INFORMATIONS ENTREPRISE]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageFooter>
+</jasperReport>

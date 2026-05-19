@@ -1,0 +1,12 @@
+metrics:
+  wal_directory: /tmp/grafana-agent-wal
+  global:
+    scrape_interval: 15s
+  configs:
+    - name: java-app
+      scrape_configs:
+        - job_name: 'java-app'
+          static_configs:
+            - targets: ['crm.chifco.com']
+              labels:
+                __metrics_path__: /actuator/prometheus
