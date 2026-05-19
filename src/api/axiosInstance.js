@@ -2,10 +2,8 @@ import axios from 'axios'
 import { store } from '../redux/store'
 import { clearAuth } from '../redux/slices/authSlice'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
-
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: '',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -17,11 +15,6 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
-    }
-    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content')
-    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content')
-    if (csrfToken && csrfHeader) {
-      config.headers[csrfHeader] = csrfToken
     }
     return config
   },
@@ -36,11 +29,23 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
-        const response = await axios.post(`${BASE_URL}/api/auth/refresh`, {}, { withCredentials: true })
-        const newToken = response.data.token
-        localStorage.setItem('token', newToken)
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`
-        return axiosInstance(originalRequest)
+        const refreshToken = localStorage.getItem('refreshToken')
+        if (!refreshToken) {
+          store.dispatch(clearAuth())
+          window.location.href = '/login'
+          return Promise.reject(error)
+        }
+        const response = await axios.post('/api/auth/refresh', {}, {
+          headers: { Authorization: `Bearer ${refreshToken}` },
+          withCredentials: true,
+        })
+        const newToken = response.data?.data?.token || response.data?.token
+        if (newToken) {
+          localStorage.setItem('token', newToken)
+          originalRequest.headers['Authorization'] = `Bearer ${newToken}`
+          return axiosInstance(originalRequest)
+        }
+        throw new Error('No token in refresh response')
       } catch {
         store.dispatch(clearAuth())
         window.location.href = '/login'
