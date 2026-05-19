@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Fiche d’information</title>
+    <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+  <link rel="stylesheet" href="https://rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.css" />
+<style>
+	.aftersendformEdit{
+		display: none;
+	}
+</style>
+</head>
+<body>
+	<section layout:fragment="content">
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">							
+								<h1 class="m-0">Modification de changement de débit</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+				<div class="row" th:if="${demande} != null">
+					
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab"
+									role="tablist">
+									<li class="nav-item"><a class="nav-link active"
+										id="custom-tabs-info-tab" data-toggle="pill"
+										href="#custom-tabs-info" role="tab"
+										aria-controls="custom-tabs-info" aria-selected="true">Information</a>										
+									</li>
+								
+
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info"
+										role="tabpanel" aria-labelledby="custom-tabs-info-tab">
+					<div class="row"  >
+										
+												<div class="col-sm-6" >
+													<div class="card-block">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom:</label>
+																<div class="col-sm-8" th:text="${demande.firstName}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Prénom:</label>
+																			<div class="col-sm-8" th:text="${demande.lastName}"></div>
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Email:</label>
+																	<div class="col-sm-8" th:text="${demande.email}"></div>																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Identification:</label>
+																	<div class="col-sm-8" th:text="${demande.cin}"></div>																	
+																</div>
+																<div class="row" th:if="${demande.gouvernorat} != null">
+																	<label class="col-sm-4 col-form-label">Gouvernorat:</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.gouvernorat.gouvernoratName}"></div>
+																	<input type="hidden" name="villeName"
+																		th:field="${demande.gouvernorat.gouvernoratId}" />
+																</div>
+																<div class="row" th:if="${demande.gouvernorat} != null">
+																	<label class="col-sm-4 col-form-label">Ville :</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.ville.villeName}"></div>
+																	<input type="hidden" name="gouvernoratName"
+																		th:field="${demande.ville.villeId}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Adresse:</label>
+																	<div class="col-sm-8" th:text="${demande.adresse}"></div>
+																	<input type="hidden" name="adresse"
+																		th:field="${demande.adresse}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Code
+																		postale:</label>
+																	<div class="col-sm-8" th:text="${demande.codePostale?.code}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">proprietaire:</label>
+																	<div class="col-sm-8">
+																		<span th:if="${demande.proprietaire}" style="color:green">Oui</span>
+																		<span th:unless="${demande.proprietaire}" style="color:red">Non</span>
+																	</div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		mobile:</label>
+																	<div class="col-sm-8" th:text="${demande.telMobile}"></div>
+																	<input type="hidden" name="telMobile"
+																		th:field="${demande.telMobile}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		mobile2:</label>
+																	<div class="col-sm-8" th:text="${demande.telMobile2}"></div>
+																	<input type="hidden" name="telMobile2"
+																		th:field="${demande.telMobile2}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Position
+																		XY:</label>
+																	<div class="col-sm-8" th:text="${demande.positionxy}"></div>
+																	<input type="hidden" name="positionxy"
+																		th:field="${demande.positionxy}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		fixe:</label>
+																	<div class="col-sm-8" th:text="${demande.telFixe}"></div>
+																	<input type="hidden" name="telFixe"
+																		th:field="${demande.telFixe}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Profession:</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.profession?.name}"></div>
+																	<input type="hidden" name="profession"
+																		th:field="${demande.profession.professionId}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Fax:</label>
+																	<div class="col-sm-8" th:text="${demande.fax}"></div>
+																	<input type="hidden" name="fax"
+																		th:field="${demande.fax}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Date de
+																		naissance:</label>
+																	<div class="col-sm-8"
+																		th:text="${#dates.format(demande.dateNaissance, 'dd-MM-yyyy')}"></div>
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Situation Familiale:</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.situationFamiliale}"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="card-block">
+														<h4>Cree par</h4>
+														<div class="card-block-body">
+															<span class="col-sm-8"
+																th:text="${demande.user?.firstName  } "></span> <span
+																th:text="${demande.user?.lastName}"></span>
+																
+																
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="card-block">
+														<h4>Informations forfait</h4>
+														<div class="card-block-body">
+															<div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label"
+																		>Status
+																		tunisie telecom</label>
+																	<p class="" 
+																		th:text="${demande.etatTT}" >
+																</div>
+															
+																<div class="row" >
+																	<label class="col-sm-4 col-form-label"
+																		>Motif Refus
+																		tunisie telecom</label>
+																	<p class=""
+																	
+																		th:text="${demande.motifRefus}" >
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Status
+																		demande:</label>
+
+																	<p class="col-sm-8"
+																		th:text="${demande.statut?.designation}"></p>
+																</div>
+
+															</div>
+															<div class="progress mb-3">
+																<div th:if="${demande.statut.nomStatut} eq 'DRAFT'"
+																	class="progress-bar bg-danger" role="progressbar"
+																	aria-valuemax="100" style="width: 20%">
+																	<span class="sr-only">20% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'SIGNED_DOC'"
+																	class="progress-bar bg-warning" role="progressbar"
+																	aria-valuenow="40" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 40%">
+																	<span class="sr-only">40% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'WAIT_TT'"
+																	class="progress-bar bg-warning  progress-bar-striped"
+																	role="progressbar" aria-valuenow="50" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 50%">
+																	<span class="sr-only">50% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'INSTALLED'"
+																	class="progress-bar bg-info" role="progressbar"
+																	aria-valuenow="65" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 65%">
+																	<span class="sr-only">65% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'ASSIGNED'"
+																	class="progress-bar bg-info progress-bar-striped"
+																	role="progressbar" aria-valuenow="80" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 80%">
+																	<span class="sr-only">80% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'VALID'"
+																	class="progress-bar bg-primary" role="progressbar"
+																	aria-valuenow="90" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 90%">
+																	<span class="sr-only">90% Complete</span>
+																</div>
+																<div
+																	th:if="${demande.statut.nomStatut} eq 'ACTIVE'  or   ${demande.statut.nomStatut} eq 'REFUSED'  or   ${demande.statut.nomStatut} eq 'CANCELED'  or   ${demande.statut.nomStatut} eq 'UNPAID'"
+																	class="progress-bar bg-success" role="progressbar"
+																	aria-valuenow="100" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 100%">
+																	<span class="sr-only">90% Complete</span>
+																</div>
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Réference:</label>
+																<div class="col-sm-8"
+																	th:text="${demande.referenceChifco}"></div>
+																<input type="hidden" name="referenceChifco"
+																	th:field="${demande.referenceChifco}" />
+
+																
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-from-label">Réference TT : </label>
+																<div class="col-sm-8" th:text="${demande.referenceTT}"></div>
+															   </div> 
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Catégorie:</label>
+																<div class="col-sm-8" name="categories"
+																	th:text="${demande.pack.categoriePack.categorieProduitInternetNom}"></div>
+															
+															</div>
+
+															  <div class="row">
+																<label class="col-sm-4 col-form-label">Pack:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${demande.pack?.title}"></div>
+																
+															</div>
+															  <div class="row">
+																<label class="col-sm-4 col-form-label">Offre:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${demande.pack?.offre?.title}"></div>
+																
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Type de
+																	paiement:</label>
+																<div class="col-sm-8"
+																	th:text="${demande.typePaiement?.nomTypePaiement}"></div>
+																
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">verification par Sms:</label>
+																
+																	<div class="col-sm-8">
+																		<span th:if="${demande.isSmsVerification}" style="color:green">Oui</span>
+																		<span th:unless="${demande.isSmsVerification}" style="color:red">Non</span>
+																	</div>
+																
+															</div>
+														</div>
+													</div>
+
+													<div class="card-block" >
+														<h4>Modification du demande de changement débit</h4>
+														<div class="card-block-body">
+															<div class="row">
+										                       <select class="form-control" id="newProductSelect" name="packId" th:required="true">
+										    <option value="" style="text-align:center;">Sélectionner un débit...</option>
+										    <!-- Iterate over packs list and create options -->
+										    <option th:each="pack : ${packs}"
+										            th:value="${pack.packId}"
+										            th:text="${pack.debitPack + ' Mbs - ' + pack.categoriePack?.categorieProduitInternetCode+' - '+pack.offre.title}"
+										            th:selected="${packActuel != null && pack.packId == packActuel.packId}">> 
+										    </option>
+										</select><br>
+										 <button type="button" id="demandeMigrationButton" class="btn btn-primary mt-3" data-toggle="modal" data-target="#myModal" > Modifier pack</button>
+
+
+														</div>
+
+													</div>
+
+												</div>
+											</div>
+				</div>
+									</div>
+						</div>
+					</div>
+
+				<!--<h2 class="text-center" th:text="${message}"></h2>-->
+				<input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+					<!-- the modal -->
+					 <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="myModalLabel" style="text-align: center;">Confirmation de modification</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+<form th:action="@{'/operationAbonnement/editdemandechdebit/' + ${operationId}}" method="POST">
+				
+				  <input type="hidden" id="selectedPackId" name="packId"></input>	
+				    <input type="hidden" id="operationId" name="operationId" th:value="${operationId}"></input>		
+                <div class="container mt-1 bg-light rounded border border-dark ">
+                    <div class="row">
+						 <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info"></h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info">Ancien pack</h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="new-info">--------------></h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="new-info">Nouveau pack</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+						<div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info">Pack </h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info" th:text="${abonnement.pack?.title}"> </h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info"></h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="new-info">Pack</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+						<div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info">Catégorie </h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info" th:text="${abonnement.pack?.categoriePack?.categorieProduitInternetNom}"> </h5> 
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info"></h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="new-info">Category</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+						<div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info">Débit </h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="old-info"  th:text="${abonnement.pack?.debitPack }"></h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            '<h5 class="old-info"></h5>
+                        </div>
+                        <div class="col-3 mb-2 mt-2">
+                            <h5 class="new-info">Débit</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+
+                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </form>
+			</div>
+        </div>
+        </div>		
+			</div>
+			</div></div>
+
+			</div>
+		</section>
+		<input type="hidden" name="fileempty" id="fileempty"
+			th:value="fileempty ?  ${fileempty} : ''" />
+	</section>
+</body>
+</html>
+		<!-- Pour afficher l'image dans une popup bootstrap -->
+												<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+												  <div class="modal-dialog " role="document">
+												    <div class="modal-content">
+												      <div class="modal-header">
+												        <h5 class="modal-title" id="myModalLabel">Image</h5>
+												        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												          <span aria-hidden="true">&times;</span>
+												        </button>
+												      </div>
+												      <div class="modal-body">
+												        <img id="imgModal" src="" style="width:100%">
+												      </div>
+												    </div>
+												  </div>
+												</div>
+												
+												
+
+<script th:inline="javascript">
+var message = /*[[${message}]]*/ null;
+let demandeId = /*[[${demande.operationId}]]*/ null;
+let packs = /*[[${packs}]]*/ "";
+let packActuel = /*[[${packActuel}]]*/ "";
+	 $(document).ready(function () {
+		 console.log("before");
+		var selectedPackId=packActuel.packId;
+		 console.log("selectedPackId:"+selectedPackId);
+		   $('#selectedPackId').val(selectedPackId);
+                $('.container .row:nth-child(2) .new-info').text(packActuel?.title );
+                $('.container .row:nth-child(3) .new-info').text(packActuel?.categoriePack?.categorieProduitInternetCode);
+                $('.container .row:nth-child(4) .new-info').text(packActuel?.debitPack);
+        $('#newProductSelect').change(function () {
+					 console.log("middle");
+             selectedPackId = $(this).val();
+            if (selectedPackId !== "") {      
+						 console.log("after");
+                $('#demandeMigrationButton').prop('disabled', false);
+                var selectedPack = packs.find(pack => pack.packId == selectedPackId);
+                $('#selectedPackId').val(selectedPackId);
+                $('.container .row:nth-child(2) .new-info').text(selectedPack ? selectedPack.title : '');
+                $('.container .row:nth-child(3) .new-info').text(selectedPack ? selectedPack.categoriePack?.categorieProduitInternetCode : '');
+                $('.container .row:nth-child(4) .new-info').text(selectedPack ? selectedPack.debitPack : '');
+            } else {
+                $('#demandeMigrationButton').prop('disabled', true);
+            }
+        });
+    });
+  $("#prev").click(function() { 
+    var imgSrc = $(this).attr('src');  
+    $('#imgModal').attr('src', imgSrc);
+    $('#myModal').modal('show');
+  });	
+	 $("#prev2").click(function() {
+		    var imgSrc = $(this).attr('src');
+		    $('#imgModal').attr('src', imgSrc);
+		    $('#myModal').modal('show');
+		  });
+	  function enableLoader(event) {
+		  $(this).prop('disabled', true);
+		  $(this).addClass('disabled').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement en cours...');
+		  $('.loader-container').show();
+		  $(this).closest('form').submit();
+		}
+	  
+	  function disableLoader(button) {
+	      button.prop('disabled', false);	      
+	      button.removeClass('disabled').html('Submit'); 
+	      $('.loader-container').hide();
+		}
+	   
+</script>

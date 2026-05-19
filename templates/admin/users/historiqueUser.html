@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Historique</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container card mt-3 p-3">
+	        <h1 class="mb-3">Historique de <span th:text="${detailHistoryUser.firstName + ' ' + detailHistoryUser.lastName}"></span></h1>
+	        <table id="historyTable" class="table table-hover">
+	            <thead>
+	                <tr>
+	                    <th>Date</th>
+	                    <th>Action</th>
+	                    <th>Modifier par</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr th:each="historyUser : ${historyUser}">
+	                    <td th:text="${#dates.format(historyUser.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
+	                    <td th:text="${historyUser.action}"></td>
+	                    <td  th:text="${historyUser.editBy.firstName + ' ' +historyUser.editBy.lastName + '(' + historyUser.editBy.codeUser + ')'}"></td>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</section>
+</body>
+</html>
+<script th:inline="javascript">
+$(document).ready(function() {
+    $('#historyTable').DataTable({
+        "language": {
+            "sEmptyTable": "Aucune donnée disponible dans le tableau",
+            "sInfo": "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
+            "sInfoEmpty": "Affichage de l'élément 0 à 0 sur 0 éléments",
+            "sInfoFiltered": "(filtré de _MAX_ éléments au total)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Afficher _MENU_ éléments",
+            "sLoadingRecords": "Chargement...",
+            "sProcessing": "Traitement...",
+            "sSearch": "Rechercher :",
+            "sZeroRecords": "Aucun élément correspondant trouvé",
+            "oPaginate": {
+                "sFirst": "Premier",
+                "sPrevious": "<",
+                "sNext": ">",
+                "sLast": "Dernier"
+            },
+
+        },
+		    "columnDefs": [
+		        { "orderable": false, "targets": [1, 2] }
+		    ]
+    });
+});
+</script>

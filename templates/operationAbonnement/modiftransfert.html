@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Demande de transfert </title>
+   <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+  <link rel="stylesheet" href="https://rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.css" />
+     <style>
+#tutorialTable_filter{
+display:none
+}
+</style>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Demande de transfert</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>      
+
+      <!-- another card -->
+        <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body" >   
+				
+					<!-- second part -->
+		<div class="row" >
+    <!-- Left column for subscriptionInfo -->
+    <div class="col-md-6">
+        <div id="subscriptionInfo"></div>
+    </div>
+    <!-- Right column for Demande de transfert -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div class="card-block-header">
+                        <h4>Modification de demande de transfert</h4>
+                    </div>
+                    <div class="card-block-body">
+						   <input type="hidden" name="operationId" th:value="${operationId}" />
+			<form class="form-sample" id="form-sample" th:action="@{/operationAbonnement/updateDemandeTransfert/{id}(id=${operationId})}" method="POST" action="#">	
+		 <input type="hidden" id="clientId" name="clientId" th:value="${demande.abonnementId}" />
+      
+            <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"> Gouvernorat*</label>
+                <div class="col-sm-9">
+                  <select
+                    id="gouvernorats"
+                    name="gouvernorats"
+                    class="form-control"
+                    th:required="true"
+                  >
+                    <option value="">Sélectionner un Gouvernorat</option>
+                    <option
+                      th:each="gov : ${gouvernorats}"
+                      th:value="${gov.gouvernoratId}"
+                      th:text="${gov.gouvernoratName}" th:selected="${gov.gouvernoratName == demande.gouvernorat.gouvernoratName}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"> Ville*</label>
+                <div class="col-sm-9">
+                  <select
+                    id="villes"
+                    name="villes"
+                    class="form-control"
+                    th:required="true"
+                  >
+                    <option value="">Sélectionner une ville</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Adresse *</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="adresse"
+                    id="adresse"
+                    placeholder="Adresse" th:value="${demande.adresse}"
+                    th:required="required"
+                    />                              
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Code postal *</label>
+                <div class="col-sm-9">
+                  <select
+                    type="tel"
+                    pattern="[0-9]{4}"
+                    class="form-control"
+                    name="codepostale"
+                    id="codepostale"
+                    placeholder="Code postal"
+                    th:required="required" 
+                  >
+                  <option value="">Sélectionner un code postal</option>
+                </select>
+                </div>
+              </div>
+            </div>
+          </div>
+               <div class="row">
+          <div class="col-md-10">
+              <div class="form-group row">
+                <label class="col-sm-5 col-form-label"
+                  >Position XY *</label
+                >
+                <div class="row col-sm-12">
+                <div class="col-md-10 pr-0">
+	                <input
+	                    type="text"
+	                    class="form-control"
+	                    name="positionxy" th:value="${demande.positionxy}"
+	                    placeholder="Position xy"
+	                    th:required="required"
+	                  />
+                </div>
+                <div class="col-md-2 pl-0">
+	                  <div class="input-group-prepend">
+	                    <span class="input-group-text btn btn-primary" id="basic-addon1"  data-toggle="modal" data-target="#modalTT"><i class="fas fa-map-marker-alt"></i></span>
+	                  </div>
+                  </div>                 
+                </div>
+              </div>
+            </div>
+            </div>
+<div class="row">
+    <div class="form-group col-sm-6">
+        <label class="col-sm-5 col-form-label">Résidence</label>
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-radio">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="residence" value="False" th:checked="${demande.proprietaire == False}"> Locataire
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-radio">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="residence" value="True"  th:checked="${demande.proprietaire == True}" checked> Propriétaire
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- <div class="form-group col-sm-6">
+        <label class="col-sm-5 col-form-label">Raccordement</label>
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-radio">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="raccordement" value="False" th:checked="${demande.hasRaccordement == False}"> Non
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-radio">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="raccordement" value="True" th:checked="${demande.hasRaccordement == True}" checked> Oui
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+</div>
+					<button type="submit" class="btn btn-primary" style="margin-right: 20px">Modifier demande de transfert</button>
+					</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div></div></div></div>
+      <!-- end of it -->      
+            </div>       
+              <input type="hidden" name="gouvernorats" th:value="${gouvernorats}" id="gouvernorats"/>
+                 <input type="hidden" id="demandeData" th:value="${demande}"/>
+                  <input type="hidden" id="codePostalOld" th:value="${codePostalOld}"/>
+                          <input type="hidden" id="villeOld" th:value="${villeOld}"/>
+             <input type="hidden" name="operationId" th:value="${operationId}" id="operationId"/>
+          <input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+					 <div class="modal fade" id="modalTT" tabindex="-1" role="dialog" aria-labelledby="modalTTlabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTTlabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <iframe src="https://geo.tunisietelecom.tn/mytaghtia" width="700" height="700" title="mytaghtia"></iframe>
+             
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+</section>
+</body>
+</html>
+<script>
+	 var ss="";
+	  var client="";
+	   var gouvernorats  =document.getElementById("gouvernorats").value;
+	    var operationId  =document.getElementById("operationId").value;
+	      var villeOld  =document.getElementById("villeOld").value;
+	        var postalcodeOld  =document.getElementById("codePostalOld").value;
+	        console.log(villeOld.villeName);
+	        console.log(postalcodeOld.name);
+
+  $(document).ready(function () {
+    $('.js-select2').select2({
+      allowClear: true,
+      width: 'style'
+    });
+          
+				ss="";           
+                $.ajax({
+                    type: 'GET',
+                    url: '/operationAbonnement/getabonnementtoTransfertInfo/'+operationId,
+                    data: { clientId: operationId },
+                 success: function (data) {                 
+                     $('#demandeMigrationButton').prop('disabled', true);
+                    var html =
+                      
+                        '<div class="col-md-12">' +
+                        '<div class="card-block">' +
+                        '<div class="card-block-header">' +
+                        '<h4>Informations principales</h4>' +
+                        '<div class="card-block-body">' +
+                        '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Prenom:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.firstName + '</div>' +
+                        '</div>' +
+                        '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Nom:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.lastName + '</div>' +
+                        '</div>' +
+                           '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Cin:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.cin + '</div>' +
+                        '</div>' +
+                            '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Gouvernorat:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.gouvernorat?.gouvernoratName + '</div>' +
+                        '</div>' +
+                          '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Ville:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.ville?.villeName + '</div>' +
+                        '</div>' +
+                           '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Adresse:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.adresse+ '</div>' +
+                        '</div>' +
+                           '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Code Postale:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.codePostale?.code+ '</div>' +
+                        '</div>' +
+                         '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Téléphone Mobile:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.telMobile+ '</div>' +
+                        '</div>' +
+                          '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Téléphone fixe:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.telFixe+ '</div>' +
+                        '</div>' +
+                         '<div class="row mb-2">' +
+                        '<label class="col-sm-4 col-form-label">Situation familiale:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.situationFamiliale+ '</div>' +
+                        '</div>' +
+       					 '<h4>Informations forfait</h4>' +
+            			 '<div class="row mt-2">' +
+                        '<label class="col-sm-4 col-form-label">Status demande:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.statut.designation + '</div>' +
+                        '</div>' +
+                         '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Code Client:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.referenceClient + '</div>' +
+                        '</div>' +
+                        '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Pack Actuel:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.pack.title + '</div>' +
+                        '</div>' +
+                        '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Offre:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.pack.offre?.title + '</div>' +
+                        '</div>' +
+                          '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Category:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.pack.categoriePack?.categorieProduitInternetNom + '</div>' +
+                        '</div>' +
+                        '<div class="row">' +
+                        '<label class="col-sm-4 col-form-label">Type de paiement:</label>' +
+                        '<div class="col-sm-8">' + data.abonnement.typePaiement.nomTypePaiement + '</div>' +
+                        '</div>' +                       
+                        '</div>' +
+                        '</div>' +            
+                        '</div>';
+                   $('#subscriptionInfo').append(html);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching subscription information:', error);
+                        $('#demandeMigrationButton').prop('disabled', true);
+                    }
+                });   
+    });
+    
+ $(document).ready(function() {
+    function sendAjaxRequest() {
+        var gouvernoratId = $("#gouvernorats").val();
+        $.get("/client/getgouvernorats/" + gouvernoratId, function(data) {
+            $("#villes").empty();
+            if (data.length !== 0) {
+                data.forEach(function(item, i) {
+                       var selected = item.villeName === villeOld ? 'selected' : '';
+                        var option = `<option ${selected} value='${item.villeId}'>${item.villeName}</option>`;                
+                             $("#villes").append(option);
+                });
+            }
+            $("#villes").change();
+        });
+    }
+
+  function sendAjaxRequestCodePostal() {
+            var villeId = $("#villes").val();
+            if (villeId) {
+                $.get("/client/codepostale/" + villeId, function(data) {
+                    $("#codepostale").empty();
+                    data.forEach(function(item) {
+                        var selected = item.name === postalcodeOld ? 'selected' : '';
+                        var option = `<option ${selected} value='${item.postalCodeId}'>${item.name}</option>`;
+                        $("#codepostale").append(option);
+                    });
+                });
+            } else {
+                $("#codepostale").empty();
+            }
+        }
+
+    sendAjaxRequest();
+    sendAjaxRequestCodePostal();
+    $("#gouvernorats").change(function() {
+        sendAjaxRequest();
+    });
+    $("#villes").change(function() {
+        sendAjaxRequestCodePostal();
+    });
+});
+
+</script>

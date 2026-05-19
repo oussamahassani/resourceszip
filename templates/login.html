@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/devtools-detector/2.0.14/devtools-detector.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeJlmwnAAAAANqZz6--ntCDGsu2U--3hL_JtPmh"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" th:href="@{/vendor/fontawesome-free/css/all.min.css}" />
+    <!--script src="https://raw.githubusercontent.com/sindresorhus/devtools-detect/master/index.js"></script-->
+    <style th:inline="text">
+        body {
+            background: url([[@{/img/Bg.jpg}]]) no-repeat center center fixed;
+        }
+    </style>
+    <style>
+        .login-page {
+            -ms-flex-align: center;
+            align-items: center;
+            background-color: #e9ecef;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            height: 100vh;
+            -ms-flex-pack: center;
+            justify-content: center;
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            text-align: center;
+        }
+
+        .login-box {
+            width: 360px;
+        }
+
+        .login-logo {
+            font-size: 2.1rem;
+            font-weight: 300;
+            margin-bottom: 0.9rem;
+            text-align: center;
+        }
+
+        .login-box-msg {
+            margin: 0;
+            padding: 0 20px 20px;
+            text-align: center;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #590E9C;
+            background-clip: border-box;
+            border: 0 solid rgba(0, 0, 0, .125);
+            border-radius: 0.25rem;
+            box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+            margin-bottom: 0;
+        }
+
+        .login-card-body {
+            background-color: #fff;
+            border-top: 0;
+            color: #666;
+            padding: 20px;
+            color: #590E9C;
+        }
+
+        .btn-primary {
+            border: 1px solid #590E9C;
+            background-color: #590E9C;
+            color: #fff;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary.active,
+        .btn-primary:active,
+        .btn-primary:active:focus {
+            border: 1px solid #590E9C;
+            background-color: #fff;
+            color: #590E9C;
+        }
+
+        .form-control {
+            height: 50px;
+            padding: 10px 12px;
+
+        }
+
+        .brand-image {
+            margin-bottom: 40px;
+        }
+
+        .input-group .center-icon {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false" class="login-page">
+
+    <div class="login-box">
+        <img src="/img/logo chifco.png" alt="Nety" class="brand-image">
+        <div class="card">
+            <div class="card-body login-card-body">
+                <br /><br />
+                <form onsubmit="return  validateCaptcha(event)" th:action="@{/login}" method="POST" class="form-signin">
+                    <h3 class="form-signin-heading">LOGIN PAGE <span th:text="${serverName}"></span></h3>
+
+                    <br />
+                    <div align="center" th:if="${param.error}">
+                        <p style="font-size: 20; color: #FF1C19;">Le nom d'utilisateur ou le mot de passe est invalide
+                        </p>
+                    </div>
+                    <!-- Hidden input field to capture the 'redirect' parameter -->
+                    <input type="hidden" id="redirectInput" name="redirect">
+                    <div align="center" th:if="${param.invalidsession}">
+                        <p style="font-size: 20; color: #FF1C19;">Session expirée</p>
+                    </div>
+
+                    <input type="text" id="username" name="username" th:placeholder="Login" class="form-control"
+                        required /> <br />
+                    <div class="input-group mb-3">
+                        <input type="password" placeholder="Mot de passe" id="name" name="password"
+                            class="form-control" required /> <br />
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="togglePassword"> <i class="fa fa-eye"></i> </span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="recaptchaToken" name="recaptchaToken">
+                    <!-- This will store the reCAPTCHA token -->
+
+                    <!--  <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>  Replace with your reCAPTCHA site key -->
+
+
+                    <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit"
+                        th:text="Login"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<!--<script
+src='https://cdn.jsdelivr.net/npm/disable-devtool'
+disable-devtool-auto
+md5="1de1d66b7918530fd194d914ea8d66e1"
+></script>-->
+<script th:inline="javascript">
+    const togglePasswordButton = document.getElementById("togglePassword");
+
+    function getParameterByName(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+
+    togglePasswordButton.addEventListener("click", function () {
+        //function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("name");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            togglePasswordButton.innerHTML = '<i class="fas fa-eye-slash"></i>'; // Eye-slash icon
+
+        } else {
+            passwordInput.type = "password";
+            togglePasswordButton.innerHTML = '<i class="fas fa-eye"></i>'; // Eye icon
+
+        }
+        //	}
+
+
+    })
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function (e) {
+        if (event.keyCode == 123) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            return false;
+        }
+    }
+
+    /*  function validateCaptcha() {
+          var response = grecaptcha.getResponse();
+          if (response.length === 0) {
+            alert("Please verify that you are not a robot by completing the CAPTCHA.");
+            return false;
+          }
+          // If the CAPTCHA is validated, you can proceed with the login process.
+          return true;
+        }
+    */
+
+    async function validateCaptcha(event) {
+
+        event.preventDefault();
+        try {
+            const token = await grecaptcha.execute('6LeJlmwnAAAAANqZz6--ntCDGsu2U--3hL_JtPmh', { action: 'login' });
+            document.getElementById('recaptchaToken').value = token;
+           
+            const name=	document.getElementById('name').value 
+            const email=	document.getElementById('username').value 
+            
+             const obj = {token,name,email}
+            console.log(obj)
+            document.getElementById('redirectInput').value = getParameterByName('redirect');
+            const response = await $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/validateToken",
+                data: JSON.stringify(obj), // Sending the token as a JSON object
+                dataType: "json",
+                // timeout: 100000,
+            });
+
+            // Handle the response here
+
+            if (response) {
+            	console.log(response)
+                // Set the value of the hidden input field with the 'redirect' parameter from the URL
+                event.target.submit();
+            }
+            // return response;
+        } catch (e) {
+            console.log("ERROR: ", e);
+            return false;
+        }
+    }
+
+</script>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Clés antivirus</title>
+<link rel="stylesheet" href="/css/customvariablestyle.css">
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+<section class="content">
+        <div class="container-fluid">
+			          <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <h1 class="m-0">Liste des clés </h1>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+          </div>
+          
+          <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body m-2">	                
+                 <div class="mb-3">
+                  <a data-toggle="modal" id="togglebutton" 
+	                       class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+	                            class="fas fa-filter fa-sm text-white-50"></i> Filtre</a> 
+                      <a
+                    	data-toggle="modal" th:attr="data-target='#importModal'"
+                       class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                            class="fas fa-upload fa-sm text-white-50"></i> Importer des clé </a>
+                    
+                    <a
+                    	id="downloadenmasse" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                            class="fas fa-download fa-sm text-white-50"></i> Exporter</a>
+                            
+						<form id="myExtractEnMasseForm" method="GET" action="extractenmasse" style="display: none;">
+						  <!-- The fields for extraction en masse -->
+						  <input type="hidden" name="key" id="key" />
+						  <input type="hidden" name="referenceClient" id="referenceClientInput" />
+						  <input type="hidden" name="etat" id="etatInput" />
+						  <input type="hidden" name="statut" id="statutInput" />
+						  <input type="hidden" name="startAffectedDate" id="startAffectedDateInput" />
+						  <input type="hidden" name="endAffectedDate" id="endAffectedDateInput" />
+						  <input type="hidden" name="startCreatedDate" id="startCreatedDateInput" />
+						  <input type="hidden" name="endCreatedDate" id="endCreatedDateInput" />
+						   <input type="hidden" name="type" id="type" />
+						</form>    
+                            
+                </div>
+                
+                <form id="showMe3" method="get" autocomplete="off">
+                	<div class="row">
+                		  <div class="col-md-3">
+	                        <label class="col-form-label" for="key">Clé </label>
+	                        <input
+	                          id="textsearch"
+	                          type="text"
+	                          name="key"
+	                          placeholder="Clé "
+	                          class="form-control"
+	                          th:onchange="|onchangeSearch(event)|"
+	                        />
+	                    </div>
+                		<div class="col-md-3">
+                		  <label class="col-form-label" for="key">Liste des clients</label>
+				            <input 
+				            	class="form-control"  
+				            	autocomplete="off" 
+				            	type="text" 
+				            	list="referenceList" 
+				            	id="referenceClient" 
+				            	name="referenceClient" 
+				            	th:onchange="|onchangeSearch(event)|" 
+				            	placeholder="Veuillez entrer le nom ou la référence du client"
+				            >		
+							<datalist id="referenceList">
+							    <option th:each="abonnement : ${listeAbonnement}" th:value="${abonnement[2]}" th:text="${abonnement[0]}+' '+${abonnement[1]}"></option>
+							    <!-- Première colonne (Prénom) -->
+							    <!-- Deuxième colonne (Nom) -->
+							    <!-- Troisième colonne (Référence Client) -->
+							</datalist>
+				        </div>
+				        <div class="col-md-3">                      
+	                      <label class="col-form-label" for="etat">État de la clé </label>
+							<select  class="form-control" id="etat" name="etat" th:onchange="|onchangeSearch(event)|">
+							  <option value = ''>Etat</option>
+							  <option value="True">Activé</option>
+							  <option value="False">Désactivé</option>
+							</select>
+ 						</div> 
+ 						<div class="col-md-3">                      
+	                      <label class="col-form-label" for="statut">Statut ( Affecté / Non affecté )</label>
+							<select  class="form-control" id="statut" name="statut" th:onchange="|onchangeSearch(event)|">
+							  <option value = ''>Statut</option>
+							  <option value="True">Affecté</option>
+							  <option value="False">Non affecté</option>
+							</select>
+ 						</div> 
+ 					<div class="col-md-3">                      
+							  <label class="col-form-label" for="type">Type</label>
+								<select class="form-control" id="type" name="type" th:onchange="|onchangeSearch(event)|">
+							    <option value="">Type</option>
+							     <option th:each="type : ${types}"
+							      th:value="${type}" th:text="${type}">
+							      </option>
+							  
+							  </select>
+							</div>
+
+ 					<div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes"
+                          >Date d'affectation
+                        </label>
+						<div class="input-group">
+						      <input type="date" class="form-control" id="startAffectedDate" name="startAffectedDate" placeholder="Date de début" th:onchange="|onchangeSearch(event)|"/>
+						      <div class="input-group-prepend input-group-append">
+						        <span class="input-group-text">à</span>
+						      </div>
+						      <input type="date" class="form-control" id="endAffectedDate" name="endAffectedDate" placeholder="Date de fin" th:onchange="|onchangeSearch(event)|"/>
+						    </div>
+                      </div>
+                      <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes"
+                          >Date d'insertion
+                        </label>
+						<div class="input-group">
+						      <input type="date" class="form-control" id="startCreatedDate" name="startCreatedDate" placeholder="Date de début" th:onchange="|onchangeSearch(event)|"/>
+						      <div class="input-group-prepend input-group-append">
+						        <span class="input-group-text">à</span>
+						      </div>
+						      <input type="date" class="form-control" id="endCreatedDate" name="endCreatedDate" placeholder="Date de fin" th:onchange="|onchangeSearch(event)|"/>
+						    </div>
+                      </div>    
+				  </div>
+				  
+				  	<div class="text-center">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm mt-3"
+                          th:onclick="onclicksherh(event)"
+                          id="buttonRecherche"
+                        >
+                          Rechercher
+                        </button>
+                     </div>
+                </form>
+                
+                	<div  id="alert-danger" th:if="${EXCEL_TABLE_ERROR != null}" class="alert alert-danger mr-1 ml-1">
+					    <p th:text="${EXCEL_TABLE_ERROR}"></p>
+					</div>
+                            
+						<table id="antivirusTable" class="table table-bordered">
+						        <thead>
+						            <tr>
+						                <th>Clé</th>
+						                <th>Durée</th>
+						                <th>Client</th>
+						                <th>Date d'affectation</th>
+						                <th>Affectée par</th>
+						                <th>Date d'insertion</th>
+						                <th>Inséré par</th>
+						                <th>Etat</th>
+						                  <th>Type</th>
+						                <th>Action</th>
+						            </tr>
+						        </thead>
+						    </table>
+                </div>
+              </div>
+            </div>
+          </div>
+  </div>
+  
+                    <div sec:authorize="hasAnyAuthority('CREATE_MODEM')" 
+                      class="modal fade" th:attr="id='importModal'" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel2">Importation des clés </h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+
+                                    <form th:action="@{/antiVirus/importKeys}" method="POST" enctype="multipart/form-data">
+
+                                        <div class="form-group">
+                                            <label for="fileInput">Sélectionner le fichier Excel :</label>                                        
+                                            <input class="form-control" id="file" type="file" name="file"/ accept=".xlsx">
+                                        </div>
+										<p class="mt-2">merci de respecter <a href="/file/TemplateAddAntiVirusKey.xlsx">cette template</a></p>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-primary" name ="uploadXls" id="uploadXls" type="submit">Confirmer</button>
+                                            <button class="btn btn-danger" type="button" data-dismiss="modal">Annuler
+                                            </button>
+                                        </div>
+
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div> 
+</section>
+
+<!-- Le modèle Bootstrap -->
+<div class="modal" id="modalAffecter">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Contenu du modèle -->
+      <div class="modal-header">
+        <h5 class="modal-title">Affecter la clé à : <span id="modalAffecterId"></span></h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+      <form th:action="@{affecter}" method="POST">
+      <input type="hidden" name="keyId" id="keyId">
+          <div class="row">
+          <div class="col-md-3">
+            <strong>Clé de licence :</strong>
+          </div>
+          <div class="col-md-8">
+            <span id="licenseKey"></span>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <label for="prenom">Liste des clients :</label>
+          </div>
+          <div class="col-md-8">
+            <input class="form-control"  autocomplete="off" type="text" list="referenceList" id="referenceClient" name="referenceClient">		
+			<datalist id="referenceList">
+			    <option th:each="abonnement : ${listeAbonnement}" th:value="${abonnement[2]}" th:text="${abonnement[0]}+' '+${abonnement[1]}"></option>
+			    <!-- Première colonne (Prénom) -->
+			    <!-- Deuxième colonne (Nom) -->
+			    <!-- Troisième colonne (Référence Client) -->
+			</datalist>
+          </div>
+        </div>	
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" name ="buttonAffectation" id="buttonAffectation">Affecter</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+          <input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+</section>
+</body>
+
+</html>
+
+<script th:inline="javascript">
+var oTable;
+$('.loader-container').show();
+
+oTable = $("#antivirusTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    searching: true,
+    // scrollY:500,
+    ajax: "/antiVirus/getAllAntivirusKey",
+    lengthMenu: [
+      [10, 20, 50],
+      [10, 20, 50],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+      //Make your callback here.
+     // updatecheklist();
+      //document.getElementById("tutorialTable_filter").style.opacity = "0";
+    },
+    columnDefs: [
+
+  		  {
+    		    targets: [0, 1, 2, 3, 4, 5, 6, 7],
+    		    orderable: false
+    		  }
+    ],
+
+    columns: [
+
+
+         {   
+          	data: null,
+           	render: function (data, type, row) {
+              
+              	 return row.licenseKey          
+              },
+           },
+
+         {   
+         	data: null,
+          	render: function (data, type, row) {
+             
+             	 return row.duree+ " mois"           
+             },
+          },
+         {   
+        	data: null,
+         	render: function (data, type, row) {
+             if(row.abonnement != null ){
+                return "<span class='badge badge-secondary'>" + row.abonnement.firstName + " " + row.abonnement.lastName + " ( " + row.abonnement.referenceClient + " )</span>"
+             }
+             else if(row.active == false){
+            	 return "<span class='badge badge-danger'>Désactivé</span>"
+             }else{
+            	 return "<span class='badge badge-primary'>Disponible</span>" 
+             }            
+            },
+         },
+         {
+             data: null,
+             render: function (data, type, row) {
+                 if (row.dateAffectation) {
+                     var date = new Date(row.dateAffectation);
+                  // Récupération des composants de la date
+                     var jour = date.getDate();
+                     var mois = date.getMonth() + 1; // Les mois sont indexés à partir de 0, donc on ajoute 1
+                     var annee = date.getFullYear();
+                     
+                  // Formatage de la date
+                     var dateFormatee = (jour < 10 ? '0' + jour : jour) + '/' + (mois < 10 ? '0' + mois : mois) + '/' + annee;
+                  
+                     return dateFormatee;
+                   } else {
+                     return "";
+                   }
+             },
+           },
+           {
+               data: null,
+               render: function (data, type, row) {
+                   if (row.affectedBy != null) {
+                       return row.affectedBy.firstName+" "+row.affectedBy.lastName;
+                     } else {
+                       return "";
+                     }
+               },
+             },
+             {
+                 data: null,
+                 render: function (data, type, row) {
+                     if (row.createdDate) {
+                         var date = new Date(row.createdDate);
+                      // Récupération des composants de la date
+                         var jour = date.getDate();
+                         var mois = date.getMonth() + 1; // Les mois sont indexés à partir de 0, donc on ajoute 1
+                         var annee = date.getFullYear();
+                         
+                      // Formatage de la date
+                         var dateFormatee = (jour < 10 ? '0' + jour : jour) + '/' + (mois < 10 ? '0' + mois : mois) + '/' + annee;
+                      
+                         return dateFormatee;
+                       } else {
+                         return "";
+                       }
+                 },
+               },
+           {
+               data: null,
+               render: function (data, type, row) {
+                   if (row.createdBy != null) {
+                       return row.createdBy.firstName+" "+row.createdBy.lastName;
+                     } else {
+                       return "";
+                     }
+               },
+             },
+         {   
+         	data: null,
+          	render: function (data, type, row) {
+              if(row.active == true ){
+                 return "<span class='badge badge-success'>Activé</span>"
+              }
+              else
+              return "<span class='badge badge-danger'>Désactivé</span>"
+             }
+          },
+          {   
+         	data: null,
+          	render: function (data, type, row) {
+              if(row.type  ){
+                 return row.type;
+              }
+              else
+              return "";
+             }
+          },
+          {   
+           	data: null,
+            	render: function (data, type, row) {
+            		var html =""
+            		if(row.abonnement == null){
+            			if(row.active == true){
+            				html += "<button class='btn btn-outline-danger' onclick='changeEtat(" + row.id + ")'> <i class=\"fas fa-times\"></i></button>";
+                        }else{
+                        	html += "<button class='btn btn-outline-success' onclick='changeEtat(" + row.id + ")'><i class='fas fa-check'></i></button>";
+                        }
+            		}                                     
+                    if(row.abonnement == null && row.active == true){
+                    	html += "<button class='btn btn-outline-primary ml-2' onclick='ouvrirModalAffecter(" + row.id + ", \"" + row.licenseKey + "\")'></i> <i class='fas fa-arrow-right'></i><i class='fas fa-user'></button>";
+                  }                    
+
+                    return html;
+
+               },"width": "12%"
+          
+            },
+
+    ],
+  });
+oTable.on('processing.dt',function(e, settings, processing) {
+    if (processing) {
+        // afficher le spinner
+		  $('.loader-container').show();
+      } else {
+        // cacher le spinner
+		  $('.loader-container').hide();
+      }
+  });					
+
+$('#uploadXls').on('click', function(event) {  
+	  // Désactiver le bouton
+	  $(this).prop('disabled', true);
+	  
+	  // Ajouter la classe qui affiche le chargeur
+	  $(this).addClass('disabled').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement en cours...');
+	  
+	  // Afficher le conteneur de chargeur
+	  $('.loader-container').show();
+	  
+	  // Soumettre le formulaire
+	  $(this).closest('form').submit();
+	});
+	
+
+
+function changeEtat(id) {
+    $.ajax({
+        type: 'POST', 
+        url: 'changeEtat', 
+        data: { id: id }, // Données à envoyer au contrôleur (la valeur row.id)
+        success: function (response) {
+        	// Refresh data table
+            var oTable = $('#antivirusTable').DataTable();
+            // Reload the table
+            oTable.ajax.reload();
+        },
+        error: function (error) {
+            // Gérer les erreurs éventuelles
+        }
+    });
+}
+
+//Fonction pour ouvrir le modèle "Affecter"
+function ouvrirModalAffecter(id, licenseKey) {
+  $('#licenseKey').text(licenseKey);
+  document.getElementById('keyId').value = id;
+  $('#modalAffecter').modal('show'); // Ouvrir le modèle
+}
+
+function changeEtat(id) {
+    $.ajax({
+        type: 'POST', 
+        url: 'changeEtat', 
+        data: { id: id }, // Données à envoyer au contrôleur (la valeur row.id)
+        success: function (response) {
+        	// Refresh data table
+            var oTable = $('#antivirusTable').DataTable();
+            // Reload the table
+            oTable.ajax.reload();
+            $(document).Toasts('create', {
+      		  title: "Succès",
+      		  body: "Le changement d'état de la clé antivirus a été effectué avec succès.",
+      		  class: 'bg-success',
+      		  autohide:true,
+      		  delay: 10000
+      		})
+        },
+        error: function (error) {
+            // Gérer les erreurs éventuelles
+        }
+    });
+}
+
+//les messages d'alerte
+var messagenotif = document.getElementById("message").value ;
+const messages = [
+	{ message: "CLIENT_NOT_FOUND", title: "Erreur", body: "Le client n'a pas été trouvé.", class: "danger" },
+	{ message: "KEY_NOT_FOUND", title: "Erreur", body: "La clé n'a pas été trouvée.", class: "danger" },
+	{ message: "KEY_DISABLE", title: "Erreur", body: "La clé est désactivée.", class: "danger" },
+	{ message: "KEY_ALREADY_USED", title: "Erreur", body: "La clé a déjà été utilisée.", class: "danger" },
+	{ message: "KEY_ASSIGN_SUCCESS", title: "Succès", body: "Le changement d'état de la clé antivirus a été effectué avec succès.", class: "success" },
+	{ message: "EXCEL_TABLE_ERROR", title: "Erreur", body: "Impossible d'importer ce fichier : Le contenu de ce fichier n'est pas valide.", class: "danger" },
+	{ message: "CLIENT_ALREADY_HAS_KEY", title: "Erreur", body: "Ce client a déjà une clé.", class: "danger" }
+	];
+
+	for (const message of messages) {
+		if (messagenotif === message.message) {
+			$(document).Toasts('create', {
+			title: message.title,
+			body: message.body,
+			class: 'bg-' + message.class,
+			autohide: true,
+			delay: 10000
+			});
+		}
+	}
+	
+	//filtre key
+	$("#togglebutton").click(function () {
+	    $("#showMe3").toggle();
+	  });
+	
+	var key = "";
+	var referenceClient = "";
+	var etat = "";
+	var statut = "";
+	var startAffectedDate = "";
+	var endAffectedDate = "";
+	var startCreatedDate = "";
+	var endCreatedDate = "";
+	var type="";
+	
+	function onchangeSearch(event) {
+	    let name = event.target.name;
+	  
+	    switch (name) {
+	      case "key": {
+	    	  key = event.target.value;
+	        break;
+	      }
+	      case "referenceClient": {
+	    	  referenceClient = event.target.value;
+	        break;
+	      }
+	      case "etat": {
+	    	  etat = event.target.value;
+	        break;
+	      }
+	      case "statut": {
+	    	  statut = event.target.value;
+	        break;
+	      }
+	      case "startAffectedDate": {
+	    	  startAffectedDate = event.target.value;
+	        break;
+	      }
+	      case "endAffectedDate": {
+	    	  endAffectedDate = event.target.value;
+	        break;
+	      }
+	      case "startCreatedDate": {
+	    	  startCreatedDate = event.target.value;
+	        break;
+	      }
+	      case "endCreatedDate": {
+	    	  endCreatedDate = event.target.value;
+	        break;
+	      }
+	       case "type": {
+	    	  type = event.target.value;
+	        break;
+	      }
+	    }
+	    
+	  }
+	
+	function onclicksherh(event) {
+		  event.preventDefault();
+		  $("#antivirusTable")
+		    .DataTable()
+		    .column(0)
+		    .search(
+		      JSON.stringify({
+		    	  key: key,
+		    	  referenceClient: referenceClient,
+		    	  etat : etat,
+		    	  statut : statut,
+		    	  startAffectedDate : startAffectedDate,
+		    	  endAffectedDate : endAffectedDate,
+		    	  startCreatedDate : startCreatedDate,
+		    	  endCreatedDate : endCreatedDate,
+		    	  type:type
+		      })
+		    )
+		    .draw();
+	}
+	
+	  $("#downloadenmasse").click(function (e) {
+		    e.preventDefault();
+		 
+		   // Mettre à jour les valeurs des champs cachés avec les valeurs des variables
+		   	  document.getElementById("key").value = key;
+			  document.getElementById("referenceClientInput").value = referenceClient;
+			  document.getElementById("etatInput").value = etat;
+			  document.getElementById("statutInput").value = statut;
+			  document.getElementById("startCreatedDateInput").value = startCreatedDate;
+			  document.getElementById("endCreatedDateInput").value = endCreatedDate;
+			  document.getElementById("startAffectedDateInput").value = startAffectedDate;
+			  document.getElementById("endCreatedDateInput").value = endCreatedDate;
+			    document.getElementById("type").value = type;
+		      
+		      // Soumettre le formulaire
+		      $("#myExtractEnMasseForm").submit();
+	  });
+</script>

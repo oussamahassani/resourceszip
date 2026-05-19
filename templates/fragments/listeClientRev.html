@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style>
+
+    
+    .paginate_button.active .page-link {
+      background-color: grey !important;
+      border: 1px solid red !important;
+    }
+  </style>
+  </head>
+<body th:fragment="clientlist(userid)">
+  <section class="content">
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <div>
+            <div class="blocy">
+              <table
+                id="tutorialTableClient"
+                class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+              >
+                <!-- Header Table -->
+                <thead class="table dataTable no-footer">
+                  <tr>
+                  <th>CIN</th>
+                        <th>Nom et Prénom </th>
+                        <th>Adresse</th>
+                        <th>Ville</th>
+                        <th>Téléphone</th>
+                        <th>Statut</th>
+                        
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+    <script th:inline="javascript">
+        var oTable;
+  
+       var iduser = document.getElementById('userid').value;
+      
+        oTable = $("#tutorialTableClient").DataTable({
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            order: [],
+            responsive: {
+              details: {
+                type: "column",
+              },
+            },
+            searching: false,
+        
+            fixedHeader: true,
+            // scrollY:500,
+            ajax: "/payement/viewDetailsRecapClient/"+iduser,
+            lengthMenu: [
+              [10, 20, 50],
+              [10, 20, 50],
+            ],
+        
+            language: {
+              lengthMenu: "Affichage _MENU_ par page",
+              zeroRecords: "Rien trouvé - désolé",
+              emptyTable: "aucune donnée disponible",
+              info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+              infoEmpty: "Aucun enregistrement disponible",
+              paginate: {
+                first: "Première",
+                last: "Dernière",
+                next: ">>",
+                previous: "<<",
+              },
+              search: "Chercher:",
+            },
+            initComplete: function (json) {
+              //Make your callback here.
+            //  document.getElementById("tutorialTable_filter").style.display = "none";
+            },
+        
+            columnDefs: [
+              // {
+              //   className: "dtr-control",
+              //   orderable: false,
+              //   targets: 0,
+              // },
+              // { orderable: false, targets: 10 },
+            ],
+        
+            columns: [
+            
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.cin) return `<a href='/client/viewclient/`+row.clientid+`'><i>
+                                        `+row.cin+`</i></a>`
+                                        
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.lastName) return row.lastName  + " " +row.firstName ;
+                  else return "";
+                },
+              },
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.adresse) return row.adresse;
+                  else return "";
+                },
+              },
+              
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.ville &&  row.gouvernorat == null)
+                    return  row.ville.gouvernoratName
+                  else  return row.ville.villeName + ' : ' +row.gouvernorat.gouvernoratName;
+                },
+              },
+             
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.telFixe)
+                    return  row.telFixe 
+                  else return "";
+                },
+              },
+ 
+              { data: null ,
+    	  render: function (data, type, row) {
+    		 
+          	if(row.enabled == true )
+          		return     '<span class="badge badge-success">Activé</span>'  ;
+          else if(row.enabled == false)
+          		 return    '<span class="badge badge-danger">Désactivé</span>' 
+          	else
+          		
+             return '<span class="badge badge-danger">Désactivé</span>';
+          }},
+          
+
+
+        
+              
+            ],
+          });
+        </script>
+</body>
+</html>

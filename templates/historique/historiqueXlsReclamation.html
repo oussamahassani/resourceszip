@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+  <title>Historique Réclamations XLS</title>
+     <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+     <style>
+#tutorialTable_filter{
+display:none
+}
+</style>    
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <div class="container-fluid">
+					<div class="content-header">     
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Liste des imports réclamations clients technique</h1>
+                </div>
+            </div> 
+    </div>
+ <div class="row">
+            <div class="col-12">
+          
+              <div class="card shadow mb-4">
+              <div class="d-flex">
+                <div class="blocFilter">
+                   <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+
+                </div>
+                  
+                        
+                  </div>
+                    <form id="showMe3" method="get" >
+
+                    <div class="row">
+
+                      <div class="col-sm-6 col-md-3" >
+					  <label class="col-form-label" for="agent">Crée par</label>
+					  <select id="creepar" name="creepar" class="form-control js-select2"
+					          data-control="select2" data-placeholder="Select User"
+					          th:onchange="|onchangeSearch(event)|">
+					    <option value="">Crée par</option>
+					    <option th:each="agent : ${creepar}"
+					            th:value="${agent.userid}"
+					            th:text="${agent.firstName + ' ' + agent.lastName + (agent.interlocuteur != null ? ' ' + agent.interlocuteur : '')}">
+					    </option>
+					  </select>
+					</div>
+                     <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date de création CRM: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datedebut" id="datedebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datefin" id="datefin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                            
+                      </div>
+
+                          <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)">
+                          Rechercher
+                        </button>
+                      </div>
+                      </form>
+                             </div>
+                             </div>
+                             </div>
+
+                    <div class="card shadow mb-4">
+						    <div class="card-body">
+						        <div class="table-responsive">
+						            <table
+						                class="table table-bordered table-striped dataTable"
+						                id="dataTable"
+						                cellspacing="0"
+						                width="100%">
+						                <thead>
+						                    <tr>
+						                        <th>Date</th>
+						                        <th>Nom de fichier</th>
+						                        <th>Nom original</th>
+						                        <th>Succès ligne</th>
+						                        <th>Erreur ligne</th>
+						                        <th>Total ligne</th>
+						                        <th>Créé par</th>
+						                        <th>Détail</th>
+						                    </tr>
+						                </thead>
+						            </table>
+						        </div>
+						    </div>
+						</div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+	let creepar="";
+	let datedebut="";
+	let datefin ="";
+	$("#togglebutton").click(function () {
+
+    $("#showMe3").toggle();
+  });
+  function onchangeSearch(event) {
+    let name = event.target.name;
+    switch (name) {
+    
+ 
+      case "datefin": {
+    	  datefin = event.target.value;
+          break;
+        }
+        case "datedebut": {
+        	datedebut = event.target.value;
+        break;
+      } 
+        case "creepar" : {
+        	creepar = event.target.value ;
+        	break ; 
+        }
+
+        
+    }}
+    
+function onclicksherh(event) {    
+    event.preventDefault();
+      changeRecherche = true;
+    $("#dataTable")
+      .DataTable()
+      .column(0)
+      .search(
+        JSON.stringify({
+        		
+			 datefin:datefin,
+	          datedebut:datedebut,
+	     
+	          creepar : creepar
+	          
+        })
+      )
+      .draw();
+       
+    changeRecherche = false;
+  } 
+var oTable;
+      
+oTable = $("#dataTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: false,
+    searching:true,
+    order: [],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+
+    fixedHeader: true,
+    ajax: "/historyXls/getAllHistoryReclamationXls",
+    lengthMenu: [
+        [10, 20, 50 , 100 , 200,500],
+        [10, 20, 50 , 100 , 200,500],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+    
+    },
+
+    columnDefs: [
+      {
+        className: "dtr-control",
+        orderable: false,
+        targets: 0,
+      },
+    ],
+
+    columns: [
+
+            {
+        data: null,
+        render: function (data, type, row) {
+          return new Date(row.createdDate).toLocaleDateString("en-GB") ;
+         
+        },
+      },
+     
+
+      {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.nameFile)
+        		return `<a href='/xlsfile/`+row.nameFile+`' target="_blank"><i>
+                                        `+row.nameFile+`</i></a>`;
+      
+        	else
+        		
+           return "";
+        },
+      },
+      {
+        data: "origineNameFile",
+
+      },
+
+      {
+        data: "successRow",
+
+      },
+
+          
+      {
+        data: "errorRow",
+
+      },
+      {
+        data: "totalRow",
+
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.user)
+        		return row.user.firstName+" "  + row.user.lastName + "("+ row.user.codeUser+")" ;
+      
+        	else
+        		
+           return "";
+        }
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.xlsHistoriqueFile)
+        		return `<a href='/historyXls/viewdetailHistoryXlsReclamation/`+row.xlsHistoriqueFile+`'><button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary btn-flat shadow-sm">
+          Détails <i class="fa fa-eye" aria-hidden="true"></i>
+        </button></a>` ;
+      
+        	else
+        		
+           return "";
+        },
+      },
+
+    ],
+  });
+   $(document).ready(function() {
+      $('.js-select2').select2({ allowClear: true});
+    });
+</script>

@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Liste des réclamations</title>
+     <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+     <style>
+#tutorialTable_filter{
+display:none
+}
+</style>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Liste des réclamations techniques des clients</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-12">
+          
+              <div class="card shadow mb-4">
+              <div class="d-flex">
+                <div class="blocFilter">
+                   <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+                  <button sec:authorize="hasAnyAuthority('ASSIGN_RECLAMATION')" type="button"
+                  class="btn btn-success d-none d-sm-inline-block btn btn-sm shadow-sm mb-3" data-toggle="modal"
+                  data-target="#ASSRECLAMATION" id="assignerReclaamtionMultiple" disabled="true">
+                  <i class="fas fa-user-plus mr-2"></i>Assigner à un agent(<span id="countReclamationSelected"></span>)
+                </button>
+                <!-- importation des rélamation tt -->
+                <button type="button" class="d-inline-block btn btn-sm bg-violet shadow-sm mb-3"
+                  sec:authorize="hasAnyAuthority('IMPORT_TECH_CLIENT_COMPLAINT')"
+                  th:attr="onclick=|triggerModalUploadenmasse(event)|">
+                  Importer réclamations TT </button>
+                  <button id="downloadenmasse" class="d-inline-block btn btn-sm btn-info shadow-sm mb-3" disabled
+                  sec:authorize="hasAnyAuthority('EXPORT_COMPLAINT_REQUEST')">
+                  Extraire les réclamations (<span id="countExport"></span>)
+                </button>
+                <form id="exportForm" method="POST" th:action="@{/reclamations/export}">
+  <input type="hidden" name="reclamationids" id="exportReclamationIds">
+</form>
+                  <div class="modal fade" id="uploadModal" data-backdrop="false" tabindex="-1" role="dialog"
+          aria-labelledby="ModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Importer réclamations TT</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <form th:action="@{/reclamations/uploadreclamationttenmasse}" enctype="multipart/form-data"
+                method="post">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <div class="custom-file">
+                      <input type="file" className="form-control"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        name="file" th:required="true" id="customFile" /> <label class="custom-file-label"
+                        for="customFile">Télécharger
+                        le fichier</label>
+                    </div>
+                  </div>
+                </div>
+                <img src="/images/Templatechangerstatut.jpg" width="90%" />
+                <p>
+                  merci de respecter cette <a href="/file/TemplateImportReclamations.xlsx">template</a>
+                </p>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="submit" class="btn btn-primary">
+                    Télécharger</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+                </div>
+                  
+                        
+                  </div>
+                    <form id="showMe3" method="get" >
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="statutListfiltre"
+                          >Statut</label
+                        >
+                        <select
+                          id="statutChifcoListfiltre"
+                          name="Status"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                   <option value = ''>Statut</option>
+                      <option
+				        th:each="st : ${status}"
+				        th:value="${st.nomStatut}"        
+				        th:text="${st.nomStatut}" >
+				    </option>
+                      </select>
+                      </div>
+          <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="statutListfiltre"
+                          >Etat tt</label
+                        >
+                        <select
+                          id="etatttListfiltre"
+                          name="etattt"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                   <option value = ''>Statut</option>
+                      <option
+				        th:each="st : ${status}"
+				        th:value="${st.nomStatut}"        
+				        th:text="${st.nomStatut}" >
+				    </option>
+                      </select>
+                      </div>
+                      <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="ref_reclamation"
+                          >Référence réclamation</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="ref_reclamation"
+                          placeholder="ref_reclamation"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                          <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="telFixe"
+                          >Téléphone fixe</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="telFixe"
+                          placeholder="Téléphone fixe"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                       <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="referencett"
+                          >Reference TT</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="referencett"
+                          placeholder="Référence TT"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                 
+                      <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="identifiant"
+                          > Identifiant</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="identifiant"
+                          placeholder="Identifiant"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                        <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="referencenety"
+                          > Réference nety</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="referencenety"
+                          placeholder="Référence Nety"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      
+                                <div class="col-sm-6 col-md-3" sec:authorize="hasAnyAuthority('READ_CLASSIFICATION')">
+                      <label class="col-form-label" for="statutListfiltre">Motif
+                      </label> <select id="motifrelclamtion" name="motifrelclamtion"
+                        class="form-control js-select2 js-states custom-select" data-placeholder="Select Motif"
+                        th:onchange="|onchangeSearch(event)|" data-control="select2" >
+                        <option value=''>Motif</option>
+                        <option th:each="motifRec : ${motifRec}" th:value="${motifRec.motifId}"
+                          th:text="${motifRec.nomMotif}"></option>
+
+                      </select>
+                    </div>  
+                    <!-- source -->
+                    <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="statutListfiltre"
+                          >Source</label
+                        >
+                      <select
+						    id="sourceListFilter"
+						    name="source"
+						    class="form-control"
+						    th:onchange="|onchangeSearch(event)|">
+						
+						    <option value="">Source</option>
+						
+						    <option
+						        th:each="src : ${sources}"
+						        th:value="${src}"
+						        th:text="${src}">
+						    </option>
+						
+						</select>
+                      </div>
+                      <div class="col-sm-6 col-md-3"
+					     sec:authorize="hasAnyAuthority('READ_ASSIGN_SUBSCRIPTION_AGENT')">
+					  <label class="col-form-label" for="agent">Traité par</label>
+					  <select id="agentsav" name="agentsav" class="form-control js-select2"
+					          data-control="select2" data-placeholder="Select agent"
+					          th:onchange="|onchangeSearch(event)|">
+					    <option value="">Assigner à</option>
+					    
+					    <option th:each="agent : ${sav}"
+					            th:value="${agent.userid}"
+					            th:text="${agent.firstName + ' ' + agent.lastName + (agent.interlocuteur != null ? ' ' + agent.interlocuteur : '')}">
+					    </option>
+					  </select>
+					</div>
+					<div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes">Gouvernorat
+                      </label> <select id="gouvernorat" name="gouvernorat" class="form-control"
+                        onchange="onchangeSearch(event); loadCentrals();">
+                        <option value="">Gouvernorat</option>
+                        <option th:each="gouvernorat : ${gouvernorats}" th:value="${gouvernorat.gouvernoratName}"
+                          th:text="${gouvernorat.gouvernoratName}"></option>
+                      </select>
+                    </div>
+					
+                                <div class="col-sm-6 col-md-3" >
+								  <label class="col-form-label" for="centralrelclamtion">Central</label>
+								
+								  <select id="centralrelclamtion" name="centralrelclamtion"
+								          class="form-control js-select2 js-states custom-select"
+								          data-placeholder="Select central"
+								          th:onchange="|onchangeSearch(event)|"
+								          data-control="select2">
+								
+								    <option value="">Central</option>
+								
+								    <option th:each="central : ${centrals}"
+								            th:value="${central}"
+								            th:text="${central}">
+								    </option>
+								
+								  </select>
+								</div>
+								<div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes">Statut technicien
+                      </label>  <select
+                          id="statutChifcoListfiltre"
+                          name="statusTech"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+									    <option value=""> Choisir un statut </option>
+									    <option value="Affectée">Affectée</option>
+									    <option value="Prise en charge">Prise en charge</option>
+									    <option value="En attente client">En attente client</option>
+									    <option value="En attente matériel">En attente matériel</option>
+									    <option value="Diagnostic en cours">Diagnostic en cours</option>
+									    <option value="Adresse incorrecte">Adresse incorrecte</option>
+									    <option value="Panne externe">Panne externe</option>
+									    <option value="Hors périmètre">Hors périmètre</option>
+									    <option value="Résolue">Résolue</option>
+									    <option value="Replanifié">Replanifié</option>
+									    
+									  </select>
+
+                    </div>
+                    <!-- end source -->
+                            
+                      </div>
+              
+                      <div class="row w-100 ml-2">
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date de création CRM: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datedebut" id="datedebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datefin" id="datefin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                         <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-6 col-form-label"> Date de modification: du</label>
+                                             <div class="col-sm-6">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="dateDebutModification" id="dateDebutModification"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div> 
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="dateFinModification" id="dateFinModification"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>     
+                       
+                                                   
+                    </div>
+                    <!--Date réclamation tt -->
+                    <div class="row w-100 ml-2">
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date réclamation TT: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datereclamationttdebut" id="datereclamationttdebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datereclamationttfin" id="datereclamationttfin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                         <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-6 col-form-label"> Date vérification fsi: du</label>
+                                             <div class="col-sm-6">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="dateverificationfsidebut" id="dateverificationfsidebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div> 
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="dateverificationfsifin" id="dateverificationfsifin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>     
+                       
+                                                   
+                    </div>
+                    <!-- fin filtre date réclamation tt -->
+                   
+                          <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                      </form>
+                             </div>
+                             </div>
+                             </div>
+             
+ 
+        </div>
+        
+                  <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                  <div>
+                    <div class="blocy">
+                      <table
+                        id="tutorialTable"
+                        class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+                      >
+                        <!-- Header Table -->
+                        <thead class="table dataTable no-footer">
+                            <tr>
+                          <th scope="col"><input name="select_all" value="1" id="select_all" type="checkbox" /></th>
+                          <th>Référence</th>
+                          <th>Référence TT</th>
+                          <th>Motif</th>
+                          <th>Tel fixe</th>
+                                <th scope="col">Central </th>
+                                <th scope="col">Statut</th>
+                                 <th scope="col">Etat tt</th> 
+                                 <th>Date état tt</th>
+                                <th scope="col">Date réclamation tt</th>
+                                <th scope="col">Client</th>
+                            <th scope="col"> Créer par</th>
+                            <th scope="col">Date de création</th>   
+                              
+                             <th scope="col">Traité par</th>
+                             <th scope="col">Source</th>                    
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Modal to assign demande to agent -->
+        <div class="modal" id="ASSRECLAMATION" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Assigner reclamation(s) à</h5>
+              </div>
+              <div class="modal-body">
+                <form class="form-upload m-1" action="#" th:action="@{/reclamations/assignerReclamationMultiple}"
+                  sec:authorize="hasAnyAuthority('ASSIGN_RECLAMATION')" method="POST"
+                  id="assignerReclamationMultipleForm">
+                  <div class="d-flex  flex-column">
+                   <label>Choisir l'agent</label> 
+					<select name="agentId" class="form-control col-md-8">
+					  <option value="" disabled selected>-- Sélectionner un agent --</option>
+					  <option th:each="agent : ${sav}" 
+					          th:value="${agent.userid}" 
+					         th:text="${agent.firstName + ' ' + agent.lastName}">Agent</option>
+					</select>
+                  </div>
+                  <input type="hidden" name="reclamationid" id="reclamationid" />
+                  <input type="hidden" name="type" id="type" value="Technique" />
+                  <input type="hidden" name="categorie" id="categorie" value="Client" />
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success"
+                      onclick='assignerReclamationMultipleForm(event)'>Confirmer</button>
+                    <em id="spinerAddMultipleAssignement"></em>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end modal -->
+          <input type="hidden" name="hasediterole" th:value="${hasediterole}" id="hasediterole"/>
+          <input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+					<input type="hidden" id="summary" th:value="${summary} ?: ''" />
+
+    </section>
+
+</section>
+</body>
+
+
+</html>
+<script  th:inline="javascript">
+var oTable;
+var hasediterole = document.getElementById("hasediterole").value;
+let  Reference = "";
+let Status = "";
+let datedebut = "";
+let datefin = "";
+let dateDebutModification = "";
+let dateFinModification ="";
+let AffecterTo = "";
+let Creepar = "" ;
+let telFixe="";
+let motifRec="";
+let referencett="";
+let referencenety="";
+let identifiant="";
+let source="";
+let agentsav="";
+let etattt="";
+let datereclamationttdebut="";
+let datereclamationttfin="";
+let dateverificationfsidebut="";
+let dateverificationfsifin="";
+let centralrelclamtion="";
+let gouvernorat = "";
+let statusTech = "";
+var messagenotif = document.getElementById("message").value ;
+    if (messagenotif !== "" && messagenotif == "clientupdated") {
+     	$(document).Toasts('create', {
+  		  title: "La modification a été effectuée avec succès",
+  		  body: "",
+  		  class: 'bg-success',
+  		  autohide:true,
+  		  delay: 10000
+  		})
+    }
+$("#togglebutton").click(function () {
+
+    $("#showMe3").toggle();
+  });
+  
+function onchangeSearch(event) {
+    let name = event.target.name;
+    switch (name) {
+      case "ref_reclamation": {
+    	  Reference = event.target.value;
+        break;
+      }
+        case "telFixe": {
+    	  telFixe = event.target.value;
+        break;
+      }
+
+      case "Status": {
+    	  Status = event.target.value;
+        break;
+        
+      }
+      case "etattt": {
+    	  etattt = event.target.value;
+        break;
+        
+      }
+ 
+      case "datefin": {
+    	  datefin = event.target.value;
+          break;
+        }
+        case "datedebut": {
+        	datedebut = event.target.value;
+        break;
+      }
+        case "dateDebutModification": {
+        	dateDebutModification = event.target.value;
+        break;
+      }
+        case "dateFinModification": {
+        	dateFinModification = event.target.value;
+        break;
+      }
+        case "AffecterTo" : {
+        	AffecterTo = event.target.value ; 
+        	break;
+        }
+         case "agentsav" : {
+        	agentsav = event.target.value ; 
+        	break;
+        }
+        case "Creepar" : {
+        	Creepar = event.target.value ;
+        	break ; 
+        }
+ case "identifiant" : {
+        	identifiant = event.target.value
+        	break;
+        }
+        case "referencett" : {
+        	referencett = event.target.value
+        	break;
+        }
+        case "referencenety" : {
+        	referencenety = event.target.value
+        	break;
+        }
+        case "listeClientFilter" : {
+        	listeClientFilter= event.target.value
+        
+    	break ; 
+        }
+        case "motifrelclamtion" : {
+        	motifRec = event.target.value
+        	break ; 
+        }
+          case "source" : {
+        	source = event.target.value
+        	break ; 
+        }
+         case "datereclamationttdebut" : {
+        	datereclamationttdebut = event.target.value
+        	break ; 
+        }
+         case "datereclamationttfin" : {
+        	datereclamationttfin = event.target.value
+        	break ; 
+        }
+         case "dateverificationfsidebut" : {
+        	dateverificationfsidebut = event.target.value
+        	break ; 
+        }
+         case "dateverificationfsifin" : {
+        	dateverificationfsifin = event.target.value
+        	break ; 
+        }
+          case "centralrelclamtion" : {
+        	centralrelclamtion = event.target.value
+        	break ; 
+        }
+        case "gouvernorat": {
+    gouvernorat = event.target.value;
+    break;
+}
+   case "statusTech": {
+    statusTech = event.target.value;
+    break;
+}
+        
+    }}
+    
+function onclicksherh(event) {    
+    event.preventDefault();
+      changeRecherche = true;
+    $("#tutorialTable")
+      .DataTable()
+      .column(0)
+      .search(
+        JSON.stringify({
+        	reference:Reference ,       
+        	Status : Status,	
+        	telFixe:telFixe,	
+			 datefin:datefin,
+	          datedebut:datedebut,
+	          dateDebutModification:dateDebutModification,
+	          dateFinModification:dateFinModification,
+	          AffecterTo:AffecterTo , 
+	          Creepar : Creepar,
+	           identifiant:identifiant,
+	          referencett:referencett,
+	          referencenety:referencenety,
+	          motifRec:motifRec,
+	          source:source, agentsav:agentsav, etattt:etattt,
+	          datereclamationttdebut:datereclamationttdebut,
+	          datereclamationttfin:datereclamationttfin,
+	          dateverificationfsidebut:dateverificationfsidebut,
+				dateverificationfsifin:dateverificationfsifin,
+				centralrelclamtion:centralrelclamtion,gouvernorat: gouvernorat,statusTech:statusTech
+        })
+      )
+      .draw();
+          document.getElementById("select_all").checked = false;
+    changeRecherche = false;
+  } 
+oTable = $("#tutorialTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    order: [11, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: true,
+    fixedHeader: true,
+    ajax: "/reclamations/getAllclientreclamationData?category=Client&type=Technique",
+    lengthMenu: [
+      [10, 20, 50 , 100 , 200,500],
+      [10, 20, 50 , 100 , 200,500],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+
+    },
+drawCallback: function () {//added this to check in each page already checked lines
+    updatecheklist();
+},
+
+   columnDefs: [
+    {
+		className: "dtr-control",
+        orderable: false,
+        targets: [0,1,2,3,4,5,6,7,8,9,10,11,13,14,15]
+    },
+    
+        { "width": "3%", "targets":0 },
+       { "width": "8%", "targets":1 },
+       { "width": "6%", "targets":2 },
+          { "width": "7%", "targets":3 },
+           { "width": "6%", "targets":4 },
+           { "width": "8%", "targets":5 },
+   
+       { "width": "6%", "targets":6 },
+       { "width": "8%", "targets":7},
+      { "width": "8%", "targets":8},
+      { "width": "8%", "targets":9},
+        { "width": "8%", "targets":10 },
+       { "width": "8%", "targets":11 },
+       { "width": "7%", "targets":12 },
+       { "width": "8%", "targets":13 },
+        { "width": "8%", "targets":14 },
+        { "width": "15%", "targets":15 },
+    ],
+
+    columns: [
+
+       {
+          data: null,
+          render: function (data, type, row) {
+            return (
+
+              "<input type='checkbox' name='chekelement' onclick='toggleCheckboxajax(this)' id=" +
+              row.reclamationid +
+              " name='idChecked' />"
+            );
+          },
+        },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return  row.ref_reclamation;
+         
+        },
+      },
+        {
+        data: null,
+        render: function (data, type, row) {
+          return  row.referencett;
+         
+        },
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+            if (row.motif && row.motif.nomMotif) {
+                return row.motif.nomMotif;
+            }
+            return "";
+        },
+    },
+        {
+        data: null,
+        render: function (data, type, row) {
+          return  row.client.telFixe;
+         
+        },
+      },
+      {
+          data: null,
+          render: function (data, type, row) {
+            return row.central;
+          },
+        },
+         {
+    data: null,
+    render: function (data, type, row) {
+        if (row.status != null) {
+            return "<div class='tablebadge' style='background-color:" + row.status.couleur + "; color: #fff; padding: 5px; border-radius: 5px; display: inline-block;'>" 
+                   + row.status.designation + "</div>";
+        } else {
+            return null;
+        }
+    }
+},
+
+   {
+                  data: null,
+                  render: function (data, type, row) {
+                    return row.etattt;
+                  },
+                },
+                 {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.date_etattt == null)
+        		return "" ;       
+        else  return new Date(row.date_etattt).toLocaleDateString("en-GB") ;
+       	
+        },
+      },
+
+      {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.date_reclamationtt == null)
+        		return "" ;       
+        else  return new Date(row.date_reclamationtt).toLocaleDateString("en-GB") ;
+       	
+        },
+      },
+         
+     
+	      {
+	    data: null,
+	    render: function(data, type, row) {
+	        if (row.client)
+	            return `<a href='/client/viewclient/` + row.client.clientid + `' target="_blank">
+	                        <i>` + row.client.referenceClient + `</i>
+	                    </a>`;
+	        else
+	            return "";
+	    }
+	},
+
+
+          { data: null ,
+        	  render: function (data, type, row) {
+        		 
+              	if(row.createdby != null )
+              		return row.createdby.firstName + "  "  + row.createdby.lastName  ;
+              else
+              		 return   null
+              
+              }},
+              {
+                  data: null,
+                  render: function (data, type, row) {
+                    return new Date(row.createdDate).toLocaleDateString("en-GB");
+                  },
+                },
+              
+        {
+			  data: null,
+			  render: function (data, type, row) {
+			    if (row.treatedBy && row.treatedBy.firstName) {
+			      return row.treatedBy.firstName + ' ' + (row.treatedBy.lastName || '');
+			    }
+			    return ''; 
+			  }
+			},
+		{
+          data: null,
+          render: function (data, type, row) {
+			  if (row.source)
+            return row.source;
+            else return "";
+          },
+        },
+       
+         {
+  data: null,
+  render: function (data, type, row) {
+    let viewclient = `
+      <a href='/reclamations/getReclamation/${row.reclamationid}'>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary btn-flat shadow-sm">
+          Détails <i class="fa fa-eye" aria-hidden="true"></i>
+        </button>
+      </a>`;
+
+    let editclient = `
+      <a href='/reclamations/editreclamation/${row.reclamationid}'>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+          Modifier <i class="fa fa-edit"></i>
+        </button>
+      </a>`;
+
+    if (hasediterole === "true") {
+      return `<span>${editclient}</span> <span>${viewclient}</span>`;
+    } else {
+      return viewclient;
+    }
+  }
+},
+
+    ],
+    
+  });
+  function updateSelectionUI() {
+  const count = listedes_ids_reclamations.length;
+
+  $("#countReclamationSelected").text(count);
+  $("#countExport").text(count);
+
+  if ($("#assignerReclaamtionMultiple").length) {
+    $("#assignerReclaamtionMultiple").prop("disabled", count === 0);
+  }
+
+  if ($("#downloadenmasse").length) {
+    $("#downloadenmasse").prop("disabled", count === 0);
+  }
+
+  if ($("#reclamationid").length) {
+    $("#reclamationid").val(listedes_ids_reclamations.join(","));
+  }
+
+  listedes_ids_reclamations.forEach(id => {
+    const cb = document.getElementById(id);
+    if (cb) cb.checked = true;
+  });
+}
+
+  var changeRecherche = false;
+  var listedes_ids_reclamations = /*[[${listedes_ids_reclamations}]]*/ [];
+    var countReclamationSelected = listedes_ids_reclamations.length;
+
+  
+  function updatecheklist() {
+
+  if (listedes_ids_reclamations.length !== 0 && changeRecherche) {
+    if (listedes_ids_reclamations.length >= $('input[name="chekelement"]').length) {
+      $("#select_all").prop("checked", true);
+    }
+  }
+
+  updateSelectionUI();
+}
+    if (listedes_ids_reclamations.length == 0) {
+      assignerReclaamtionMultiple = 0;
+     
+       if (document.getElementById("assignerReclaamtionMultiple")) {
+
+        $("#assignerReclaamtionMultiple").prop('disabled', true);
+      }
+    }
+  
+  function toggleCheckboxajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+    this.toggleCheckbox(column, data.reclamationid);
+  }
+
+function toggleCheckbox(element, id) {
+  if (element.checked === true) {
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/reclamations/addid",
+      data: JSON.stringify(id),
+      dataType: "json",
+      success: function () {
+        listedes_ids_reclamations.push(id);
+        updatecheklist();
+      }
+    });
+  } else {
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/reclamations/removeid",
+      data: JSON.stringify(id),
+      dataType: "json",
+      success: function () {
+        listedes_ids_reclamations =
+          listedes_ids_reclamations.filter(el => el !== id);
+        updatecheklist();
+      }
+    });
+  }
+}
+
+</script>
+<script>
+	var messagenotif = document.getElementById("message").value;
+if (messagenotif !== "" && messagenotif == "Une réclamation a été ajouté avec succées") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une réclamation a été ajouté avec succées",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "Reclamationmodif") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une réclamation a été modifié avec succées",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+  if (messagenotif !== "" && messagenotif == "assignementAvecSuccess") {
+      $(document).Toasts("create", {
+        title: "Succès",
+        body: "Assignement de(s) réclamation(s) a été effectuée avec succès",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    // File upload alerts
+if (messagenotif !== "" && messagenotif == "filetoomanylines") {
+    $(document).Toasts("create", {
+        title: "Erreur d'importation",
+        body: "Le fichier contient trop de lignes. Maximum 1000 lignes autorisées.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "invalidfileformat") {
+    $(document).Toasts("create", {
+        title: "Erreur d'importation",
+        body: "Format de fichier invalide. Seuls les fichiers Excel (.xlsx, .xls) sont acceptés.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "fileempty") {
+    $(document).Toasts("create", {
+        title: "Erreur d'importation",
+        body: "Le fichier est vide.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "uploaderror") {
+    $(document).Toasts("create", {
+        title: "Erreur d'importation",
+        body: "Une erreur s'est produite lors de l'importation du fichier.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "erreuruploadeditabonnementenmasse") {
+    $(document).Toasts("create", {
+        title: "Erreur d'importation",
+        body: "Format de fichier incorrect. Vérifiez les en-têtes du fichier Excel.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+if (messagenotif !== "" && messagenotif == "uploadsuccess") {
+    $(document).Toasts("create", {
+        title: "Importation réussie",
+        body: "L'importation des réclamations TT a été effectuée avec succès.",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+var summary = document.getElementById("summary")?.value;
+
+if (summary && summary !== "") {
+    $(document).Toasts("create", {
+        title: "Résumé de l'importation",
+        body: summary,
+        class: "bg-info",  
+        autohide: true,
+        delay: 12000,
+    });
+}
+    $(document).ready(function() {
+      $('.js-select2').select2({ allowClear: true});
+    });
+   function triggerModalUploadenmasse(e) {
+    e.preventDefault();
+
+    $("#uploadModal").modal();
+  }
+  
+     $('thead input[name="select_all"]').on("click", function (e) {
+
+      if (this.checked) {
+        let selectedid = this.id;
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/reclamations/addall/Technique/Client",
+          data: JSON.stringify({
+          	reference:Reference ,       
+        	Status : Status,	
+        	telFixe:telFixe,	
+			 datefin:datefin,
+	          datedebut:datedebut,
+	          dateDebutModification:dateDebutModification,
+	          dateFinModification:dateFinModification,
+	          AffecterTo:AffecterTo , 
+	          Creepar : Creepar,
+	           identifiant:identifiant,
+	          referencett:referencett,
+	          referencenety:referencenety,
+	          motifRec:motifRec,source:source,agentsav:agentsav,etattt:etattt,
+	          datereclamationttdebut:datereclamationttdebut,
+	          datereclamationttfin:datereclamationttfin,
+	          dateverificationfsidebut:dateverificationfsidebut,
+	          dateverificationfsifin:dateverificationfsifin,	centralrelclamtion:centralrelclamtion,gouvernorat: gouvernorat,statusTech:statusTech
+          }),
+          dataType: "json",
+          timeout: 100000,
+          async: false,
+          success: function (data) {
+            listedes_ids_reclamations = data;
+            updatecheklist();
+            countReclamationSelected = data.length;
+          
+
+          },
+          error: function (e) {
+            console.log("ERROR: ", e);
+          },
+        });
+      } else {
+
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/reclamations/removeall",
+          dataType: "json",
+          timeout: 100000,
+          async: false,
+          success: function (data) {
+            listedes_ids_reclamations.forEach(function (item, index, array) {
+              var elem = document.getElementById(item);
+              if (elem !== null) {
+                document.getElementById(item).checked = false;
+              }
+            });
+            listedes_ids_reclamations = []
+            document.getElementById('countReclamationSelected').innerHTML = listedes_ids_reclamations.length;
+			updateSelectionUI();
+           
+            if (document.getElementById('assignerReclamationMultiple')) {
+              $("#assignerReclamationMultiple").prop('disabled', true);
+            }
+
+
+          },
+          error: function (e) {
+            console.log("ERROR: ", e);
+          },
+        });
+      
+      }
+
+      e.stopPropagation();
+    });
+$("#downloadenmasse").click(function (e) {
+    e.preventDefault();
+    if (listedes_ids_reclamations.length === 0) {
+        $(document).Toasts('create', {
+            title: "Erreur",
+            body: "Veuillez sélectionner au moins une réclamation",
+            class: 'bg-danger',
+            autohide: true,
+            delay: 5000
+        });
+        return;
+    }
+    if (listedes_ids_reclamations.length >1000){
+		  $(document).Toasts('create', {
+            title: "Erreur",
+            body: "Vous avez dépassé le nombre maximum de lignes exportables (1000).",
+            class: 'bg-danger',
+            autohide: true,
+            delay: 5000
+        });
+        return;
+	}
+    $("#exportReclamationIds").val(listedes_ids_reclamations.join(","));
+    $("#exportForm").submit();
+});
+
+  </script>
+  <script>
+function loadCentrals() {
+    const gouvernorat = document.getElementById("gouvernorat").value;
+    const centralSelect = document.getElementById("centralrelclamtion");
+
+    centralSelect.innerHTML = '<option value="">Central</option>';
+
+    let url = '';
+
+    if (!gouvernorat) {
+        url = '/reclamations/centrals/all';
+    } else {
+        url = '/reclamations/centrals/by-gouvernorat?gouvernorat=' + encodeURIComponent(gouvernorat);
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(central => {
+                const option = document.createElement("option");
+                option.value = central;
+                option.text = central;
+                centralSelect.appendChild(option);
+            });
+
+            $('#centralrelclamtion').trigger('change');
+        })
+        .catch(error => console.error('Error loading centrals:', error));
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    loadCentrals(); 
+});
+</script>

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Fiche de changement débit</title>
+<style>
+	.aftersendformEdit{
+		display: none;
+	}
+</style>
+</head>
+<body>
+	<section layout:fragment="content">
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">							
+								<h1 class="m-0">Fiche demande de changement débit</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+				<div class="row" th:if="${demande} != null">
+					<div class="col-12 grid-margin"></div>
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab"
+									role="tablist">
+									<li class="nav-item"><a class="nav-link active"
+										id="custom-tabs-info-tab" data-toggle="pill"
+										href="#custom-tabs-info" role="tab"
+										aria-controls="custom-tabs-info" aria-selected="true">Information</a>										
+									</li>								 	
+								</ul>
+							</div>				
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info"
+										role="tabpanel" aria-labelledby="custom-tabs-info-tab">
+										<div class="card bg-light" th:if="${demande.user.userid} eq ${idconnected} or ${isadmin} == true">										
+											<div
+												class="card-header  d-flex justify-content-end flex-wrap flex-row align-items-center">																							
+													<div class=""
+											th:if="${demande.statut.nomStatut} eq 'SIGNED_DOC' " sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')">
+												<form 
+												class="form-upload m-1" action="#"
+												th:action="@{/operationAbonnement/referencett}"
+												sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')"												
+												method="POST">
+												<label for="referencett">Reference TT</label>
+												<input id="referencett" name="referencett"  class="form-control" placeholder="Reference  TT"  required></input>
+												<div th:if="${demande.statut.nomStatut} eq 'SIGNED_DOC'" sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')">
+												<button type="submit" class="btn btn-outline-info" id="demandeEnvoyeeTTButton"><i class="fas fa-paper-plane mr-2"></i>Demande envoyée à TT</button>
+												</div>
+													<input type="hidden" name="idabon"
+													id="idabon" th:value="${demande.operationId}" />												
+											</form>
+											</div>
+											  <div>
+									<button  th:if="${demande.statut.nomStatut} != 'RESILIATION'" type='button' class='btn btn-primary mr-5 ml-2' data-toggle='modal' data-target='#ReafectModal' sec:authorize="hasAnyAuthority('AFFECT_ABONNEMENT_TO_REVENDEUR','AFFECT_ABONNEMENT_TO_REVENDEUR_BY_DISTRIBITEUR')">Réaffecter  Demande</button>
+										</div>
+												
+												<div th:if="${isduplicate} == true">
+													<form id="duplicatedDemande" class="form-sample" action="#"
+														th:action="@{/operationAbonnement/duplicatedDemande}" method="POST">
+													<input type="hidden" name="operationId"
+															th:field="${demande.operationId}" />
+											
+												   <button type="submit" class="btn btn-outline-info">Duplication Demande </button>
+													</form>
+											 </div>
+											
+												<div class=""
+												th:if="(${isadmin} == true AND  ( ${demande.etatTT}  eq  ${DBEtatTT.Enregister}  ) AND ${demande.statut.nomStatut} eq 'WAIT_TT' ) or (${demande.user.userid} eq ${idconnected}  AND ${demande.etatTT}  eq  ${DBEtatTT.Enregister} ) AND  ${demande.statut.nomStatut} eq 'WAIT_TT' ">
+												<form 
+												class="form-upload m-1" action="#"
+												th:action="@{/operationAbonnement/confirmeAbonnement}"
+												sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')"
+												
+												method="POST">
+												<input type="hidden" name="confirmation"
+													value="execution"/>
+													<input type="hidden" name="idabon"
+													id="idabon" th:value="${demande.operationId}" />
+												<div>
+													<button type="submit" class="btn btn-outline-success mr-5 ml-5"><i class="fas fa-book-reader mr-1"></i>Exécution</button>
+												</div>
+											</form>																				
+											</div>
+												<div class="row ml-2"
+													th:if="(${isadmin} == true AND  ( ${demande.etatTT}  eq 'Exécution' ) AND  ${demande.statut.nomStatut} eq 'WAIT_TT')">
+													<form 
+													class="form-upload m-1" action="#"
+													sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')"
+													th:action="@{/operationAbonnement/confirmeAbonnement}"
+													method="POST">
+													<input type="hidden" name="confirmation"
+														value="Clôturée" />
+														<input type="hidden" name="idabon"
+																id="idabon" th:value="${demande.operationId}" />
+													<div>
+														<button type="submit" class="btn btn-success mr-5">Clôturée</button>
+													</div>
+												</form>
+													<button type="button" class="btn btn-outline-danger m-1" data-toggle="modal" data-target="#modalanuller"> <i class="fas fa-times mr-2"></i>Annulé</button>
+
+															<div class="modal fade" id="modalanuller" tabindex="-1" aria-labelledby="modalanullerModalCenterTitle" style="display: none;" aria-hidden="true">
+																	<div class="modal-dialog modal-dialog-centered" role="document">
+																	<div class="modal-content">
+																						<form 
+												class="form-upload m-1" action="#"
+												th:action="@{/operationAbonnement/confirmeAbonnement}"
+												sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')"
+												method="POST">
+												<input type="hidden" name="confirmation"
+												value="annuler"/>
+													<input type="hidden" name="idabon"
+																id="idabon" th:value="${demande.operationId}" />
+																			<div class="modal-header">
+																				<h5 class="modal-title" id="modalanullerModalCenterTitle" text="Anuller demande"></h5>
+																				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																					<span aria-hidden="true">×</span>
+																				</button>
+																			</div>
+																			<div class="modal-body">
+																				<h4>Êtes-vous sûr de vouloir annuler cette demande</h4>
+																			</div>
+																			<div class="modal-footer">
+																					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler </button>
+																					<button type="submit" class="btn btn-success">Valider</button>
+																			</div>
+																						</form>
+																		</div>
+																	</div>
+															</div>
+														
+												</div>
+												</div>
+													</div>
+										</div>											
+										<form id="myForm" class="form-sample" action="#"
+											th:action="@{/demandeabonnement/report}" method="POST"
+											th:object="${demande}">
+											<input type="hidden" name="operationId"
+												th:field="${demande.operationId}" />
+											<div class="row"  >										
+												<div class="col-sm-6" th:if="${demande.user.userid} eq ${idconnected} or ${isadmin} == true ">
+													<div class="card-block">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom:</label>
+																<div class="col-sm-8" th:text="${demande.firstName}"></div>																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Prénom:</label>
+																			<div class="col-sm-8" th:text="${demande.lastName}"></div>
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Email:</label>
+																	<div class="col-sm-8" th:text="${demande.email}"></div>																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Identification:</label>
+																	<div class="col-sm-8" th:text="${demande.cin}"></div>																	
+																</div>
+																<div class="row" th:if="${demande.gouvernorat} != null">
+																	<label class="col-sm-4 col-form-label">Gouvernorat:</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.gouvernorat.gouvernoratName}"></div>
+																	<input type="hidden" name="villeName"
+																		th:field="${demande.gouvernorat.gouvernoratId}" />
+																</div>
+																<div class="row" th:if="${demande.gouvernorat} != null">
+																	<label class="col-sm-4 col-form-label">Ville :</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.ville.villeName}"></div>
+																	<input type="hidden" name="gouvernoratName"
+																		th:field="${demande.ville.villeId}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Adresse:</label>
+																	<div class="col-sm-8" th:text="${demande.adresse}"></div>
+																	<input type="hidden" name="adresse"
+																		th:field="${demande.adresse}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Code
+																		postale:</label>
+																	<div class="col-sm-8" th:text="${demande.codePostale?.code}"></div>																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">proprietaire:</label>
+																	<div class="col-sm-8">
+																		<span th:if="${demande.proprietaire}" style="color:green">Oui</span>
+																		<span th:unless="${demande.proprietaire}" style="color:red">Non</span>
+																	</div>																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		mobile:</label>
+																	<div class="col-sm-8" th:text="${demande.telMobile}"></div>
+																	<input type="hidden" name="telMobile"
+																		th:field="${demande.telMobile}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		mobile2:</label>
+																	<div class="col-sm-8" th:text="${demande.telMobile2}"></div>
+																	<input type="hidden" name="telMobile2"
+																		th:field="${demande.telMobile2}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Position
+																		XY:</label>
+																	<div class="col-sm-8" th:text="${demande.positionxy}"></div>
+																	<input type="hidden" name="positionxy"
+																		th:field="${demande.positionxy}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		fixe:</label>
+																	<div class="col-sm-8" th:text="${demande.telFixe}"></div>
+																	<input type="hidden" name="telFixe"
+																		th:field="${demande.telFixe}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Profession:</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.profession?.name}"></div>
+																	<input type="hidden" name="profession"
+																		th:field="${demande.profession.professionId}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Fax:</label>
+																	<div class="col-sm-8" th:text="${demande.fax}"></div>
+																	<input type="hidden" name="fax"
+																		th:field="${demande.fax}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Date de
+																		naissance:</label>
+																	<div class="col-sm-8"
+																		th:text="${#dates.format(demande.dateNaissance, 'dd-MM-yyyy')}"></div>
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Situation Familiale:</label>
+																	<div class="col-sm-8"
+																		th:text="${demande.situationFamiliale}"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="card-block">
+														<h4>Cree par</h4>
+														<div class="card-block-body">
+															<span class="col-sm-8"
+																th:text="${demande.user?.firstName  } "></span> <span
+																th:text="${demande.user?.lastName}"></span>																																
+														</div>
+														<div class="col-md-6">
+														<h5>Affecter a</h5>														
+															<span 
+																th:text="${AssignedToUser?.firstName  } "></span> <span
+																th:text="${AssignedToUser?.lastName}"></span>
+																
+															
+														</div>
+														
+													</div>
+														
+												</div>
+												<div class="col-sm-6">
+													<div class="card-block">
+														<h4>Informations forfait</h4>
+														<div class="card-block-body">
+															<div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label"
+																		>Status
+																		tunisie telecom</label>
+																	<p class="" 
+																		th:text="${demande.etatTT}" >
+																</div>															
+																<div class="row" >
+																	<label class="col-sm-4 col-form-label"
+																		>Motif Refus
+																		tunisie telecom</label>
+																	<p class=""																	
+																		th:text="${demande.motifRefus}" >
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Status
+																		demande:</label>
+																	<p class="col-sm-8"
+																		th:text="${demande.statut?.designation}"></p>
+																</div>
+															</div>
+															<div class="progress mb-3">
+																<div th:if="${demande.statut.nomStatut} eq 'DRAFT'"
+																	class="progress-bar bg-danger" role="progressbar"
+																	aria-valuemax="100" style="width: 20%">
+																	<span class="sr-only">20% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'SIGNED_DOC'"
+																	class="progress-bar bg-warning" role="progressbar"
+																	aria-valuenow="40" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 40%">
+																	<span class="sr-only">40% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'WAIT_TT'"
+																	class="progress-bar bg-warning  progress-bar-striped"
+																	role="progressbar" aria-valuenow="50" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 50%">
+																	<span class="sr-only">50% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'INSTALLED'"
+																	class="progress-bar bg-info" role="progressbar"
+																	aria-valuenow="65" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 65%">
+																	<span class="sr-only">65% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'ASSIGNED'"
+																	class="progress-bar bg-info progress-bar-striped"
+																	role="progressbar" aria-valuenow="80" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 80%">
+																	<span class="sr-only">80% Complete</span>
+																</div>
+																<div th:if="${demande.statut.nomStatut} eq 'VALID'"
+																	class="progress-bar bg-primary" role="progressbar"
+																	aria-valuenow="90" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 90%">
+																	<span class="sr-only">90% Complete</span>
+																</div>
+																<div
+																	th:if="${demande.statut.nomStatut} eq 'ACTIVE'  or   ${demande.statut.nomStatut} eq 'REFUSED'  or   ${demande.statut.nomStatut} eq 'CANCELED'  or   ${demande.statut.nomStatut} eq 'UNPAID'"
+																	class="progress-bar bg-success" role="progressbar"
+																	aria-valuenow="100" aria-valuemin="0"
+																	aria-valuemax="100" style="width: 100%">
+																	<span class="sr-only">90% Complete</span>
+																</div>
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Réference:</label>
+																<div class="col-sm-8"
+																	th:text="${demande.referenceChifco}"></div>
+																<input type="hidden" name="referenceChifco"
+																	th:field="${demande.referenceChifco}" />																
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-from-label">Réference TT : </label>
+																<div class="col-sm-8" th:text="${demande.referenceTT}"></div>
+															   </div> 
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Catégorie:</label>
+																<div class="col-sm-8" name="categories"
+																	th:text="${demande.pack.categoriePack.categorieProduitInternetNom}"></div>															
+															</div>
+															  <div class="row">
+																<label class="col-sm-4 col-form-label">Pack:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${demande.pack?.title}"></div>																
+															</div>
+															 <div class="row">
+																<label class="col-sm-4 col-form-label">Débit:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${demande.pack?.debitPack}"></div>																
+															</div>
+															  <div class="row">
+																<label class="col-sm-4 col-form-label">Offre:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${demande.pack?.offre?.title}"></div>																
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Type de
+																	paiement:</label>
+																<div class="col-sm-8"
+																	th:text="${demande.typePaiement?.nomTypePaiement}"></div>																
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">verification par Sms:</label>
+																
+																	<div class="col-sm-8">
+																		<span th:if="${demande.isSmsVerification}" style="color:green">Oui</span>
+																		<span th:unless="${demande.isSmsVerification}" style="color:red">Non</span>
+																	</div>																
+															</div>
+														</div>
+													</div>
+													<div class="card-block"  th:if="${demande.user?.userid} eq ${idconnected} or ${isadmin} == true ">
+														<h4>Les documents</h4>
+														<div class="card-block-body">
+														    <div class="row">
+														        <div class="col-form-label">Photo Recto de la CIN :</div>
+														         <div>
+														            <!-- Afficher CIN sous forme image -->
+														            <img th:if="${demande.photoCin1 != null and (demande.photoCin1.toLowerCase().endsWith('.jpg') or demande.photoCin1.toLowerCase().endsWith('.jpeg') or demande.photoCin1.toLowerCase().endsWith('.png'))}"
+														                 th:src="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin1}}"
+														                 id="prev" style="height: 200px; width: 200px;cursor: pointer;" />
+														            
+														            <!-- Afficher CIN sous forme PDF -->
+														            <a th:if="${demande.photoCin1 != null and demande.photoCin1.toLowerCase().endsWith('.pdf')}"
+														               th:href="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin1}}"
+														               target="_blank">
+														                <span>Copie numérique du CIN au format PDF</span>
+														            </a>
+														        </div>
+														    </div>
+														    
+														    <div class="row">
+														        <div class="col-form-label">Photo Verso de la CIN :</div>
+														        <div>
+														            <!-- Afficher CIN sous forme image -->
+														            <img th:if="${demande.photoCin2 != null and (demande.photoCin2.toLowerCase().endsWith('.jpg') or demande.photoCin2.toLowerCase().endsWith('.jpeg') or demande.photoCin2.toLowerCase().endsWith('.png'))}"
+														                 th:src="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin2}}"
+														                 id="prev2" style="height: 200px; width: 200px;cursor: pointer;" />
+														            
+														            <!-- Afficher CIN sous forme PDF -->
+														            <a th:if="${demande.photoCin2 != null and demande.photoCin2.toLowerCase().endsWith('.pdf')}"
+														               th:href="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin2}}"
+														               target="_blank">
+														                <span>Copie numérique du CIN au format PDF</span>
+														            </a>
+														        </div>
+														    </div>
+														</div>
+
+													</div>
+
+												</div>
+											</div>																				</form>
+
+										<!-- Modal -->
+										<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+											role="dialog" aria-labelledby="exampleModalCenterTitle"
+											aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered"
+												role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalCenterTitle" th:text="${demande.statut.nomStatut} eq 'DRAFT' ?  'Ajouter la demande signée' : 'Voir le contrat'"></h5>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<form th:if="${demande.statut.nomStatut} eq 'DRAFT'"
+															class="form-upload" action="#"
+															enctype="multipart/form-data"
+															th:action="@{/demandeabonnement/upload/pdf}"
+															method="POST" id="myForm2">
+															<input type="hidden" name="operationId"
+																th:field="${demande.operationId}" /> <input type="hidden"
+																name="cin" th:field="${demande.cin}" /> <br> <br>																								
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary"
+																	data-dismiss="modal">Annuler </button>
+																<button type="submit" id="buttonDemandeSigne" class="btn btn-primary"  sec:authorize="hasAnyAuthority('ADD_SUBSCRIPTION_REQUEST')" >Valider</button>
+															</div>
+
+														</form>
+													</div>
+
+												</div>
+											</div>
+										</div>
+						</div>
+									  <div class="tab-pane fade" id="custom-tabs-action"
+										role="tabpanel" aria-labelledby="custom-tabs-action-tab">
+											<div class="card-body">
+												<div class="table-responsive">
+													<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+														<thead>
+														<tr>
+															<th>Nom</th>
+															<th>Prenom</th>
+															<th>cin</th>
+															<th>Date </th>
+															<th>Description</th>
+															<th>Cree par</th>
+														</tr>
+														</thead>					
+														<tbody>
+														<tr th:each="ob:${historylist}">
+															<td th:text=${ob.firstName}></td>
+															<td th:text=${ob.lastName}></td>
+															<td th:text=${ob.cin}></td>
+															<td th:text="${#dates.format(ob.createdDate, 'dd-MM-yyyy')}"></td>
+															<td th:text=${ob.Description}></td>
+															<td ><span th:text=${ob.createdBy.firstName}></span> (<span th:text=${ob.createdBy.codeUser}></span>)</td>
+														</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+									</div>							
+								</div>
+							</div>						
+					</div>
+				</div>
+				<input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+			</div>			
+		</section>	
+		<input type="hidden" name="fileempty" id="fileempty"
+			th:value="fileempty ?  ${fileempty} : ''" />
+	</section>
+</body>
+</html>
+												<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+												  <div class="modal-dialog" role="document">
+												    <div class="modal-content">
+												      <div class="modal-header">
+												        <h5 class="modal-title" id="myModalLabel">Image</h5>
+												        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												          <span aria-hidden="true">&times;</span>
+												        </button>
+												      </div>
+												      <div class="modal-body">
+												        <img id="imgModal" src="" style="width:100%">
+												      </div>
+
+												    </div>
+												  </div>
+												</div>
+												
+												<div class="modal fade" id="ReafectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Réaffecter Abonnement</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			  <form id="AbonnementReaffectation" class="form-sample d-flex flex-column" action="/operationAbonnement/affectationClient" 
+													method="POST" >
+	<input type="hidden" name="operationId"	th:field="${demande.operationId}" /> 
+																 <div class="row mb-10">
+																         <div class="col-md-10">																		
+																			<label>Recherche par (cin , code user ,email, nom commerciale ,identification fiscale , Interlocuteur ) </label>
+																			
+																				<input type="Text" 
+																					class="form-control" 
+																					id="codeRevendeur" name="codeRevendeur"  required  /> 
+																		</div>																    																			<div id="erruerMsgAffacation"></div>
+																			<div id="tabResultRevendeur" class="col-md-10"></div>
+																				
+																		</div>						
+		  <div class="d-flex justify-content-between mt-3">
+		  	
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+		<div id="affecterAction"></div>
+			<input type="submit" class="btn btn-outline-info" value="Rechercher"></input>
+			
+																</div>
+																	</form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+<script th:inline="javascript">
+	 $("#AbonnementReaffectation").submit(function (e) {
+	 		    e.preventDefault();
+			    recherche =  $('#codeRevendeur').val()
+			    if(recherche){
+			    $.ajax({
+			        type: "POST",
+			        contentType: "application/json",
+			        url: "/operationAbonnement/affectationClient",
+			        data: JSON.stringify({
+			        	"recherche":recherche,
+			        	"demandeId":operationId
+			        }),
+			        dataType: "json",
+			        timeout: 100000,
+			        success: function (data) {
+			        	if(data && data.length > 0){
+			        		$('#erruerMsgAffacation').empty()
+			        		let affecterAction = '<button type="button" class="btn btn-success" onClick="SendaffecterRevendeur(event)">Affecter</button>'
+			        		$('#affecterAction').empty().append(affecterAction)
+			        		return generateTabRevendeur(data)
+			        	}
+			        	else {
+			        		let erruerMsg = "<span' class='btn text-danger' > Aucun revendeur trouvé avec les données fournies. </span>"
+			    	      		$('#erruerMsgAffacation').empty().append(erruerMsg)
+			    	      		$('#tabResultRevendeur').empty()
+			        	}
+			        },
+			    error: function (e) {}
+			    })
+			    }
+	    })
+	     function generateTabRevendeur (data) {
+	    		 
+	    		 var tableHtml = `<table id="affactationTabRevendeur" class="table"><thead class="class="thead-dark"><tr><th scope="col">code user</th>
+	    		 <th scope="col">Nom</th><th scope="col">Prénom</th><th scope="col">Type user</th><th scope="Interlocuteur" > Interlocuteur </th><th scope="col">Checked</th></tr></thead><tbody>`;
+
+	    		// loop through each object in the array and create a table row
+	    		$.each(data, function(index, value) {
+	    		  tableHtml += '<tr>';
+	    		  tableHtml += '<td>' + value.codeUser + '</td>';
+	    		  tableHtml += '<td>' + value.firstName + '</td>';
+	    		  tableHtml += '<td>' + value.lastName + '</td>';
+	    		  if(value.typeUser){
+	    			  tableHtml += '<td>' + value.typeUser  + '</td>'; 
+	    		  }
+	    		  else {
+	    			  tableHtml += '<td>' + "---" + '</td>';
+	    		  }
+	    		  if(value.interlocuteur){
+	    			  tableHtml += '<td>' + value.interlocuteur  + '</td>'; 
+	    		  }
+	    		  else {
+	    			  tableHtml += '<td>' + "---" + '</td>';
+	    		  }
+	    		  tableHtml += '<td><input type="radio" name="checked" value='+value.userid+'></td>';
+	    		  tableHtml += '</tr>';
+	    		});
+
+	    		tableHtml += '</tbody></table>';
+
+
+
+
+
+	    		 $('#tabResultRevendeur').empty().append(tableHtml)
+	    	 }
+	    	 	  function SendaffecterRevendeur(event){
+		  event.preventDefault()
+		  var selectedDataArray = [];
+
+		    $("table#affactationTabRevendeur tr").each(function(index, row) {
+		      var selectedValue = $(row).find("input[name^='checked']:checked").val();
+		      if (selectedValue) {
+		        selectedDataArray.push(selectedValue);
+		      }
+		    });
+		    
+		    if(selectedDataArray.length > 0 ){
+	 		   
+				    let userselected =  selectedDataArray[0]
+				    $.ajax({
+				        type: "POST",
+				        contentType: "application/json",
+				        url: "/operationAbonnement/sendAffectationClient",
+				        data: JSON.stringify({
+				        	"userselected":userselected,
+				        	"demandeId":operationId
+				        }),
+				        dataType: "json",
+				        timeout: 100000,
+				        success: function (data) {
+				        	if(data){
+				          		 $('#ReafectModal').modal('hide');
+				     	       	$(document).Toasts('create', {
+				     	            		  title: "Succès",
+				     	            		  body: "La demande a été réaffectée avec succès ",
+				     	            		  class: 'bg-success',
+				     	            		  autohide:true,
+				     	            		  delay: 5000
+				     	            		})
+				     	            		$('.toast').on('hidden.bs.toast', function () {
+				     	            		    window.location.reload()
+				     	            		});
+				        	}
+				        	else {
+				        		let erruerMsg = "<span' class='btn text-danger' > Aucun revendeur trouvé avec les données fournies.</span>"
+				    	      		$('#erruerMsgAffacation').empty().append(erruerMsg)
+				        	}
+				        },
+				    error: function (e) {}
+				    })
+		    }
+		    else {
+		    	let erruerMsg = "<span' class='btn text-danger' > Veuillez sélectionner le revendeur auquel vous souhaitez réaffecter la demande avant de continuer. </span>"
+    	      		$('#erruerMsgAffacation').empty().append(erruerMsg)
+		    }
+	  }
+var message = /*[[${message}]]*/ null;
+let operationId = /*[[${demande.operationId}]]*/ null
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+let numeroTelphone = /*[[${demande.telMobile}]]*/ null
+let codeUser = ""
+
+    var reader = new FileReader()
+    var elem = document.getElementsByClassName('abced');
+  
+    if(document.getElementById("demandeAbonnementid") !== null){
+    var iddemande = document.getElementById("demandeAbonnementid").value ;
+      if(document.getElementById("codeCatProduit")){
+    var codeCatProduit = document.getElementById("codeCatProduit").value ;
+       triggermodemjax(iddemande,codeCatProduit);
+    }
+    }
+    var array = [...elem];
+    var  i = 0 ;
+    array.forEach(function(el ) {
+   
+    	    var hiddenDiv = document.getElementsByClassName('showMe')[i];
+    	    var hiddenDiv2 = document.getElementsByClassName("showMe2")[i];
+    	 hiddenDiv.style.display = (el.value !== "280") ? "none" : "block";
+    	    hiddenDiv2.style.display = (el.value !== "281") ? "none" : "block";
+    	    i++
+    	});
+    reader.onload = function (r_event) {
+        document.getElementById('prev3').setAttribute('src', r_event.target.result);
+    }
+    function cacherliste() {
+        var hiddenDiv = document.getElementById("showMe");
+        var hiddenDiv2 = document.getElementById("showMe2");
+        hiddenDiv.style.display = "none";
+        hiddenDiv2.style.display = "none";
+    };
+	$('#file').on('change',function(){
+                var fileName = $(this).val();
+                $(this).next('.custom-file-label').html(fileName);
+            })
+   if(document.getElementsByName('imageFile').length > 0){
+	   document
+	      .getElementsByName("imageFile")[0]
+	      .addEventListener("change", function (event) {        
+	        var fileName = event.target.value;
+	        if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".png")) {
+	              document.getElementById("prev3").classList.remove("hidden");
+	        	reader.readAsDataURL(this.files[0]);
+	          }else{
+	              document.getElementById("prev3").removeAttribute("src");
+	              document.getElementById("prev3").classList.add("hidden");
+	          }
+	      });
+    }
+    var reader2 = new FileReader();
+    reader2.onload = function (r_event) {
+        document.getElementById('prev4').setAttribute('src', r_event.target.result);
+    }
+  if(document.getElementsByName('imageFile2').length > 0){
+    document.getElementsByName('imageFile2')[0].addEventListener('change', function (event) {
+    	var fileName = event.target.value;
+        if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".png")) {
+              document.getElementById("prev4").classList.remove("hidden");
+        	reader2.readAsDataURL(this.files[0]);
+          }else{
+              document.getElementById("prev4").removeAttribute("src");
+              document.getElementById("prev4").classList.add("hidden");
+          }
+    })
+  }
+    $(document)
+			.ready(
+					function() {
+						$("#myForm2")
+								.validate(
+										{
+											rules : {
+												imageFile : "required",
+												imageFile2 : "required",
+												file : {
+													required : true,
+													
+												},									
+											},
+											messages : {
+												imageFile : "Veuillez ajouter la Recto de la CIN",
+												imageFile2 : "Veuillez ajouter la Verso de la CIN",
+												file : {
+													required : "Veuillez ajouter la demande d’abonnement signée",
+												
+												},
+												motifRefus:{
+													required : "Veuillez ajouter la demande d’abonnement signée",
+												}											
+											},
+											errorElement : "em",
+											errorPlacement : function(error,
+													element) {
+												// Add the `invalid-feedback` class to the error element
+												error
+														.addClass("invalid-feedback");
+
+												if (element.prop("type") === "checkbox") {
+													error.insertAfter(element
+															.next("label"));
+												} else {
+													error.insertAfter(element);
+												}
+											},
+											highlight : function(element,
+													errorClass, validClass) {
+												$(element)
+														.addClass("is-invalid")
+														.removeClass("is-valid");
+											},
+											unhighlight : function(element,
+													errorClass, validClass) {
+												$(element).addClass("is-valid")
+														.removeClass(
+																"is-invalid");
+											}
+										});						
+					});
+    
+    var messagenotif = document.getElementById("message").value ;
+    if (messagenotif !== "" && messagenotif == "changementdebitcrée") {
+     	$(document).Toasts('create', {
+  		  title: "Erreur",
+  		  body: "Création demande changement débit",
+  		  class: 'bg-danger',
+  		  autohide:true,
+  		  delay: 10000
+  		})
+    }
+
+
+	if (messagenotif !== "" && messagenotif == "statutanuller") {
+     	$(document).Toasts('create', {
+  		  title: "Succès",
+  		  body: "La demande a été annulée avec succès",
+  		  class: 'bg-success',
+  		  autohide:true,
+  		  delay: 10000
+  		})
+    }
+          if(messagenotif !== "" && messagenotif == "Échec de la duplication de la demande."){
+ 	   $(document).Toasts("create", {
+	        title: "Error",
+	        body: "Échec de la duplication de la demande. ",
+	        class: "bg-danger",
+	        autohide: true,
+	        delay: 10000,
+	      });
+    }
+       if(messagenotif !== "" && messagenotif == "Échec de la duplication une autre demande est en cours"){
+ 	   $(document).Toasts("create", {
+	        title: "Error",
+	        body: "Échec de la duplication une autre demande est en cours",
+	        class: "bg-danger",
+	        autohide: true,
+	        delay: 10000,
+	      });
+    }
+	if (messagenotif !== "" && messagenotif == "execution") {
+     	$(document).Toasts('create', {
+  		  title: "Succès",
+  		  body: "La demande est en état d'execution",
+  		  class: 'bg-success',
+  		  autohide:true,
+  		  delay: 10000
+  		})
+    }
+	if(messagenotif !== "" && messagenotif == "Clôturée"){
+      $(document).Toasts("create", {
+	        title: "Succès",
+	        body: "demande Clôturée avec succes",
+	        class: "bg-success",
+	        autohide: true,
+	        delay: 10000,
+	      });
+    }
+	$( "#editabonnementForm" ).submit(function( event ) {		
+		$('p#editabonnementForm').addClass('aftersendformEdit')
+ });
+  $("#prev").click(function() {
+    var imgSrc = $(this).attr('src');
+    $('#imgModal').attr('src', imgSrc);
+    $('#myModal').modal('show');
+  });	
+	 $("#prev2").click(function() {
+		    var imgSrc = $(this).attr('src');
+		    $('#imgModal').attr('src', imgSrc);
+		    $('#myModal').modal('show');
+		  });
+	 $('#buttonDemandeSigne').on('click', function() {
+		  $(this).addClass('disabled').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement en cours...');
+		  $('.loader-container').show();
+	  });
+	 $('#buttonPaiement').on('click', function() {
+		  $('.loader-container').show();
+	  });
+	 
+</script>

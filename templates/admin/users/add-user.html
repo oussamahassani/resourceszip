@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Ajouter un utilisateur</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">Ajouter un utilisateur</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form-sample"  id="form-sample" action="#" th:action="@{/admin/users/add-user}" enctype="multipart/form-data" method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Nom</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="test" th:value="${nom != null} ? ${nom}" class="form-control" name="Nom" placeholder="Nom" />                                         
+                                        <!-- th:required="required" -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Prénom</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:value="${prenom != null} ? ${prenom}" class="form-control" name="Prenom" placeholder="Prénom" />
+                                    </div>
+                                </div>
+                            </div>
+                 
+                        </div>
+                                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Nom commercial</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="test" th:value="${nomCommercial != null} ? ${nomCommercial}" class="form-control" name="nomCommercial" placeholder="nomCommercial" />                                         
+                                        <!-- th:required="required" -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Interlocuteur</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:value="${interlocuteur != null} ? ${interlocuteur}" class="form-control" name="interlocuteur" placeholder="interlocuteur" />
+                                    </div>
+                                </div>
+                            </div>
+                 
+                       <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">code PGH</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:value="${codePGHUser != null} ? ${codePGHUser}" class="form-control" name="codePGHUser" placeholder="codePGHUser" />
+                                    </div>
+                                </div>
+                            </div>
+                 
+                        </div>
+                        <div class="row">
+                                                        <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Type</label>                                    
+                                    <div class="col-sm-10">
+                                        <select id="typerole" name="typerole" class="form-control" th:required="true" onclick='verificationTypeUser(this)'>
+                                            <option value="" selected>Selectionner type user</option>
+                                            <option th:selected="(${type} =='ADMINISTRATEUR')" value="ADMINISTRATEUR"  sec:authorize="hasAnyAuthority('READ_USER_LIST')">ADMINISTRATEUR</option>
+                                             <option th:selected="(${type} =='POS')" value="POS" sec:authorize="hasAnyAuthority('READ_USER_LIST')">POS</option>
+                                              <option th:selected="(${type} =='DISTRIBUTEUR')" value="DISTRIBUTEUR" sec:authorize="hasAnyAuthority('READ_USER_LIST')">DISTRIBUTEUR</option>
+                                               <option th:selected="(${type} =='REVENDEUR')" value="REVENDEUR">REVENDEUR</option>
+                                                <option th:selected="(${type} =='G.STOCK')" value="G.STOCK" sec:authorize="hasAnyAuthority('READ_USER_LIST')">GESTION.STOCK</option>
+                                               
+                                               
+                                             
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Role</label>
+                                    <div class="col-sm-10"  sec:authorize="hasAnyAuthority('READ_USER_LIST')">
+                                        <select id="roles" name="roles" class="form-control" th:required="true">
+                                            <option value="">Selectionner un role</option>
+                                            <option th:each="role : ${roles}" th:value="${role.roleId}" 
+                                            		th:selected="(${role_id} == ${role.roleId})"
+                                                    th:text="${role.roleName}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-10" sec:authorize="!hasAnyAuthority('READ_USER_LIST')">
+                                        <select id="roles" name="roles" class="form-control" th:required="true">
+                                            <option value="">Selectionner un role</option>
+                                            <option  th:value="${rolerevendeur.roleId}" th:text="${rolerevendeur.roleName}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                                                          <div class="col-md-6">
+                                <div class="form-group row">
+                               <label class="col-sm-2 col-form-label">Gouvernorat</label>
+                               
+                                    <div class="col-sm-10">
+                                                <select
+								                    id="gouvernorats"
+								                    name="gouvernorat"
+								                    class="form-control"
+								                    th:required="true"
+								                  >
+								                    <option value="">Sélectionner un Gouvernorat</option>
+								                    <option
+								                      th:each="gouvernorat : ${gouvernorats}"
+								                      th:value="${gouvernorat.gouvernoratId}"
+								                      th:text="${gouvernorat.gouvernoratName}"
+                                                      th:selected="${gouvernorat_id == gouvernorat.gouvernoratId}"								                      
+								                    ></option>
+								                  </select>
+               
+                                    </div>
+                                </div>
+                            </div> 
+                          
+                             <div class="col-md-6">
+                                <div class="form-group row">
+                               <label class="col-sm-2 col-form-label">Ville</label>
+                                    <div class="col-sm-10">
+					                  <select
+					                    id="ville"
+					                    name="ville"
+					                    class="form-control"
+					                    th:required="true"
+					                  >
+					                  	<option value="">Sélectionner une ville</option>					                  
+					                    <option
+								         th:each="ville : ${villes}"
+								         th:value="${ville.villeId}"
+								         th:text="${ville.villeName}"
+                                         th:selected="${ville_id == ville.villeId}"								                      
+								       ></option>
+					                  </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                            <div class="form-group row">
+							  <label class="col-sm-2 col-form-label">Code postal </label>
+							  <div class="col-sm-10">							  
+							    <select
+							    	class="form-control"
+					                name="codepostale"
+							      	id="codepostale"
+							      	placeholder="Code postal"
+							      	th:required="required"
+					                  >
+					                    <option value="">Code postal</option>
+			                          <option
+			                                th:each="codePostale : ${listCodePostale}"
+			                                th:value="${codePostale.PostalCodeId}"
+			                                th:text="${codePostale.name+'-'+codePostale.code}"
+                                         	th:selected="${codePostale.PostalCodeId == codePostaleId}"								                      			                                
+			                              ></option>
+			                        </select>
+							  </div>
+							  </div>
+							</div>
+                            
+                            <div class="col-md-6">
+                            <div class="form-group row">                            
+								<label class="col-sm-2 col-form-label">Adresse</label>
+								<div class="col-sm-10">								
+									<input
+									   type="text"
+									   class="form-control"
+									   name="adresse"
+									   id="adresse"
+									   placeholder="Adresse"
+									   th:required="required"
+									   th:value="${adresse != null} ? ${adresse}"
+									 />								
+								</div>
+							</div>
+							</div>
+							
+                            
+							<div class="col-md-6">
+	                            <div class="form-group row">                            							
+									<label class="col-sm-2 col-form-label">Numéro de téléphone</label>
+									<div class="col-sm-10">																
+										<input type="number" name="telephone"  th:value="${telephone != null} ? ${telephone}"  id="telephone" class="form-control" required="true" / >
+									</div>
+								</div>
+							</div>
+                        </div>
+                        
+                    <!-- Bloc Email + CIN -->
+                    <div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-sm-2 col-form-label">Email</label>
+								<p th:text="${img}"></p>
+	                             <div class="col-sm-10">
+	                                <input onchange="msg_error_supp()" type="email" th:class="${email != null} ? 'form-control border border-danger' : 'form-control'" th:value="${email != null} ? ${email}" class="form-control" name="Email" placeholder="Email" />
+	                                <p class="text-danger" name="msg_email_error" id="msg_email_error" th:if="${existedCode != null}">Email déjà utilisé</p>	                                
+	                             </div>                             
+	                            
+	                         </div>
+	                    </div>
+        				<div class="col-md-6">
+                        	<div class="form-group row">
+								<label class="col-sm-2 col-form-label">CIN</label>
+								 <div class="col-sm-10">
+								  	<input type="number" th:value="${cin != null} ? ${cin}" name="CIN" class="form-control" required="true" >
+								 </div>
+							</div>
+                    	</div>
+                   </div>
+                        
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Mot de passe</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="password" name="Password" placeholder="Mot de passe" th:required="required"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Confirmer le mot de passe</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" onKeyUp="validate_confirm_password()" id="confirm_password" class="form-control" name="Confirm_Password" placeholder="Confirmer le mot de passe" th:required="required"/>
+                                    	<span id="msg"></span>
+                                    	 
+                                    </div>                                                                           
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label" for="imageFile">Photo de profil</label>
+                                    <div class="col-sm-10">
+                                        <div class="custom-file">
+                                            <input type="file" accept="image/*"  class="custom-file-input" id="imageFile"
+                                                   name="imageFile"/>
+                                            <label class="custom-file-label" for="imageFile">Choisir une image</label>
+                                        </div>
+                                    </div>
+                                    <img src="/img/faces/choisiruneimage.png" id="prev" style="height: 200px;width: 50%;
+                                    display: block;margin-left: auto;margin-right: auto; margin-top: 20px;"/>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Activation </label>
+                                     
+                                    
+                                    <div class="col-sm-4">
+                                        <div class="form-radio">
+                                            <label class="form-check-label" >
+                                            
+                                                <input th:checked="(${activation} == true or ${activation}==null)" type="radio" style="opacity: 1 !important;" class="form-check-input" name="activation" id="membershipRadios1" value="True"> Activé
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-radio">
+                                            <label class="form-check-label">
+                                                <input th:checked="(${activation} == false)" type="radio" style="opacity: 1 !important" class="form-check-input" name="activation" id="membershipRadios2" value="False"> Désactivé
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                       <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Tva </label>
+                                     
+                                    
+                                    <div class="col-sm-4">
+                                        <div class="form-radio">
+                                            <label class="form-check-label" >
+                                            
+                                                <input th:checked="(${isExonoree} == true )" type="radio" style="opacity: 1 !important;" class="form-check-input" name="isExonoree" id="isExonoree1" value="True">   Exonérée de TVA
+ 
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-radio">
+                                            <label class="form-check-label">
+                                                <input th:checked="(${isExonoree} == false or ${isExonoree}==null)" type="radio" style="opacity: 1 !important" class="form-check-input" name="isExonoree" id="isExonoree2" value="False"> Soumise à la TVA
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                         <div id="otherinput">
+                            </div>
+                        <div class="card-footer" style="margin-top: 20px; text-align: center;">
+                        	<button type="submit" class="btn btn-success" style="margin-right: 20px;">Sauvegarder</button>
+                        	<button th:if="!${nom}" type="reset" class="btn btn-danger" style="margin-left: 20px;" onclick="resetimage()">Réinitialiser</button>
+                        	<button th:if="${nom}" class="btn btn-danger" style="margin-left: 20px;"><a th:href="@{/admin/users/add-user}" class="text-light">Réinitialiser</a></button>
+                        </div>
+                    </form>
+                </div>
+              
+                
+            </div>
+        </div>
+    </div>
+        </div>
+    </section>
+
+</section>
+</body>
+</html>
+<script th:inline="javascript">
+var plafonrevendeur = /*[[${plafonrevendeur}]]*/ "default";
+var coordonneesBancaires = /*[[${coordonneesBancaires}]]*/ "default";
+	if(coordonneesBancaires == null){coordonneesBancaires=""}
+var ActivitePrincipale = /*[[${ActivitePrincipale}]]*/ "default";
+	if(ActivitePrincipale == null){ActivitePrincipale=""}
+var Regimefiscal = /*[[${Regimefiscal}]]*/ "default";
+	if(Regimefiscal == null){Regimefiscal=""}
+var identificationfiscale = /*[[${identificationfiscale}]]*/ "default";
+	if(identificationfiscale == null){identificationfiscale=""}
+var classuser = /*[[${classuser}]]*/ "default";
+
+afficheBlockRev = false
+const selectTypeUser = document.querySelector('#typerole');
+
+if(selectTypeUser.value=="REVENDEUR"){
+	afficheBlockRev = true
+	verificationTypeUser(selectTypeUser)
+}
+
+	var reader = new FileReader();
+    reader.onload = function(r_event) {
+        document.getElementById('prev').setAttribute('src', r_event.target.result);
+    }
+
+    document.getElementsByName('imageFile')[0].addEventListener('change', function(event) {
+        reader.readAsDataURL(this.files[0]);
+    })
+    function resetimage() {
+        document.getElementById('prev').setAttribute('src', '/img/faces/choisiruneimage.png');
+    }
+    ;
+    
+    //fonction pour les pattern
+    jQuery.validator.addMethod(
+		    "regexInputText",
+		    function(value, element, regexp) {
+		        var check = false;
+		        return this.optional(element) || regexp.test(value);
+		    },
+		    "Please check your input."
+		);
+    
+    $("#gouvernorats").change(function () {
+        sendAjaxRequest();
+      });
+    
+    $("#ville").change(function(){
+        sendAjaxRequestCodePostal()
+      })
+
+        function sendAjaxRequest() {
+      var villeid = $("#gouvernorats").val();
+      $.get("/client/getgouvernorats/" + villeid, function (data) {
+    	  
+    	  if(data.length !== 0)
+    	  {
+    	      $.get("/client/codepostale/" + data[0].villeId, function (data) {
+    	        $("#codepostale").empty();
+    	        data.forEach(function (item, i) {
+    	          var optiondata =
+    	            "<option value = " +
+    	            item.postalCodeId +
+    	            ">" +
+    	            item.name +"-" + item.code+
+    	            "</option>";
+    	          $("#codepostale").append(optiondata);
+    	        });
+    	   
+    	      });
+    	      }
+    	  
+		        $("#ville").empty();
+		        data.forEach(function (item, i) {
+		          
+		          var option =
+		            "<option value = " +
+		            item.villeId +
+		            ">" +
+		            item.villeName +
+		            "</option>";
+		          $("#ville").append(option);
+		        });
+		      });
+		    }
+        
+        function sendAjaxRequestCodePostal() {
+            var villeid = $("#ville").val();
+            $.get("/client/codepostale/" + villeid, function (data) {
+    	     $("#codepostale").empty();
+              data.forEach(function (item, i) {
+                var option =
+                  "<option value = " +
+                  item.postalCodeId +
+                  ">" +
+                  item.name +"-" + item.code+
+                  "</option>";
+                $("#codepostale").append(option);
+              });
+            });
+          }
+    
+    function verificationTypeUser(column){
+   	 	if(column.value=="REVENDEUR"){
+   	 	afficheBlockRev = true
+   	 	}else{
+   	 	afficheBlockRev = false
+   	 	}
+  	  let otherinput = "<div></div>"  	
+  	 
+  	  if(afficheBlockRev == true)
+  		  {
+
+  		otherinput = `<div class="row mt-2">
+  		
+  			<div class="form-group col-md-6">
+			  <label for="pcfacturerecurent" class="col-form-label">Taux de réalisation  </label>
+			  <input name="pcfacturerecurent" class="form-control type="number" required/>
+			  </div>
+			   <div class="form-group col-md-6">
+				  <label for="pcRefusCommision" class="col-form-label">Taux rejet commercial</label>
+				  <input name="pcRefusCommision" class="form-control  type="number" required>
+				  </div>
+
+                  <div class="col-md-6">
+                 <label class="col-form-label">Plafond revendeur </label>
+                 <input type="number"  min="0"  max="99999" name="plafonrevendeur" class="form-control" value="`+plafonrevendeur+`" required="true" / >
+    
+              </div>
+              <div class="col-md-6">
+              <label class="col-form-label">Coordonnées Bancaires  </label>
+              <input  type="text" name="coordonneesBancaires" class="form-control" value="`+coordonneesBancaires+`" required="true"  / >
+ 
+           </div>
+           
+           <div class="col-md-6">
+           <label class="col-form-label">Principale  Activite </label>
+           <input defaultValue="1000"  type="text" name="ActivitePrincipale" value="`+ActivitePrincipale+`" class="form-control" required="true" / >
+
+        </div>
+        <div class="col-md-6">
+        <label class="col-form-label">Avoir du stock</label>
+        <select id="withstock" name="withstock" class="form-control" required="true" >
+        <option  value="true">avec stock</option>
+                 <option  value="false">n'a pas de stock</option>
+                 </select>
+
+     </div>
+     <div class="col-md-6">
+     <label class="col-form-label">Classe  Revendeur </label>
+     <select id="classuser" name="classusers" class="form-control" >
+     		  <option value="" >Selectioner Classement</option>
+     		  <option  value="A">Classe A</option>
+              <option  value="B" >Classe B</option>
+              <option  value="C">Classe C</option>
+              <option  value="D">Classe D</option>
+              </select>
+
+  </div>
+<div class="col-md-6">
+  <label class="col-form-label">Régime fiscal</label>
+  <input type="text" name="Regimefiscal" value="`+Regimefiscal+`" class="form-control" / >
+</div>
+
+<div class="col-md-6">
+	     <label class="col-form-label">Forme juridique </label>
+	     <select class="form-control" name="Formejuridique" id="Formejuridique">
+		        <option value="" >Selectioner forme juridique</option>
+		        <option value="SASU"  >SASU</option>
+		        <option value="EURL" >EURL</option>
+		        <option value="SAS" >SAS</option>
+		        <option value="SARL" >SARL</option>
+		        <option value="SNC" >SNC</option>
+		        <option value="SA" >SA</option>
+     	</select>
+
+</div>
+<div class="col-md-6">
+	<label class="col-form-label">Identification fiscale</label>
+    <input type="text" class="form-control" value="`+identificationfiscale+`" name="identificationfiscale" id="identificationfiscale"/>
+</div>
+
+
+<div class="col-md-6">
+	        <label class="col-form-label" for="imageFile">RNE</label>
+	        <input type="file" accept="pdf/*" className="form-control"
+                name="imageFileRNE" id="imageFileRNE" class="form-control-file border">
+</div>
+
+<div class="col-md-6">
+		<label class="col-form-label" for="imageFileFiscale">Carte Fiscale</label>
+		<input type="file" accept="pdf/*" className="form-control"
+            name="imageFileFiscale" id="imageFileFiscale" class="form-control-file border">
+</div>
+
+<div class="col-md-6">
+		<label class="col-form-label" for="imageFile">Contrat</label>
+		<input type="file" accept="pdf/*" className="form-control"
+            name="Contratpdf" id="Contratpdf" class="form-control-file border">
+</div>
+  
+  
+  		  </div>`
+  		  }
+  	  
+  	$('#otherinput').empty().append(otherinput);
+    }
+    
+$( document ).ready( function () {
+	$( "#form-sample" ).validate( {
+		rules: {
+			Nom: {
+				required: true,
+				minlength: 3
+			},
+			Prenom: {
+				required: true,
+				minlength: 3
+			},
+			gouvernorats: {
+				required: true,
+			
+			},
+			Email: {
+				required: true,
+				email: true
+			},
+			Password: "required",
+			Confirm_Password:{
+				required: true,
+				equalTo: "#password"
+			},
+			ville:{
+				required: true,
+				
+			},
+            CIN: {
+				required: true,
+				minlength: 8,
+                maxlength: 8
+			},
+            typerole:{
+                required: true, 
+            },
+            adresse:{
+                required: true, 
+	            maxlength : 115
+	        },
+		},
+		messages: {
+		
+			Nom: {
+				required: "Ce champ est obligatoire",
+				minlength: "Veuillez entrer un Nom valide"
+			},
+			Prenom: {
+				required: "Ce champ est obligatoire",
+				minlength: "Veuillez entrer un Prenom valide"
+			},
+			Email: "S'il vous plaît, mettez une adresse email valide",
+			gouvernorats: {
+				required: "Ce champ est obligatoire",
+
+			}, 
+            CIN: {
+				required: "Ce champ est obligatoire",
+				minlength: "Le numéro doit comporter 8 chiffres",
+                maxlength: "Le numéro doit comporter 8 chiffres"
+			}, 
+			adresse: {
+                required: "Ce champ est obligatoire",
+            	maxlength : "L'adresse doit contenir au maximum 115 caractères"
+            },
+			ville: "Ce champ est obligatoire",
+			Password:"Ce champ est obligatoire",
+			Confirm_Password:{
+				required: "Ce champ est obligatoire",
+				equalTo :"La confirmation n'est pas identique"
+			},
+            typerole:"Ce champ est obligatoire",
+            plafonrevendeur:"Ce champ est obligatoire",
+            coordonneesBancaires:"Ce champ est obligatoire",
+            ActivitePrincipale:"Ce champ est obligatoire",
+            roles:"Ce champ est obligatoire",
+            telephone :"Ce champ est obligatoire",
+            codepostale:"Ce champ est obligatoire",
+            gouvernorats:"Ce champ est obligatoire",
+           
+            
+		},
+		errorElement: "em",
+		errorPlacement: function ( error, element ) {
+			// Add the `invalid-feedback` class to the error element
+			error.addClass( "invalid-feedback" );
+
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.next( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+		},
+		highlight: function ( element, errorClass, validClass ) {
+			$( element ).addClass( "is-invalid" ).removeClass( "is-valid" );
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$( element ).addClass( "is-valid" ).removeClass( "is-invalid" );
+		}
+	} );
+
+    $.validator.setDefaults( {
+	submitHandler: function (form) {
+	
+		 form.submit()
+	}
+} );
+
+} );
+
+function msg_error_supp() {
+	  document.getElementById("msg_email_error").innerHTML = "";
+}
+
+</script>
+

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<meta charset="UTF-8">
+<title>Details Historique</title>
+</head>
+
+<body>
+	<section layout:fragment="content">
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row mb-2">
+					<div class="col-sm-12" >
+						<h1 class="m-0">Details Historique</h1>
+					</div>
+	
+	
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<div class="row">
+			<div class="col-sm-10">
+				<div class="card-block">
+					<h4>Informations Historique</h4>
+					<div class="row">
+						<label class="col-sm-4 col-form-label">Date de creation:</label>
+						<div class="col-sm-8" th:text="${#dates.format(importXlsHistoryFile.createdDate, 'dd-MM-yyyy HH:mm')}"></div>
+
+					</div>
+
+					<div class="row">
+						<label class="col-sm-4 col-form-label">Nom file:</label> <span
+							class="col-sm-8" name="creepar"
+							th:text="${importXlsHistoryFile.nameFile}"></span> 
+					</div>
+
+					<div class="row">
+						<label class="col-sm-4 col-form-label">Success:</label>
+						<div class="col-sm-8" name="montant"
+							th:text="${importXlsHistoryFile.successRow}"></div>
+					</div>
+					<div class="row">
+						<label class="col-sm-4 col-form-label">Error:</label>
+						<div class="col-sm-8" th:text="${importXlsHistoryFile.errorRow}"></div>
+
+					</div>
+					<div class="row">
+						<label class="col-sm-4 col-form-label">Total:</label>
+						<div class="col-sm-8" th:text="${importXlsHistoryFile.totalRow}"></div>
+
+					</div>
+
+				</div>
+				<table class="table table-bordered" id="dataTable" width="100%"
+					cellspacing="0">
+					<thead>
+						<tr>
+							<th>Reference</th>
+							<th>Reference tt</th>
+							<th>Description</th>
+							<th>Etat</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ob:${ImportXlsHistory}">
+							<td th:text=${ob.referenceChifco} name="ref"></td>
+							<td th:text=${ob.referencett}></td>
+							<td th:text=${ob.description}></td>
+							<td >
+								<span class="bg-danger m-2 p-1" th:if="${ob.status == 'Erreur'}">Erreur</span>
+								<span  class ="bg-success m-2 p-1" th:unless="${ob.status== 'Erreur'}">Success</span>
+							</td>
+							
+
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+		</div>
+		<input type="hidden" name="message" id="message"
+			th:value="message ?  ${message}  : ''" />
+	</section>
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Admin Modems</title>
+<link rel="stylesheet" href="/css/customvariablestyle.css">
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">État du stock par revendeur</h1>			
+                            
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+        </div>
+
+</section>
+         <div class="card p-3">
+         		  <a  id="exportationButton" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm col-md-2 mb-2"><i
+                            class="fas fa-download fa-sm text-white-50"></i> Exporter <span class="numberSelect"></span> etat de stock </a>
+         				         <div class="container mb-3">
+				  <form class="row">
+				  	 <div class="col-md-3" sec:authorize="hasAnyAuthority('READ_MODEM')">
+				      	   <label class="col-form-label" for="revendeur">Recherche par distributeur</label>				 
+                           <input list="distributeur" 
+                           			class="form-control" 
+                           			autocomplete="off" 
+                           			type="text" 
+                           			name="dist" 
+                           			id="dist" 
+                           			th:required="true" 
+                           			placeholder="Recherche par code ou nom"
+                           			th:onchange="onchangeSearch(event); validationDataListDist(event);">
+ 							<div id="alertContainerDist"></div>
+                          			
+							<datalist id="distributeur">
+							<option th:each="u:${listDistributeur}"
+		                             th:value="${u.codeUser}"
+        							 th:text="${u.firstName + ' ' + u.lastName}">
+        							 
+		                     </option>
+							</datalist>
+					 </div>
+				      <div class="col-md-3">
+				      	   <label class="col-form-label" for="revendeur">Recherche revendeur par code ou nom</label>				 
+                           <input list="users" 
+                           			class="form-control" 
+                           			autocomplete="off" 
+                           			type="text" 
+                           			name="revendeur" 
+                           			id="revendeur" 
+                           			th:required="true" 
+                           			placeholder="Recherche par code ou nom"
+                           			th:onchange="onchangeSearch(event); validationDataListRev(event);">
+ 							<div id="alertContainer"></div>
+                          			
+							<datalist id="users">
+							<option th:each="u:${listUsers}"
+		                             th:value="${u.codeUser}"
+        							 th:text="${u.firstName + ' ' + u.lastName + (u.nomCommercial != null ? ' / ' + u.nomCommercial : '')}">
+        							 
+		                     </option>
+							</datalist>
+					 </div>
+					   <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="villes"
+                          >Gouvernorat
+                        </label>
+                        <select
+                         id="gouvernorat"
+                          name="gouvernorat"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                          <option value="">Gouvernorat</option>
+                          <option
+                            th:each="g : ${listGouvernorats}"
+                            th:value="${g.gouvernoratId}"
+                            th:text="${g.gouvernoratName}"
+                          ></option>
+                        </select>
+                      </div>
+					  <div class="col-md-3">
+	                        <label class="col-form-label" for="min">Stock disponible minimum</label>
+	                        <input
+	                          id="min"
+	                          type="number"
+	                          name="min"
+	                          placeholder="Stock disponible minimum"
+	                          class="form-control"
+	                          th:onchange="|onchangeSearch(event)|"
+	                        />
+	                    </div>
+	                      <div class="col-md-3">
+	                        <label class="col-form-label" for="max">Stock disponible maximum</label>
+	                        <input
+	                          id="max"
+	                          type="number"
+	                          name="max"
+	                          placeholder="Stock disponible maximum"
+	                          class="form-control"
+	                          th:onchange="|onchangeSearch(event)|"
+	                        />
+	                    </div>
+					 <div>
+					 </div>
+	                      <div class="col-md-3 mt-3">
+	                        <button
+	                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+	                          th:onclick="onclicksherh(event)"
+	                          id="buttonRecherche"
+	                        >
+	                          Rechercher
+	                        </button>
+	                      </div>
+				  </form>
+				</div>
+   				<table class="table table-bordered text-center" id="modamtabel">
+                            <thead>
+	                            <tr>
+	                             <th scope="col">
+		                              <input
+		                                name="select_all"
+		                                value="1"
+		                                id="select_all"
+		                                type="checkbox"
+		                              />                              
+		                            </th>
+		                            <th>Code</th>
+	                                <th>Revendeur</th>
+									<th class="col-2">Nombre total de modems</th>
+									<th class="col-2">Nombre de modems affectés</th>
+									<th class="col-2">Nombre de modems disponibles</th>
+									<th>Action</th>
+	                            </tr>                           
+                            </thead>
+                </table>
+          </div>
+
+</body>
+
+</html>
+
+<script th:inline="javascript">
+$('.loader-container').show();
+var revendeur = "";
+var max = "";
+var min = "";
+var gouvernorat = "";
+var dist = "";
+
+function onchangeSearch(event) {
+    let name = event.target.name;
+  
+    switch (name) {
+      case "revendeur": {
+    	  revendeur = event.target.value;
+        break;
+      }
+      case "max": {
+    	  max = event.target.value;
+        break;
+      }
+      case "min": {
+    	  min = event.target.value;
+        break;
+      }
+      case "gouvernorat": {
+    	  gouvernorat = event.target.value;
+        break;
+      }
+      case "dist": {
+    	  dist = event.target.value;
+        break;
+      }
+    }
+    
+  }
+  
+function onclicksherh(event) {
+	  //event.preventdefault()
+	  event.preventDefault();
+
+	  //$('#tutorialTable').DataTable().ajax.reload();
+	  $("#modamtabel")
+	    .DataTable()
+	    .column(0)
+	    .search(
+	      JSON.stringify({
+	    	  revendeur: revendeur,
+	    	  max: max,
+	    	  min: min,
+	    	  gouvernorat : gouvernorat,
+	    	  distributeur : dist
+	      })
+	    )
+	    .draw();
+      document.getElementById("select_all").checked = false;
+      viderUserCodes()
+}
+
+//initialiser le tableau pour stocker les user codes
+var userCodes = [];
+
+//définir le gestionnaire d'événements pour les cases à cocher
+function handleCheckboxClick(checkbox) {
+  var code = checkbox.getAttribute('id');
+  if (checkbox.checked) {
+    addCodeUser(code);
+  } else {
+    removeCodeUser(code);
+  }
+}
+
+//définir la fonction pour ajouter code user au tableau
+function addCodeUser(code) {
+	  userCodes.push(code);
+}
+
+//définir la fonction pour supprimer code user du tableau
+function removeCodeUser(code) {
+	  var index = userCodes.findIndex(element => element == code)
+	  if (index > -1) {
+	    userCodes.splice(index, 1);
+	  }
+	  document.getElementById("select_all").checked = false;
+}
+
+//pour chcked les checkbox qui dans tableau userCodes
+function checkDefaultCheckbox(){
+    if (userCodes.length !== 0) {
+    	userCodes.forEach(function (item, index, array) {
+          var elem = document.getElementById(item);
+          if (elem !== null) {
+            document.getElementById(item).checked = true;
+          }
+        });
+      }
+}
+
+//pour vider tableau userCodes
+function viderUserCodes(){
+	if (userCodes.length !== 0) {
+    	userCodes.forEach(function (item, index, array) {
+          var elem = document.getElementById(item);
+          if (elem !== null) {
+            document.getElementById(item).checked = false;
+          }
+        });
+      }
+	  userCodes.splice(0, userCodes.length);
+}
+
+//Cette formuaire est utilisée pour envoyer une demande POST vers le contrôleur 
+//stockDist avec l'identifiant de l'utilisateur (userId) pour afficher les détails du stock
+function details(column) {
+	  var data = oTable.row($(column).parents('tr')).data();
+
+	  var form = document.createElement('form');
+	  form.method = 'POST';
+	  form.action = '/stockRev';
+
+	  var input = document.createElement('input');
+	  input.type = 'hidden';
+	  input.name = 'userId';
+	  input.value = data.userId;
+	  form.appendChild(input);
+
+	  document.body.appendChild(form);
+	  form.submit();
+	}
+	
+var oTable;
+	$(document)
+			.ready(
+					function() {
+						   oTable =   $('#modamtabel').DataTable({
+							   "language": {
+									"lengthMenu": "Affichage _MENU_ enregistrements par page",
+						            "zeroRecords": "Rien trouvé - désolé",
+						            "info": "Afficher _START_ -  _END_ de _TOTAL_ Revendeur ",
+						            "infoEmpty": "Aucun enregistrement disponible",
+						            paginate: {
+						                first: "<i class='fa fa-fast-backward'></i>",
+						                last: "<i class='fa  fa-fast-forward '></i>",
+						                next: "<i class='fa fa-solid fa-chevron-right'></i>",
+						                previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+						              },
+						        },
+                             pagingType: 'full_numbers',
+						      processing: true,
+						      serverSide: true,
+						      searching : true,
+						      "processing": true, // activer le mode processing
+						      "serverSide": true, // activer le mode server-side
+						      ajax: '/recaprev',
+						      lengthMenu: [
+						          [10, 20, 50 , 100 , 200,500],
+						          [10, 20, 50 , 100 , 200,500],
+						        ],
+						      columnDefs: [{
+						    	    orderable: false,
+						    	    targets: [0, 1, 2, 3, 4, 5, 6],
+						    	    
+						      
+						    	  }],
+						      columns: [
+						    	  {
+						              data: null,
+						              render: function (data, type, row) {
+						            	return (		                		
+						            	  "<input type='checkbox' name='chekelement' onclick='handleCheckboxClick(this)' id=" +
+						            	  row.codeUser +
+						                  " name='idChecked' />"
+						                );
+						              },
+						            },
+						            { data: 'codeUser' },
+						            {
+						                data: null,
+						                render: function(data, type, row) {
+						                    var fullName = row.firstName + " " + row.lastName;
+						                    if (row.nomCommercial !== null) {
+						                        fullName += ' / ' + row.nomCommercial;
+						                    }
+						                    return fullName;
+						                }
+						            },
+						          { data: 'nb_modems_affectes' },
+						          { data: 'nb_modems_client' },
+						          {   
+							        	 data: null,
+							        	 render: function (data, type, row) {
+	                                        return row.nb_modems_disponible
+	                                     }
+
+	                              },
+	                              {
+										data : null,
+										render : function(data,
+												type, row) { 
+                                      
+                                    return "<button type='button' class='btn btn-primary' onclick='details(this)'>" +
+                                        "<i class='fas fa-eye'></i>" +
+                                        "</button>";                                       
+									}
+									},
+
+
+						      ],
+						  });
+
+						    oTable.on('processing.dt',function(e, settings, processing) {
+						    	
+						        // Update state of "Select all" contrselect_allol
+						        checkDefaultCheckbox();
+						        
+						        if (processing) {
+						            // afficher le spinner
+									  $('.loader-container').show();
+						          } else {
+						            // cacher le spinner
+									  $('.loader-container').hide();
+						          }
+						      });					
+					});
+	$(document).ready(function() {
+		$('#exportationButton').click(function() {
+			// Création du formulaire
+			var form = $('<form></form>');
+			form.attr('method', 'post');
+	        // Utilisation de la syntaxe Thymeleaf pour générer l'URL
+	        form.attr('action', /*[[@{/exporterEtat}]]*/ '');
+
+	        // Ajout d'un champ input de type hidden pour stocker le tableau user codes
+	        var userCodesField = $('<input></input>');
+	        userCodesField.attr('type', 'hidden');
+	        userCodesField.attr('name', 'userCodes');
+	        userCodesField.val(userCodes.join(','));
+	        form.append(userCodesField);
+	        
+	        // Ajout d'un champ input de type hidden pour stocker le type de user (revendeur / distributeur)
+	        var typeField = $('<input></input>');
+	        typeField.attr('type', 'hidden');
+	        typeField.attr('name', 'typeUser');
+	        typeField.val("rev");
+	        form.append(typeField);
+	        
+	        // Ajout du formulaire à la page et soumission automatique
+			$('body').append(form);
+			form.submit();
+		});
+	});
+    
+ $('thead input[name="select_all"]').on("click", function (e) {
+        if (this.checked) {
+                 	 $.ajax({
+                          type: "POST",
+                          contentType: "application/json",
+                          url: "/modem/codeuser/rev",
+                          data: JSON.stringify({
+                        	  userCode: revendeur,
+                	    	  max: max,
+                	    	  min: min,
+                	    	  gouvernorat : gouvernorat,
+                	    	  distributeur : dist
+                           }),
+                          dataType: "json",
+                          timeout: 100000,
+                          async:false,
+                          success: function (data) {
+
+                        	userCodes=data;
+                            checkDefaultCheckbox();
+                          },
+                          error: function (e) {
+                            console.log("ERROR: ", e);
+                          },
+                        });        	
+
+       } else {
+    	   
+    	   viderUserCodes()
+       }
+       e.stopPropagation();
+     });
+
+ $(document).ready(function() {
+		$('#exportationButton').click(function() {
+			// Création du formulaire
+			var form = $('<form></form>');
+			form.attr('method', 'post');
+	        // Utilisation de la syntaxe Thymeleaf pour générer l'URL
+	        form.attr('action', /*[[@{/exporterEtat}]]*/ '');
+
+	        // Ajout d'un champ input de type hidden pour stocker le tableau user codes
+	        var userCodesField = $('<input></input>');
+	        userCodesField.attr('type', 'hidden');
+	        userCodesField.attr('name', 'userCodes');
+	        userCodesField.val(userCodes.join(','));
+	        form.append(userCodesField);
+	        
+	        // Ajout d'un champ input de type hidden pour stocker le type de user (revendeur / distributeur)
+	        var typeField = $('<input></input>');
+	        typeField.attr('type', 'hidden');
+	        typeField.attr('name', 'typeUser');
+	        typeField.val("rev");
+	        form.append(typeField);
+	        
+	        // Ajout du formulaire à la page et soumission automatique
+			$('body').append(form);
+			form.submit();
+		});
+	});
+ 
+ //Validation de datalist Recherche revendeur dans filtre
+ function validationDataListRev(event) {
+ 	  var selectedValue = event.target.value;
+ 	  var datalistOptions = document.getElementById('users').options;
+ 	  var optionExists = false;
+ 	  if(selectedValue.length != 0){
+	    	  for (var i = 0; i < datalistOptions.length; i++) {
+		    	    if (datalistOptions[i].value === selectedValue) {
+		    	      optionExists = true;
+		    	      break;
+		    	    }
+		    	  } 
+	    	  if (!optionExists) {
+	    		  var alertElement = document.createElement('div');
+	    	      alertElement.classList.add('text-danger');
+	    	      alertElement.textContent = "Veuillez choisir un élément valide dans la liste.";
+	    	 
+	    		  var alertContainer = document.getElementById('alertContainer');
+	    	      alertContainer.innerHTML = '';
+	    	      alertContainer.appendChild(alertElement);
+	    	      
+	    	      // Désactiver le bouton de soumission "Rechercher"
+	    	      document.getElementById('buttonRecherche').disabled = true;
+		    	}else {
+		    	      // Supprimer l'alerte et activer le bouton de soumission "Rechercher"
+		    	      var alertContainer = document.getElementById('alertContainer');
+		    	      alertContainer.innerHTML = '';
+		    	      
+		    	      // Activer le bouton de soumission "Rechercher"
+		    	      document.getElementById('buttonRecherche').disabled = false;
+		    	    }
+ 	  }else{
+ 		// Supprimer l'alerte et activer le bouton de soumission "Rechercher"
+ 	      var alertContainer = document.getElementById('alertContainer');
+ 	      alertContainer.innerHTML = '';
+ 	      
+ 		// Activer le bouton de soumission "Rechercher"
+ 	      document.getElementById('buttonRecherche').disabled = false;
+ 	  }
+
+ 	}
+
+ //Validation de datalist recherche par distibuteur dans filtre
+ function validationDataListDist(event) {
+ 	  var selectedValue = event.target.value;
+ 	  var datalistOptions = document.getElementById('distributeur').options;
+ 	  var optionExists = false;
+ 	  if(selectedValue.length != 0){
+	    	  for (var i = 0; i < datalistOptions.length; i++) {
+		    	    if (datalistOptions[i].value === selectedValue) {
+		    	      optionExists = true;
+		    	      break;
+		    	    }
+		    	  } 
+	    	  if (!optionExists) {
+	    		  var alertElement = document.createElement('div');
+	    	      alertElement.classList.add('text-danger');
+	    	      alertElement.textContent = "Veuillez choisir un élément valide dans la liste.";
+	    	 
+	    		  var alertContainerDist = document.getElementById('alertContainerDist');
+	    	      alertContainerDist.innerHTML = '';
+	    	      alertContainerDist.appendChild(alertElement);
+	    	      
+	    	      // Désactiver le bouton de soumission "Rechercher"
+	    	      document.getElementById('buttonRecherche').disabled = true;
+		    	}else {
+		    	      // Supprimer l'alerte et activer le bouton de soumission "Rechercher"
+		    	      var alertContainerDist = document.getElementById('alertContainerDist');
+		    	      alertContainerDist.innerHTML = '';
+		    	      
+		    	      // Activer le bouton de soumission "Rechercher"
+		    	      document.getElementById('buttonRecherche').disabled = false;
+		    	    }
+ 	  }else{
+ 		// Supprimer l'alerte et activer le bouton de soumission "Rechercher"
+ 	      var alertContainerDist = document.getElementById('alertContainerDist');
+ 	      alertContainerDist.innerHTML = '';
+ 	      
+ 		// Activer le bouton de soumission "Rechercher"
+ 	      document.getElementById('buttonRecherche').disabled = false;
+ 	  }
+
+ 	}
+</script>

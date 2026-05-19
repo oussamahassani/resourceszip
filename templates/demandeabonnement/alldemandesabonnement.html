@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="layout">
+
+<head>
+  <title>Demandes D'Abonnement</title>
+  <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+  <link rel="stylesheet" href="https://rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.css" />
+
+  <style>
+    #checkedabonnementfixe {
+      display: none;
+    }
+
+    #addreferenceabonnement {
+      display: none;
+    }
+
+    #menu {
+      display: none;
+    }
+
+    table {
+      margin: 0 auto;
+      width: 100%;
+      clear: both;
+      border-collapse: collapse;
+      table-layout: fixed;
+      word-wrap: break-word;
+    }
+
+    table td {
+      width: 20%;
+    }
+
+    .tablebadge {
+      text-align: center;
+      color: white;
+      padding: "2px";
+      font-weight: 600;
+      border-radius: 2px;
+      padding: 4px 8px;
+    }
+
+    /*
+.select2-results__option {
+    max-height: 50px; 
+    overflow: hidden; 
+}
+*/
+    /* Adjust the height of the selected items in the dropdown */
+    /*
+.select2-selection__choice {
+    max-height: 30px; 
+    overflow: hidden; 
+}
+*/
+    .selection>span {
+      height: auto !important;
+    }
+
+    .selection ul {
+      height: auto !important;
+
+    }
+
+    /* width */
+    .selection ul ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    .selection ul ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+      border-radius: 10px;
+    }
+
+    /* Handle */
+    .selection ul ::-webkit-scrollbar-thumb {
+      background: grey;
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    .selection ul ::-webkit-scrollbar-thumb:hover {
+      background: black;
+    }
+  </style>
+</head>
+
+<body>
+  <section layout:fragment="content">
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-12">
+                <h1 class="m-0">Liste des abonnements</h1>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow mb-4">
+              <div class="blocFilter">
+                <button id="downloadenmasse" class="d-inline-block btn btn-sm btn-info shadow-sm mb-3"
+                  sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS','EXPORT_SUBSCRIPTION_REQUEST_RETAIL')">
+                  Extraire les demandes (<span id="countAbonnementSelected"></span>)
+                </button>
+                <form id="myForm" class="form-sample" method="post" action="" style="display: none">
+                  <!--        <div th:if = "${_csrf.parameterName">
+                                       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                       </div>-->
+                </form>
+
+                <button type="button" class="d-inline-block btn btn-sm bg-violet shadow-sm mb-3"
+                  sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')"
+                  th:attr="onclick=|triggerModalUploadenmasse(event)|">
+                  Changer le statut des demandes</button>
+                <button type="button" class="d-inline-block btn btn-sm bg-olive shadow-sm mb-3"
+                  sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_STATUS')"
+                  th:attr="onclick=|triggerModalAddReference(event)|">
+                  Ajouter reference</button>
+
+                <button id="togglebutton" class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3">
+                  Filtre</button>
+                <button sec:authorize="hasAnyAuthority('CLASSIFICATION_APPLICATION_SUBSCRIPTION')" type="button"
+                  class="btn btn-danger d-none d-sm-inline-block btn btn-sm shadow-sm mb-3" data-toggle="modal"
+                  data-target="#CLSDEMANDE" id="classificationDemandeMultiple" disabled="true">
+                  <i class="fas fa-times mr-2"></i>Changement de classification
+                </button>
+                <button class="btn btn-danger d-none d-sm-inline-block shadow-sm mb-3 " id="resilierselection"
+                  disabled="true">Réinitialiser la sélection</button>
+                  <!-- assigner demande au back office agent -->
+                    <button sec:authorize="hasAnyAuthority('ASSIGN_SUBSCRIPTION_AGENT')" type="button"
+                  class="btn btn-success d-none d-sm-inline-block btn btn-sm shadow-sm mb-3" data-toggle="modal"
+                  data-target="#ASSDEMANDE" id="assignerDemandeMultiple" disabled="true">
+                  <i class="fas fa-user-plus mr-2"></i>Assigner à un agent BO
+                </button>
+                  <!-- end of it -->
+                <form id="showMe3" method="get" autocomplete="off">
+                  <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="statutListfiltre">Status</label>
+                      <select id="statutListfiltre" name="statutListfiltre" class="form-control"
+                        th:onchange="|onchangeSearch(event)|"></select>
+                    </div>
+
+
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="statutListfiltre">Status
+                        TT</label> <select id="statutTTListfiltre" name="statutTTListfiltre" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value=''>Statut</option>
+                        <option value="Enregistrée">Enregistrée</option>
+                        <option value="Etude">Etude</option>
+                        <option value="Confirmation Client">Confirmation
+                          Client</option>
+                        <option value="Construction Ligne">Construction
+                          Ligne</option>
+                        <option value="Reservation">Reservation</option>
+                        <option value="Clôturée">Clôturée</option>
+                        <option value="Mise en service TT">Mise en service
+                          TT</option>
+                        <option value="Confirmation Client OK">Confirmation
+                          Client OK</option>
+                        <option value="Confirmation Client Annuler">Confirmation
+                          Client Annuler</option>
+                        <option value="Instance">Instance</option>
+                        <option value="Annulée">Annulée et refusé par TT</option>
+                      </select>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3" sec:authorize="hasAnyAuthority('READ_CLASSIFICATION')">
+                      <label class="col-form-label" for="statutListfiltre">Motif
+                      </label> 
+                      <select id="motifInstance" name="motifInstance"
+                        class="form-control js-select2 js-states custom-select" data-placeholder="Select Motif"
+                        th:onchange="|onchangeSearch(event)|" data-control="select2" multiple="multiple">
+                        <option value=''>Motif</option>
+                        <option th:each="motifInstance : ${motifInstance}" th:value="${motifInstance}"
+                          th:text="${motifInstance}"
+                             
+                          ></option>
+
+                      </select>
+                    </div>
+                    <div sec:authorize="hasAnyAuthority('READ_CLASSIFICATION')" class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="statutListfiltre">Classification
+                        Demande</label> <select id="classification" name="classification" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value=''>Classification</option>
+                        <option value="RCommercial">Refus commercial</option>
+                        <option value="ACCEPTATION">Acceptation</option>
+                        <option value="DDEMANDE">Duplication demande</option>
+                        <option value="DEnAttente">Demande en attente</option>
+
+                      </select>
+                    </div>
+
+
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes">Gouvernorat
+                      </label> <select id="gouvernorat" name="gouvernorat" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value="">Gouvernorat</option>
+                        <option th:each="ville : ${villes}" th:value="${ville.gouvernoratId}"
+                          th:text="${ville.gouvernoratName}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="gouvernorat">Ville</label>
+                      <select id="villes" name="villes" class="form-control" th:onchange="|onchangeSearch(event)|">
+                        <option value="">Ville</option>
+                      </select>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="Nom">Nom</label> <input id="textsearch" type="text" name="Nom"
+                        placeholder="Nom" class="form-control" th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="Prenom">Prénom</label> <input id="textsearch" type="text"
+                        name="Prenom" placeholder="Prénom" class="form-control" th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="CIN">Identification</label>
+                      <input id="textsearch" type="text" name="CIN" placeholder="Identification" class="form-control"
+                        th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="TEL">Téléphone</label> <input id="textsearch" type="number"
+                        name="TEL" placeholder="Téléphone" class="form-control" th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="RefTT">Référence
+                        TT</label> <input id="textsearch" type="text" name="RefTT" placeholder="Référence TT"
+                        class="form-control" th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="RefChif">Référence</label>
+                      <input id="textsearch" type="text" name="RefChif" placeholder="Référence" class="form-control"
+                        th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="professions">Profession</label>
+                      <select id="professions" name="professions" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value="">Profession</option>
+                        <option th:each="profession : ${professions}" th:value="${profession.professionId}"
+                          th:text="${profession.name}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="categories">Catégorie</label>
+                      <select id="categories" name="categories" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value="">Catégorie</option>
+                        <option th:each="categorie : ${categories}" th:value="${categorie.categorieProduitInternetId}"
+                          th:text="${categorie.categorieProduitInternetNom}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="professions">Pack</label>
+                      <select id="produit" name="produit" class="form-control" th:onchange="|onchangeSearch(event)|">
+                        <option value="">Pack</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3"
+                      sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_AREA','READ_SUBSCRIPTION_REQUEST_ALL')">
+                      <label class="col-form-label" for="professions">Affecté
+                        à</label> <select id="AffecterTo" name="AffecterTo" class="form-control js-select2"
+                        data-control="select2" data-placeholder="Select utilisateur"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value="">Affecté à</option>
+                        <option th:if="${user.interlocuteur != null}" th:each="user : ${AffectedTo}"
+                          th:value="${user.userid}"
+                          th:text="${user.firstName} + ' ' + ${user.lastName} + ' ' +${user.interlocuteur}"></option>
+                        <option th:if="${user.interlocuteur == null}" th:each="user : ${AffectedTo}"
+                          th:value="${user.userid}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3 "
+                      sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_AREA','READ_SUBSCRIPTION_REQUEST_ALL')">
+                      <label class="col-form-label" for="professions">Créé
+                        par </label> <select id="CreePar" name="CreePar" class="form-control js-select2"
+                        data-control="select2" data-placeholder="Select utilisateur"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value="">Créé par</option>
+                        <option th:if="${user.interlocuteur != null}" th:each="user : ${AffectedTo}"
+                          th:value="${user.userid}"
+                          th:text="${user.firstName} + ' ' + ${user.lastName} + ' ' +${user.interlocuteur}"></option>
+                        <option th:if="${user.interlocuteur == null}" th:each="user : ${AffectedTo}"
+                          th:value="${user.userid}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3"
+					     sec:authorize="hasAnyAuthority('READ_ASSIGN_SUBSCRIPTION_AGENT')">
+					  <label class="col-form-label" for="agent">Traité par</label>
+					  <select id="agentBO" name="agentBO" class="form-control js-select2"
+					          data-control="select2" data-placeholder="Select agent"
+					          th:onchange="|onchangeSearch(event)|">
+					    <option value="">Assigner à</option>
+					    <option value="-10">Aucun</option>
+					    <option th:each="agent : ${agents}"
+					            th:value="${agent.userid}"
+					            th:text="${agent.firstName + ' ' + agent.lastName + (agent.interlocuteur != null ? ' ' + agent.interlocuteur : '')}">
+					    </option>
+					  </select>
+					</div>
+					<div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="source">Source</label>
+                       <select id="source" name="source" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value=''>Source</option>
+                        <option value="Nety action">Nety action</option>
+                       <option value="Parrainage">Parrainage</option>
+                        <option value="CRM">CRM</option>
+                        <option value="Site Nety">Site Nety</option>    
+                         <option value="Site Nety">My Nety app</option>                                  
+                      </select>
+                    </div>
+	                  <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="source">Type Abonnment</label>
+                       <select id="source" name="typeAbonnment" class="form-control"
+                        th:onchange="|onchangeSearch(event)|">
+                        <option value=''>Type</option>
+                        <option value="ABBONEMENT_INTERNET">Internet</option>
+                       <option value="5G">Box 5G</option>
+                                                          
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-5 col-form-label"> Date de
+                          création: du</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de début"
+                            name="datedebut" id="datedebut" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">au</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de fin"
+                            name="datefin" id="datefin" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-6 col-form-label"> Date de
+                          modification: du</label>
+                        <div class="col-sm-6">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de début"
+                            name="dateDebutModification" id="dateDebutModification"
+                            th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">au</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de fin"
+                            name="dateFinModification" id="dateFinModification" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                    <div class="row">
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-5 col-form-label"> Date de
+                          mise en service:</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de début mise en service"
+                            name="datedebutMiseService" id="datedebutMiseService" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">au</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de fin mise en service"
+                            name="datefinMiseService" id="datefinMiseService" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    
+                  <div class="text-center">
+                    <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                      th:onclick="onclicksherh(event)">Rechercher</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+<!--Modal to assign demande to agent -->
+        <div class="modal" id="ASSDEMANDE" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Assigner demande(s) à</h5>
+              </div>
+              <div class="modal-body">
+                <form class="form-upload m-1" action="#" th:action="@{/demandeabonnement/assignerDemandeMultiple}"
+                  sec:authorize="hasAnyAuthority('ASSIGN_SUBSCRIPTION_AGENT')" method="POST"
+                  id="assignerDemandeMultipleForm">
+                  <div class="d-flex  flex-column">
+                   <label>Choisir l'agent</label> 
+					<select name="agentId" class="form-control col-md-8">
+					  <option value="" disabled selected>-- Sélectionner un agent --</option>
+					  <option th:each="agent : ${agents}" 
+					          th:value="${agent.userid}" 
+					         th:text="${agent.firstName + ' ' + agent.lastName}">Agent</option>
+					</select>
+                  </div>
+                  <input type="hidden" name="idabon" id="idabon" />
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success"
+                      onclick='assignerDemandeMultipleForm(event)'>Confirmer</button>
+                    <em id="spinerAddMultipleAssignement"></em>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end modal -->
+        <!-- Modal -->
+        <div class="modal" id="CLSDEMANDE" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">changement
+                  de classification demande</h5>
+
+              </div>
+
+              <div class="modal-body">
+                <form class="form-upload m-1" action="#" th:action="@{/demandeabonnement/classificationDemandeMultiple}"
+                  sec:authorize="hasAnyAuthority('CLASSIFICATION_APPLICATION_SUBSCRIPTION')" method="POST"
+                  id="classificationDemandeMultipleForm">
+                  <div class="d-flex  flex-column">
+                    <label>Choisir classification</label> <select name="statusClasssification" class="col-md-8">
+                      <option value="RCommercial">Rejet commercial</option>
+                      <option value="ACCEPTATION">Demande acceptée</option>
+                      <option value="DDEMANDE">Demande dupliquée</option>
+                      <option value="DEnAttente">Demande en attente</option>
+                    </select>
+                  </div>
+                  <input type="hidden" name="idabonforClassification" id="idabonforClassification" />
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success"
+                      onclick='classificationDemandeMultipleForm(event)'>Confirmer</button>
+                    <em id="spinerAddMultipleClassification"></em>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow mb-4">
+              <div class="card-body">
+                <div>
+                  <div class="blocy">
+                    <table id="tutorialTable"
+                      class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline">
+                      <!-- Header Table -->
+                      <thead class="table dataTable no-footer">
+                        <tr>
+                          <th scope="col"><input name="select_all" value="1" id="select_all" type="checkbox" /></th>
+                          <th scope="col">Référence</th>
+                          <th scope="col">Référence TT</th>
+                          <th scope="col">Statut TT</th>
+                          <th scope="col">Statut</th>
+                          <th scope="col">Identifiant</th>
+                          <th scope="col">Nom et prénom</th>
+                          <th scope="col">Téléphone</th>
+                          <th scope="col">Pack</th>
+                          <th scope="col">Creé par</th>
+                          <th scope="col">Date de Creation</th>
+                          <th scope="col">Classification</th>
+                            <th scope="col">Traité par</th>
+                             <th scope="col">Source</th>
+							<!--<th scope="col" sec:authorize="hasAuthority('ASSIGN_SUBSCRIPTION_AGENT')">Agent</th>-->
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                    </table>
+                    <div sec:authorize="hasAnyAuthority('CLASSIFICATION_APPLICATION_SUBSCRIPTION')" scope="col"
+                      id="userAuthority"></div>
+                       <div sec:authorize="hasAnyAuthority('ASSIGN_SUBSCRIPTION_AGENT')" scope="col"
+                      id="BOLeaderHasAuthority"></div>
+                         <div sec:authorize="hasAnyAuthority('READ_ASSIGN_SUBSCRIPTION_AGENT')" scope="col"
+                      id="ReadAssignHasAuthority"></div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="message" id="message" th:value="${message} ?  ${message} : ''" /> <input
+          type="hidden" name="notfoundcalcul" id="notfoundcalcul" th:value="notfoundcalcul ?  ${notfoundcalcul} : ''" />
+        <input type="hidden" name="tiragecalcul" id="tiragecalcul" th:value="tiragecalcul ?  ${tiragecalcul} : ''" />
+        <input type="hidden" name="reservationcalcul" id="reservationcalcul"
+          th:value="reservationcalcul ?  ${reservationcalcul} : ''" /> <input type="hidden" name="constricutioncalcul"
+          id="constricutioncalcul" th:value="constricutioncalcul ?  ${constricutioncalcul} : ''" /> <input type="hidden"
+          name="confirmationclientcalcul" id="confirmationclientcalcul"
+          th:value="confirmationclientcalcul ?  ${confirmationclientcalcul} : ''" />
+        <input type="hidden" name="etudecalcul" id="etudecalcul" th:value="etudecalcul ?  ${etudecalcul} : ''" /> <input
+          type="hidden" name="anullercalcul" id="anullercalcul" th:value="anullercalcul ?  ${anullercalcul} : ''" />
+        <input type="hidden" name="fixeNonExisteClacule" id="fixeNonExisteClacule"
+          th:value="fixeNonExisteClacule ?  ${fixeNonExisteClacule} : ''" />
+
+
+        <div class="modal fade" id="uploadModal" data-backdrop="false" tabindex="-1" role="dialog"
+          aria-labelledby="ModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Changer le
+                  statut des demandes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <form th:action="@{/demandeabonnement/uploadeditabonnementenmasse}" enctype="multipart/form-data"
+                method="post">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <div class="custom-file">
+                      <input type="file" className="form-control"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        name="file" th:required="true" id="customFile" /> <label class="custom-file-label"
+                        for="customFile">Télécharger
+                        le fichier</label>
+                    </div>
+                  </div>
+                </div>
+                <img src="/images/Templatechangerstatut.jpg" width="90%" />
+                <p>
+                  merci de respecter cette <a href="/file/TemplateChangersSatut.xlsx">template</a>
+                </p>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="submit" class="btn btn-primary">
+                    Télécharger</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="ModalAddReference" data-backdrop="false" tabindex="-1" role="dialog"
+          aria-labelledby="ModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Ajouter
+                  Reference des demandes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form th:action="@{/demandeabonnement/uploadaddreferenceabonnementenmasse}" enctype="multipart/form-data"
+                method="post">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <input type="file" name="filecustomFile"
+                      accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                      required />
+                  </div>
+                </div>
+                <img src="/images/TemplateAddReference.jpg" width="90%" />
+                <p>
+                  merci de respecter cette <a href="/file/TemplateAddReference.xlsx">template</a>
+                </p>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="submit" class="btn btn-primary">
+                    Télécharger</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <input type="hidden" name="hasediterole" th:value="${hasediterole}" id="hasediterole" />
+    </section>
+  </section>
+</body>
+
+</html>
+<script src="//rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.js"></script>
+<script th:inline="javascript">
+  // chek if num fixe existe to permit change status
+  var chekfixeexiste = null;
+  let changeRecherche = true;
+  // nom data tabel 
+  var oTable;
+  // check if user have edit privileege
+  var hasediterole = document.getElementById("hasediterole").value;
+  let userHasAuthority = document.getElementById('userAuthority') ? true : false
+   let BOLeaderHasAuthority = document.getElementById('BOLeaderHasAuthority') ? true : false
+   let ReadAssignHasAuthority = document.getElementById('ReadAssignHasAuthority') ? true : false
+  
+
+
+  // make filter abonnement 
+  var statutListfiltre = "";
+  var villes = "";
+  var gouvernorat = "";
+  var professions = "";
+  var categories = "";
+  var produit = "";
+  var TEL = "";
+  var Nom = "";
+  var Prenom = "";
+  var CIN = "";
+  var RefTT = "";
+  var RefChif = "";
+  var datedebut = "";
+  var datefin = "";
+  var statutTTListfiltre = "";
+  var dateDebutModification = "";
+  var dateFinModification = "";
+  var AffecterTo = "";
+  var CreePar = "";
+  var classification = "";
+  var datedebutMiseService="";
+  var datefinMiseService=""
+  var motifInstance = [];
+  var agentBO="";
+  var source = "";
+  var typeAbonnment=""
+
+  /*<![CDATA[*/
+
+  var listedes_ids = /*[[${listedes_ids}]]*/ "default";
+  var UPDATE_SUBSCRIPTION_REQUEST_ADMIN = /*[[${UPDATE_SUBSCRIPTION_REQUEST_ADMIN}]]*/ "default";
+  var CLASSIFICATION_APPLICATION_SUBSCRIPTION = /*[[${CLASSIFICATION_APPLICATION_SUBSCRIPTION}]]*/ "default";
+  var ASSIGN_SUBSCRIPTION_AGENT= /*[[${ASSIGN_SUBSCRIPTION_AGENT}]]*/ "default";
+   var READ_ASSIGN_SUBSCRIPTION_AGENT= /*[[${READ_ASSIGN_SUBSCRIPTION_AGENT}]]*/ "default";
+  var countAbonnementSelected = listedes_ids.length;
+
+
+  if (document.getElementById('countAbonnementSelected') != null) {
+    document.getElementById('countAbonnementSelected').innerHTML = countAbonnementSelected;
+  }
+
+
+
+  /*]]>*/
+
+  function updatecheklist() {
+
+    if (listedes_ids.length !== 0) {
+      // Vérifier 0 existe pour checked checkbox select-all  	  }
+      //	const found = listedes_ids.find(element => element == 0);	  
+      if (listedes_ids.length >= $('input[name="chekelement"]').length && changeRecherche) {
+
+        document.getElementById("select_all").checked = true;
+      }
+    }
+
+    /*if(listedes_ids.length !== 0 && listedes_ids.length == $('input[name="chekelement"]').length   ){
+      
+    
+       $('thead input[name="select_all"]').each(function () {		      	
+              
+              this.checked = true;
+            
+          })
+      }*/
+    if (listedes_ids.length !== 0) {
+      listedes_ids.forEach(function (item, index, array) {
+        var elem = document.getElementById(item);
+        if (elem !== null) {
+          document.getElementById(item).checked = true;
+        }
+      });
+      if (document.getElementById("classificationDemandeMultiple")) {
+
+        $("#classificationDemandeMultiple").prop('disabled', false);
+      }
+       if (document.getElementById("assignerDemandeMultiple")) {
+
+        $("#assignerDemandeMultiple").prop('disabled', false);
+      }
+
+      $('#resilierselection').prop('disabled', false);
+
+      if (document.getElementById("idabon")) {
+    	
+        document.getElementById("idabon").value = listedes_ids
+      }
+if (document.getElementById("idabonforClassification")) {
+	
+  document.getElementById("idabonforClassification").value = listedes_ids
+}
+      // const index = listedes_ids.indexOf(0);
+      // if(index !== -1){
+      //	  countAbonnementSelected = listedes_ids.length - 1
+      // }else{
+
+      countAbonnementSelected = listedes_ids.length
+      // }
+    }
+    // changeRecherche = true ; 
+    if (listedes_ids.length == 0) {
+      countAbonnementSelected = 0;
+      if (document.getElementById("classificationDemandeMultiple")) {
+
+        $("#classificationDemandeMultiple").prop('disabled', true);
+      }
+       if (document.getElementById("assignerDemandeMultiple")) {
+
+        $("#assignerDemandeMultiple").prop('disabled', true);
+      }
+      $('#resilierselection').prop('disabled', true);
+
+    }
+  }
+
+  $("#downloadenmasse").click(function (e) {
+    e.preventDefault();
+
+    if (listedes_ids.length !== 0) {
+      var url = "/demandeabonnement/extractenmasse";
+      $("#myForm").attr("action", url);
+      $("#myForm").submit();
+      //listedes_ids = []
+      // countAbonnementSelected = 0
+      // document.getElementById('countAbonnementSelected').innerHTML = countAbonnementSelected;
+      /*  $('thead input[name="select_all"]').each(function () {
+        	
+            this.checked = false;
+        })*/
+      /*  $('input[name="chekelement"]:checked').each(function () {
+        	
+            
+            this.checked = false;
+        })*/
+    } else {
+      alert("Veuillez selectionner les demandes à extraire");
+      window.location.reload();
+    }
+  });
+
+  function toggleCheckboxajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+    this.toggleCheckbox(column, data.demandeId);
+  }
+
+  function toggleCheckbox(element, id) {
+    if (element.checked === true) {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/demandeabonnement/addid",
+        data: JSON.stringify(id),
+        dataType: "json",
+        timeout: 100000,
+        success: function (data) {
+          listedes_ids.push(id);
+          updatecheklist();
+          //document.location.reload(true)
+          //countAbonnementSelected ++;
+          document.getElementById('countAbonnementSelected').innerHTML = countAbonnementSelected;
+        },
+        error: function (e) {
+          console.log("ERROR: ", e);
+        },
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/demandeabonnement/removeid",
+        data: JSON.stringify(id),
+        dataType: "json",
+        timeout: 100000,
+        success: function (data) {
+          //  findIndex(isLargeNumber)
+
+          let newelm = listedes_ids.filter((el) => el !== id);
+          listedes_ids = newelm;
+          //  if (index !== -1) listedes_ids.splice(index, 1);
+          updatecheklist();
+          // document.location.reload(true)
+          // countAbonnementSelected --;
+          document.getElementById('countAbonnementSelected').innerHTML = countAbonnementSelected;
+
+        },
+        error: function (e) {
+          console.log("ERROR: ", e);
+        },
+      });
+    }
+  }
+
+  function cacherliste() {
+    var hiddenDiv = document.getElementById("showMe");
+    var hiddenDiv2 = document.getElementById("showMe2");
+    var checkedabonnementfixe = document.getElementById("checkedabonnementfixe");
+    var addreferenceabonnement = document.getElementById("addreferenceabonnement");
+
+    checkedabonnementfixe.style.display = "none"
+    addreferenceabonnement.style.display = "none"
+    hiddenDiv.style.display = "none";
+    hiddenDiv2.style.display = "none";
+  }
+
+  function onchangeSearch(event) {
+    let name = event.target.name;
+
+    switch (name) {
+      case "statutListfiltre": {
+        statutListfiltre = event.target.value;
+        break;
+      }
+      case "statutTTListfiltre": {
+        statutTTListfiltre = event.target.value;
+        break;
+      }
+      case "villes": {
+        villes = event.target.value;
+        break;
+      }
+      case "gouvernorat": {
+        gouvernorat = event.target.value;
+        villes = "";
+        if (gouvernorat == "") villes = "";
+        break;
+      }
+
+      case "professions": {
+        professions = event.target.value;
+        break;
+      }
+      case "categories": {
+        categories = event.target.value;
+        break;
+      }
+      case "produit": {
+        produit = event.target.value;
+        break;
+      }
+      case "RefChif": {
+        RefChif = event.target.value;
+        break;
+      }
+      case "RefTT": {
+        RefTT = event.target.value;
+        break;
+      }
+      case "CIN": {
+        CIN = event.target.value;
+        break;
+      }
+      case "Prenom": {
+        Prenom = event.target.value;
+        break;
+      }
+      case "Nom": {
+        Nom = event.target.value;
+        break;
+      }
+      case "TEL": {
+        TEL = event.target.value;
+        break;
+      }
+      case "datefin": {
+        datefin = event.target.value;
+        break;
+      }
+      case "datedebut": {
+        datedebut = event.target.value;
+        break;
+      }
+      case "dateDebutModification": {
+        dateDebutModification = event.target.value;
+        break;
+      }
+      case "dateFinModification": {
+        dateFinModification = event.target.value;
+        break;
+      }
+      case "AffecterTo": {
+        AffecterTo = event.target.value;
+        break;
+      }
+      case "CreePar": {
+        CreePar = event.target.value;
+        break;
+      }
+       case "agentBO": {
+        agentBO = event.target.value;
+        break;
+      }
+      case "motifInstance": {
+        motifInstance = $("#motifInstance").val();
+        break;
+      }
+      case "classification": {
+        classification = event.target.value;
+        break;
+      }
+      
+      case "datedebutMiseService":{
+    	  datedebutMiseService = event.target.value;
+    	  break;
+      }
+      case "datefinMiseService":{
+    	  datefinMiseService = event.target.value;
+    	  break;
+      }
+      case "source":{
+    	  source = event.target.value;
+    	  break;
+      }
+      case "typeAbonnment":{
+    	  typeAbonnment = event.target.value;
+    	  break;
+      }
+      
+      
+    }
+  }
+
+  function onclicksherh(event) {
+    //event.preventdefault()
+    event.preventDefault();
+const data ={
+    statutListfiltre: statutListfiltre,
+    statutTTListfiltre: statutTTListfiltre,
+    gouvernorat: gouvernorat,
+    professions: professions,
+    categories: categories,
+    produit: produit,
+    villes: villes,
+    refChif: RefChif,
+    refTT: RefTT,
+    cin: CIN,
+    prenom: Prenom,
+    nom: Nom,
+    tel: TEL,
+    datefin: datefin,
+    datedebut: datedebut,
+    dateDebutModification: dateDebutModification,
+    dateFinModification: dateFinModification,
+    AffecterTo: AffecterTo,
+    CreePar: CreePar,
+    classification: classification,
+    motifInstance: motifInstance,
+    datedebutMiseService:datedebutMiseService,
+    datefinMiseService:datefinMiseService,
+    agentBO:agentBO,
+    source:source,
+    typeAbonnment:typeAbonnment
+  }
+    //$('#tutorialTable').DataTable().ajax.reload();
+    const base64 = btoa(
+  new TextDecoder().decode(
+    new TextEncoder().encode(JSON.stringify(data))
+  )
+);
+    const bases64 = btoa(
+    		  unescape(encodeURIComponent(JSON.stringify(data)))
+    		);
+    $("#tutorialTable")
+      .DataTable()
+      .column(0)
+      .search(bases64
+      )
+      .draw();
+
+    document.getElementById("select_all").checked = false;
+    changeRecherche = false;
+
+  }
+
+  function showdetailsajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+    let href =
+      "/demandeabonnement/getdemandeabonnementtoimprimer/" + data.demandeId;
+    window.location.href = href;
+  }
+
+
+
+
+
+  function triggerModalUploadenmasse(e) {
+    e.preventDefault();
+
+    $("#uploadModal").modal();
+  }
+  function triggerModalAddReference(e) {
+    e.preventDefault();
+
+    $("#ModalAddReference").modal();
+  }
+
+  $.get("/demandeabonnement/getallstatusabonnement", function (data) {
+
+    $("#statutListfiltre").empty();
+    var option = "<option value = ''>Statut</option>";
+    $("#statutListfiltre").append(option);
+
+    data.forEach(function (item, i) {
+      var option =
+        "<option value = " +
+        item.statutId +
+        ">" +
+        item.designation +
+        "</option>";
+      $("#statutListfiltre").append(option);
+    });
+  });
+  function sendAjaxRequest() {
+    var villeid = $("#gouvernorat").val();
+    if (villeid === "") {
+      $("#villes").empty();
+      var option = "<option value = ''>Ville</option>";
+      $("#villes").append(option);
+    } else {
+      $.get("/client/getgouvernorats/" + villeid, function (data) {
+        $("#villes").empty();
+        var option = "<option value = ''>Ville</option>";
+        $("#villes").append(option);
+        data.forEach(function (item, i) {
+          var option =
+            "<option value = " +
+            item.villeId +
+            ">" +
+            item.villeName +
+            "</option>";
+          $("#villes").append(option);
+        });
+      });
+    }
+  } function sendAjaxRequestMotif() {
+    var statutId = $("#statutTTListfiltre").val();
+    motifInstance = [];
+    if (statutId === "") {
+      $.get("/client/getAllMotif", function (data) {
+        $("#motifInstance").empty();
+        var option = "<option value = ''>motif</option>";
+        $("#motifInstance").append(option);
+        data.forEach(function (item, i) {
+          var option =
+            "<option value = '" +
+            item +
+            "'>" +
+            item +
+            "</option>";
+          $("#motifInstance").append(option);
+        });
+      })
+    } else {
+      $.get("/client/getMotif/" + statutId, function (data) {
+        $("#motifInstance").empty();
+        var option = "<option value = ''>motif</option>";
+        $("#motifInstance").append(option);
+        data.forEach(function (item, i) {
+          var option =
+            "<option value = '" +
+            item +
+            "'>" +
+            item +
+            "</option>";
+          $("#motifInstance").append(option);
+        });
+      });
+    }
+  }
+  function sendAjaxRequest2() {
+    var option = "<option value = ''>Pack</option>";
+    var categorieid = $("#categories").val();
+    if (categorieid === "") {
+      $("#produit").empty();
+
+      $("#produit").append(option);
+    } else {
+      $.get("/pack/packByCategory/" + categorieid, function (data) {
+        $("#produit").empty();
+        $("#produit").append(option);
+        data.forEach(function (item, i) {
+          var option =
+            "<option value = " +
+            item.packId +
+            ">" +
+            item.title +
+            "</option>";
+          $("#produit").append(option);
+        });
+      });
+    }
+  }
+  function etatttcolor(row) {
+    let motif = ""
+    let color = "red";
+    switch (row.etatTT) {
+      case "Etude": {
+        color = "#ff9c33" // oranger
+        break;
+      }
+      case "Confirmation Client": {
+        color = "#3358ff "  // azrek kam
+
+        break;
+      }
+      case "Construction Ligne": {
+        color = "#33f9ff" // azrek
+
+        break;
+      }
+
+      case "Reservation": {
+        color = "#ff7133 " //orange
+        break;
+      }
+      case "TirageJarretiere": {
+        color = "#33ffb5"; //a4der
+        break;
+      }
+      case "Mise en service TT": {
+        color = "#33f0b5"; //a4der
+        break;
+      }
+      case "Enregistrée": {
+        color = "#0077fd"; //asrek
+        break;
+      }
+      case "Instance": {
+        color = "#fd008e"; //roze
+        break;
+      }
+      case "Confirmation Client OK": {
+        color = "#109326"; //roze
+        break;
+      }
+      case "Refusé par TT": {
+        color = "#991e33"; //roze
+        break;
+      }
+      case "Clôturée": {
+        color = "#544af1"; // move
+        break;
+      }
+      default:
+        color = "red";
+    }
+    if (row.motifRefus) {
+      motif = "  motif :" + row.motifRefus
+    }
+
+    return "<div class='tablebadge' style=background-color:" + color + ">" + row.etatTT + motif + "</div>";
+  }
+  function telechargercontratnonsigne(rows) {
+    var data = oTable.row($(rows).parents("tr")).data();
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/demandeabonnement/contratNonsigne",
+      data: JSON.stringify(data),
+      timeout: 100000,
+    });
+  }
+
+  function telechargercontratsigne(rows) {
+    var data = oTable.row($(rows).parents("tr")).data();
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/demandeabonnement/downloadcontratajax",
+      data: JSON.stringify(data.demandeId),
+      timeout: 100000,
+    });
+  }
+
+  $(document).ready(function () {
+    var token = $("meta[name='_csrf']").attr("content");
+    var parameterName = $("meta[name='_csrf_parameter']").attr("content");
+    var messagenotif = document.getElementById("message").value;
+
+    if (messagenotif !== "" && messagenotif == "uploadeditabonnementenmasse") {
+      var notfoundcalcul = document.getElementById("notfoundcalcul").value;
+      var tiragecalcul = document.getElementById("tiragecalcul").value;
+      var reservationcalcul =
+        document.getElementById("reservationcalcul").value;
+      var constricutioncalcul = document.getElementById(
+        "constricutioncalcul"
+      ).value;
+      var confirmationclientcalcul = document.getElementById(
+        "confirmationclientcalcul"
+      ).value;
+      var etudecalcul = document.getElementById("etudecalcul").value;
+      var anullercalcul = document.getElementById("anullercalcul").value;
+      var fixeNonExisteClacule = document.getElementById("fixeNonExisteClacule").value;
+      var bodystring = "change statut demande xls effectuer  : ";
+      if (fixeNonExisteClacule != "" && fixeNonExisteClacule > 0) {
+        bodystring += "Téléphone  fixe non existe" + notfoundcalcul + "Dossier"
+      }
+      if (notfoundcalcul != "" && notfoundcalcul > 0)
+        bodystring += "non traiter " + notfoundcalcul + "Dossier";
+      if (reservationcalcul != "" && reservationcalcul > 0)
+        bodystring += "reservation Ligne " + notfoundcalcul + "Dossier";
+      if (reservationcalcul != "" && reservationcalcul > 0)
+        bodystring += "reservation Ligne " + reservationcalcul + "Dossier";
+      if (constricutioncalcul != "" && constricutioncalcul > 0)
+        bodystring += "Construction Ligne " + constricutioncalcul + "Dossier";
+      if (confirmationclientcalcul != "" && confirmationclientcalcul > 0)
+        bodystring +=
+          "Confirmation Client " + confirmationclientcalcul + "Dossier";
+      if (etudecalcul != "" && etudecalcul > 0)
+        bodystring += "encore en etude " + etudecalcul + "Dossier";
+      if (anullercalcul != "" && anullercalcul > 0)
+        bodystring += "Dossier Anuller " + anullercalcul;
+
+      $(document).Toasts("create", {
+        title: "change statut demande xls",
+        body: bodystring,
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "erreuruploadeditabonnementenmasse") {
+      $(document).Toasts("create", {
+        title: "changer statut demande",
+        body: "Impossible d'importer ce fichier : Le contenu de ce fichier n'est pas valide ",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "sendtt") {
+      $(document).Toasts("create", {
+        title: "demande envoyer au tt avec succes",
+        body: "",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "sendttReferenceObligtoir") {
+      $(document).Toasts("create", {
+        title: "Référence TT est obligatoire.",
+        body: "",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+
+
+    if (messagenotif !== "" && messagenotif == "numeroTelephoneObligatoir") {
+      $(document).Toasts("create", {
+        title: "Le numéro téléphone fixe est obligatoire.",
+        body: "",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "INSTALLED") {
+      $(document).Toasts("create", {
+        title: "Demande validée et installée par TT",
+        body: "",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "demandeupdated") {
+      $(document).Toasts('create', {
+        title: "Succès",
+        body: "La modification a été effectuée avec succès",
+        class: 'bg-success',
+        autohide: true,
+        delay: 10000
+      })
+    }
+    if (messagenotif !== "" && messagenotif == "sendttReferenceExiste") {
+      $(document).Toasts("create", {
+        title: "Erreur",
+        body: "Référence TT déjà utilisé",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "fileempty") {
+      $(document).Toasts("create", {
+        title: "Importation des données:",
+        body: "Le format de fichier n'est pas pris en compte seul les fichier Xlsx sont pris en charge",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "classificationAvecSuccess") {
+      $(document).Toasts("create", {
+        title: "Succès",
+        body: "classification des demandes d'abonnements a été effectuée avec succès",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+  if (messagenotif !== "" && messagenotif == "assignementAvecSuccess") {
+      $(document).Toasts("create", {
+        title: "Succès",
+        body: "Assignement de(s) demande(s) d'abonnement(s) a été effectuée avec succès",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+    if (messagenotif !== "" && messagenotif == "classificationMaxSizeEreur") {
+      $(document).Toasts("create", {
+        title: "Erreur",
+        body: "Veuillez s'il vous plaît ne pas dépasser 500 demandes.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+      if (messagenotif !== "" && messagenotif == "assignementMaxSizeEreur") {
+      $(document).Toasts("create", {
+        title: "Erreur",
+        body: "Veuillez s'il vous plaît ne pas dépasser 500 demandes.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+    }
+
+
+    if (
+      messagenotif !== "" &&
+      messagenotif == "uploadaddreferenceabonnementenmasse"
+    ) {
+      var etudecalcul = document.getElementById("etudecalcul").value;
+      var notfoundcalcul = document.getElementById("notfoundcalcul").value;
+      var referenceexistcount = document.getElementById("anullercalcul").value;
+      var bodystring = "ajouter Reference demande xls effectuer  : ";
+      if (notfoundcalcul != "" && notfoundcalcul > 0)
+        bodystring += "non traiter  :" + notfoundcalcul + "Dossier";
+      if (etudecalcul != "" && etudecalcul > 0)
+        bodystring += "Etude de ligne : " + etudecalcul + "Dossier";
+      if (referenceexistcount != "" && referenceexistcount > 0) {
+        bodystring += "reference Existe: " + referenceexistcount + "Dossier";
+        $(document).Toasts("create", {
+          title: "ajouter Reference demande xls",
+          body: "reference Existe: " + referenceexistcount,
+          class: "bg-danger",
+          autohide: true,
+          delay: 10000,
+        });
+      }
+      else {
+
+
+        $(document).Toasts("create", {
+          title: " Les références TT ont été ajoutées avec succès",
+          body: bodystring,
+          class: "bg-success",
+          autohide: true,
+          delay: 10000,
+        });
+      }
+    }
+
+    if (
+      messagenotif !== "" &&
+      messagenotif == "erreurreferenceabonnementenmasse"
+    ) {
+
+      $(document).Toasts("create", {
+        title: "Importation des données:",
+        body: "Impossible d'importer ce fichier : Le contenu de ce fichier n'est pas valide: ",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+      });
+
+    }
+
+
+
+    oTable = $("#tutorialTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ordering: true,
+      order: [3, "desc"],
+      responsive: {
+        details: {
+          type: "column",
+        },
+      },
+      searching: true,
+      fixedHeader: true,
+      // scrollY:500,
+      ajax: "/demandeabonnement/getallabonement",
+      lengthMenu: [
+        [10, 20, 50, 100, 200, 500],
+        [10, 20, 50, 100, 200, 500],
+      ],
+
+      language: {
+        lengthMenu: "Affichage _MENU_ par page",
+        zeroRecords: "Rien trouvé - désolé",
+        emptyTable: "aucune donnée disponible",
+        info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+        infoEmpty: "Aucun enregistrement disponible",
+        paginate: {
+          first: "<i class='fa fa-fast-backward'></i>",
+          last: "<i class='fa  fa-fast-forward '></i>",
+          next: "<i class='fa fa-solid fa-chevron-right'></i>",
+          previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+        },
+        search: "Chercher:",
+      },
+      initComplete: function (json) {
+        //Make your callback here.
+        updatecheklist();
+        document.getElementById("tutorialTable_filter").style.display = "none";
+      },
+
+      columnDefs: [
+        {
+          className: "dtr-control",
+          orderable: false,
+          targets: [0, 11, 12,13],
+        },
+        { width: "1%", targets: 0 },
+        { "width": "8%", "targets": 1 },
+
+        { "width": "8%", "targets": 2 },
+        { "width": "9%", "targets": 3 },
+        { "width": "9%", "targets": 4 },
+        { "width": "7%", "targets": 5 },
+        { "width": "8%", "targets": 6 },
+        { "width": "7%", "targets": 7 },
+        { "width": "8%", "targets": 8 },
+        { "width": "8%", "targets": 9 },
+        { "width": "7%", "targets": 10 },
+        { "width": "8%", "targets": 11 },
+        { "width": "7%", "targets": 12 },
+        { "width": "6%", "targets": 13 },
+        { "width": "8%", "targets": 14 },
+
+      ],
+      //"columnDefs": [{
+      //"targets": 12,
+      //"data": null,
+      //"defaultContent":
+
+      //  },
+
+      //  ],
+      columns: [
+        {
+          data: null,
+          render: function (data, type, row) {
+            return (
+
+              "<input type='checkbox' name='chekelement' onclick='toggleCheckboxajax(this)' id=" +
+              row.demandeId +
+              " name='idChecked' />"
+            );
+          },
+        },
+        { data: "referenceChifco" },
+        {
+          data: null,
+          render: function (data, type, row) {
+            if (row.referenceTT) return row.referenceTT;
+            else return "";
+          },
+        },
+        {
+          data: null,
+          render: function (data, type, row) {
+            if (row.etatTT)
+              return etatttcolor(row)   //"<div class='badge bg-success'>" + row.etatTT + "</div>";
+            else return "";
+          },
+        },
+
+        {
+          data: null,
+          render: function (data, type, row) {
+            if (row.nomStatut)
+              return (
+                "<div class='tablebadge' style=background-color:" +
+                row.couleurStatut +
+                ">" +
+                row.statutDesignation +
+                "</div>"
+              );
+            else return "";
+          },
+        },
+        // {data: 'statut.designation'},
+        { data: "cin" },
+
+        {
+          data: null,
+          render: function (data, type, row) {
+            return row.firstName + " " + row.lastName;
+          },
+        },
+
+        // {
+        //data: null,
+        //render: function (data, type, row) {
+        //return row.ville.gouvernoratName + ':' + row.gouvernorat.villeName;
+        // }
+        //},
+        //{
+        // data: null,
+        // render: function (data, type, row) {
+        // return row.adresse;
+        //}
+        //},
+        // {
+        //  data: null,
+        //render: function (data, type, row) {
+        // if (row.telFixe && row.telMobile)
+        //return row.telMobile + ' || ' + row.telFixe;
+        //else if (row.telFixe && row.telMobile == null)
+        //return row.telFixe
+        //else
+        // return row.telMobile
+
+        //}
+        // },
+        { data: "telFixe" },
+        {
+          data: null,
+          render: function (data, type, row) {
+            if (row.titlePack)
+              return row.titlePack
+            else
+              return ""
+          }
+        },
+        {
+          data: null,
+          render: function (data, type, row) {
+
+            if (row.createdByfirstName)
+              return row.createdByfirstName + "  " + row.createdBylastName
+            else
+              return null;
+
+          }
+        },
+
+        {
+          data: null,
+          render: function (data, type, row) {
+            return new Date(row.createdDate).toLocaleDateString("en-GB");
+          },
+        },
+        {
+          data: 'classementValue', // Use the name of the additional field
+          visible: userHasAuthority // Set visibility based on the authority
+        },
+		   {
+		  data: null,
+		  visible: ReadAssignHasAuthority,
+		  render: function (data, type, row) {
+		    const firstName = row?.treatedByfirstName || '';
+		    const lastName = row?.treatedBylaststName || '';
+		    return `${firstName} ${lastName}`;
+		  },
+		},
+		{
+          data: null,
+          render: function (data, type, row) {
+			  if (row.origin)
+            return row.origin;
+            else return "";
+          },
+        },
+        {
+          data: null,
+
+          render: function (data, type, row) {
+
+            var bolckaction =
+              "<div class='blocaction'> <a href='/demandeabonnement/getdemandeabonnementtoimprimer/" +
+              row.demandeId +
+              "'>" +
+              "<i style='cursor:pointer' type='button' class='fa fa-eye' aria-hidden='true'></i>" +
+              "</a>";
+
+            bolckaction += "</div>";
+
+            if (UPDATE_SUBSCRIPTION_REQUEST_ADMIN && row.statutId <= "279") {
+              bolckaction +=
+                "<div class='blocaction'><a href='/demandeabonnement/editabonnement/" +
+                row.demandeId +
+                "'>" +
+                "<i type='button' class='fa  fa-edit'></i>" +
+                "</a>" +
+                "</div>"
+            }
+            if (((row.statutId == "276" || row.statutId == "277") && hasediterole == "true") && !UPDATE_SUBSCRIPTION_REQUEST_ADMIN) {
+
+              return (
+                "<div class='blocaction'><a href='/demandeabonnement/editabonnement/" +
+                row.demandeId +
+                "'>" +
+                "<i type='button' class='fa  fa-edit'></i>" +
+                "</a>" +
+                bolckaction +
+                "</div>"
+              );
+            }
+            if ((row.statutId == "276" || row.statutId == "277") && hasediterole == false) {
+
+              return
+
+              bolckaction
+
+
+            } else if (row.statutId == "280") {
+
+
+              return (
+                "<div class='blocaction'> <form class='form-upload' action='/demandeabonnement/contratNonsigne' method='POST' > " +
+                "<input type='hidden' name='demandeAbonnementid' value='" +
+                row.demandeId +
+                "'/> " +
+                "<input type='hidden' name='" +
+                parameterName +
+                "' value='" +
+                token +
+                "'/>" +
+                "<div> <button type='submit' class='btn' > <i style='cursor:pointer' " +
+                "class='fa  fa-download' " +
+                "aria-hidden='true'></i> </button> </div> </form>" +
+                bolckaction +
+                "</div>"
+              );
+            } else if (row.statutId == "281") {
+              // validé
+
+
+              return (
+                " <div class='blocaction'><form class='form-upload' action='/demandeabonnement/downloadcontrat' method='POST' > " +
+                "<input type='hidden' name='demandeId' value='" +
+                row.demandeId +
+                "'/> " +
+                "<input type='hidden' name='" +
+                parameterName +
+                "' value='" +
+                token +
+                "'/>" +
+                "<div> <button type='submit' class='btn' > <i style='cursor:pointer' " +
+                "class='fa  fa-download' " +
+                "aria-hidden='true'></i> </button> </div> </form>" +
+                bolckaction +
+                "</div>"
+              );
+            } else return bolckaction;
+          },
+        },
+
+        // <td th:text="${cl.produit.produitnom}"/>
+      ],
+    });
+    oTable.on("draw", function () {
+
+
+      // Update state of "Select all" contrselect_allol
+      updatecheklist();
+    });
+    $('thead input[name="select_all"]').on("click", function (e) {
+
+      if (this.checked) {
+        let selectedid = this.id;
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/demandeabonnement/addall",
+          data: JSON.stringify({
+            statutListfiltre: statutListfiltre,
+            statutTTListfiltre: statutTTListfiltre,
+            gouvernorat: gouvernorat,
+            professions: professions,
+            categories: categories,
+            produit: produit,
+            villes: villes,
+            refChif: RefChif,
+            refTT: RefTT,
+            cin: CIN,
+            prenom: Prenom,
+            nom: Nom,
+            tel: TEL,
+            datefin: datefin,
+            datedebut: datedebut,
+            dateDebutModification: dateDebutModification,
+            dateFinModification: dateFinModification,
+            AffecterTo: AffecterTo,
+            CreePar: CreePar,
+            classification: classification,
+            motifInstance: motifInstance,
+            datefinMiseService:datefinMiseService,
+            datedebutMiseService:datedebutMiseService, 
+            agentBO:agentBO,
+            source:source,
+            typeAbonnment:typeAbonnment
+
+          }),
+          dataType: "json",
+          timeout: 100000,
+          async: false,
+          success: function (data) {
+            listedes_ids = data;
+            updatecheklist();
+            countAbonnementSelected = data.length;
+            document.getElementById('countAbonnementSelected').innerHTML = countAbonnementSelected;
+
+          },
+          error: function (e) {
+            console.log("ERROR: ", e);
+          },
+        });
+        // this.checked
+        // listedes_ids.push(this.id);
+
+        //toggleCheckbox(this,this.id)
+
+
+        // 
+
+
+        //    $('#tutorialTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+      } else {
+
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/demandeabonnement/removeall",
+          dataType: "json",
+          timeout: 100000,
+          async: false,
+          success: function (data) {
+            listedes_ids.forEach(function (item, index, array) {
+              var elem = document.getElementById(item);
+              if (elem !== null) {
+                document.getElementById(item).checked = false;
+              }
+            });
+            listedes_ids = []
+            document.getElementById('countAbonnementSelected').innerHTML = listedes_ids.length;
+
+            if (document.getElementById('classificationDemandeMultiple')) {
+              $("#classificationDemandeMultiple").prop('disabled', true);
+            }
+            if (document.getElementById('assignerDemandeMultiple')) {
+              $("#assignerDemandeMultiple").prop('disabled', true);
+            }
+
+            $('#resilierselection').prop('disabled', true);
+
+          },
+          error: function (e) {
+            console.log("ERROR: ", e);
+          },
+        });
+        //   listedes_ids = [];
+
+        //    updatecheklist();
+
+        //  $('#tutorialTable tbody input[type="checkbox"]:checked').trigger('click');
+      }
+
+      // Prevent click event from propagating to parent
+      e.stopPropagation();
+    });
+
+
+
+    $('#resilierselection').on("click", function (e) {
+
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/demandeabonnement/removeall",
+        dataType: "json",
+        timeout: 100000,
+        async: false,
+        success: function (data) {
+          listedes_ids.forEach(function (item, index, array) {
+            var elem = document.getElementById(item);
+            if (elem !== null) {
+              document.getElementById(item).checked = false;
+            }
+          });
+          listedes_ids = []
+          document.getElementById('countAbonnementSelected').innerHTML = listedes_ids.length;
+          if (document.getElementById('classificationDemandeMultiple')) {
+            $("#classificationDemandeMultiple").prop('disabled', true);
+          }
+          if (document.getElementById('assignerDemandeMultiple')) {
+            $("#assignerDemandeMultiple").prop('disabled', true);
+          }
+
+          $('#resilierselection').prop('disabled', true);
+          document.getElementById("select_all").checked = false;
+
+        },
+        error: function (e) {
+          console.log("ERROR: ", e);
+        },
+      });
+
+
+    })
+    // $("#tutorialTable tbody").on("click", ".page-item", function () {
+
+    // If checkbox is not checked
+    //   if(!this.checked){
+
+    // If "Select all" control is checked and has 'indeterminate' property
+    // if(el && el.checked && ('indeterminate' in el)){
+    // Set visual state of "Select all" control
+    // as 'indeterminate'
+    //  el.indeterminate = true;
+    //  }
+    //}
+    // });
+    // $("body").on("change", updatecheklist())
+
+
+    $("#gouvernorat").change(function () {
+      sendAjaxRequest();
+    });
+
+    $("#statutTTListfiltre").change(function () {
+      sendAjaxRequestMotif();
+    });
+    $("#categories").change(function () {
+      sendAjaxRequest2();
+    });
+    $("#togglebutton").click(function () {
+      $("#showMe3").toggle();
+    });
+    $("#pageSizeSelect").change(function () {
+      var pagesizeselected = $("#pageSizeSelect").val();
+      /*<![CDATA[*/
+      var paginationwithsearch = /*[[${paginationwithsearch}]]*/ "default";
+
+      var key, sta, vil, gou, prof, cat, pro, dd, df;
+      if (paginationwithsearch === true) {
+        key = /*[[${key}]]*/ "default";
+
+        sta = /*[[${sta}]]*/ "default";
+
+        vil = /*[[${vil}]]*/ "default";
+
+        gou = /*[[${gou}]]*/ "default";
+
+        prof = /*[[${prof}]]*/ "default";
+
+        cat = /*[[${cat}]]*/ "default";
+
+        pro = /*[[${pro}]]*/ "default";
+
+        dd = /*[[${dd}]]*/ "default";
+
+        df = /*[[${df}]]*/ "default";
+
+        window.location.replace(
+          "/demandeabonnement/alldemandesabonnement/1/" +
+          pagesizeselected +
+          "?keyword=" +
+          key +
+          "&statutListfiltre=" +
+          sta +
+          "&villes=" +
+          vil +
+          "&gouvernorat=" +
+          gou +
+          "&professions=" +
+          prof +
+          "&categories=" +
+          cat +
+          "&produit=" +
+          pro +
+          "&datedebut=" +
+          dd +
+          "&datefin=" +
+          df
+        );
+      } else {
+        window.location.replace(
+          "/demandeabonnement/alldemandesabonnement/1/" + pagesizeselected
+        );
+      }
+      /*]]>*/
+    });
+
+    $("#showMe3").validate({
+      rules: {
+        CIN: {
+          minlength: 7,
+          maxlength: 13,
+          //digits: true,
+        },
+        TEL: {
+          minlength: 8,
+          digits: true,
+          maxlength: 8,
+          number: true
+        },
+      },
+      messages: {
+        CIN: {
+          minlength:
+            "Votre cin doit être composé d'au moins 7 chiffre ",
+          maxlength:
+            "Votre cin doit être composé d'au plus 12 chiffre ",
+          //   digits : "Merci de n'entrer que des chiffres."
+        },
+        TEL: {
+          minlength: "Votre numero telephone  doit être d'au moins 8 chiffres",
+          maxlength: "Votre numero telephone doit être d'au plus 8 chiffres",
+          digits: "S'il vous plait, entrez un nombre valide.",
+          number: "S'il vous plait, entrez un nombre valide."
+        },
+      },
+      errorElement: "em",
+      errorPlacement: function (error, element) {
+        // Add the `invalid-feedback` class to the error element
+        error.addClass("invalid-feedback");
+
+        if (element.prop("type") === "checkbox") {
+          error.insertAfter(element.next("label"));
+        } else {
+          error.insertAfter(element);
+        }
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass("is-invalid").removeClass("is-valid");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).addClass("is-valid").removeClass("is-invalid");
+      },
+    });
+  });
+
+
+  if (CLASSIFICATION_APPLICATION_SUBSCRIPTION) {
+    $.contextMenu({
+      selector: 'tr',
+      trigger: 'right',
+      build: function ($trigger, e) {
+        // Function to build the context menu dynamically for each row
+        let classification = null;
+        var rowData = oTable.row($trigger[0]).data();
+        if (rowData && rowData.nomStatut != null)
+          classification = rowData.classementCode; //
+
+        if (classification === "DEnAttente") {
+          return {
+            callback: function (key, options) {
+
+              switch (key) {
+                case 'classificationOk':
+                  classificationOk(rowData)
+                  break;
+                case 'nonClassification':
+                  doAnotherThingClassification(rowData)
+                  break;
+                default:
+                  break
+              }
+            },
+            items: {
+              "classificationOk": { name: "classification Ok", icon: "add" },
+              "nonClassification": { name: "Refus commercial", icon: "delete" }
+            }
+          }
+        }
+        else {
+          return false; // Prevent the context menu from showing when the condition is not met
+        }
+      }
+    })
+  }
+
+
+  // Function to handle "do-something"
+  function classificationOk(rowData) {
+    // Perform action for "do-something" menu item
+    $.ajax({
+      type: "POST",
+
+      url: "/demandeabonnement/updateClassement",
+      contentType: "application/json",
+      data: JSON.stringify({
+        demandeId: rowData.demandeId,
+        classementCode: 'ACCEPTATION',
+      }),
+      dataType: "json",
+      timeout: 100000,
+      async: false,
+      success: function (data) {
+        if (true) {
+          $(document).Toasts("create", {
+            title: "classification demande",
+            body: "Votre demande est classifier :accptation ",
+            class: "bg-success",
+            autohide: true,
+            delay: 1000,
+          });
+          $('.toast').on('hidden.bs.toast', function () {
+            // Code to execute after the toast has been hidden
+            //  window.location.reload()
+            const simulatedEvent = new Event('click');
+
+            onclicksherh(simulatedEvent);
+          });
+        }
+        else {
+          $(document).Toasts("create", {
+            title: "changer statut demande",
+            body: "Une erreur est survenue ",
+            class: "bg-danger",
+            autohide: true,
+            delay: 1000,
+          });
+        }
+
+      },
+      error: function (e) {
+        console.log("ERROR: ", e);
+      },
+    });
+  }
+  function doAnotherThingClassification(rowData) {
+    // Perform action for "do-another-thing" menu item
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/demandeabonnement/updateClassement",
+      data: JSON.stringify({
+        demandeId: rowData.demandeId,
+        classementCode: 'RCommercial',
+      }),
+      dataType: "json",
+      timeout: 100000,
+      async: false,
+      success: function (data) {
+        if (true) {
+          $(document).Toasts("create", {
+            title: "changer statut demande",
+            body: "Votre demande est classifier :Rejet commercial  ",
+            class: "bg-success",
+            autohide: true,
+            delay: 1000,
+          });
+          $('.toast').on('hidden.bs.toast', function () {
+            // Code to execute after the toast has been hidden
+            // window.location.reload()
+            const simulatedEvent = new Event('click');
+
+            onclicksherh(simulatedEvent);
+            onclicksherh()
+          });
+        }
+        else {
+
+          $(document).Toasts("create", {
+            title: "changer statut demande",
+            body: "Une erreur est survenue ",
+            class: "bg-danger",
+            autohide: true,
+            delay: 1000,
+          });
+
+        }
+
+      },
+      error: function (e) {
+        console.log("ERROR: ", e);
+      },
+    });
+  }
+
+  function classificationDemandeMultipleForm(e) {
+     let form = document.getElementById('classificationDemandeMultipleForm');
+	 
+
+ 
+    $(this).prop('disabled', true);
+    let spinner = '<em><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement en cours...</em>';
+
+    $('#spinerAddMultipleClassification').html(spinner);
+    // $('#spinnerModal').modal('show');
+
+    //  form.setAttribute('data-backdrop', 'static');
+    // form.setAttribute('data-keyboard', 'false');
+    for (let i = 0; i < form.elements.length; i++) {
+      if (form.elements[i].type === 'button' || form.elements[i].type === 'submit') {
+        form.elements[i].disabled = true;
+      }
+    }
+    const formData = new FormData(form);
+    const idabon = formData.get('idabonforClassification');
+
+    form.submit();
+    //  return true;
+  }
+  function assignerDemandeMultipleForm(e) {
+    e.preventDefault(); // Preve
+    $(this).prop('disabled', true);
+    let spinner = '<em><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement en cours...</em>';
+
+    $('#spinerAddMultipleAssignement').html(spinner);
+    let form = document.getElementById('assignerDemandeMultipleForm');
+    for (let i = 0; i < form.elements.length; i++) {
+      if (form.elements[i].type === 'button' || form.elements[i].type === 'submit') {
+        form.elements[i].disabled = true;
+      }
+    }
+    $('#assignerDemandeMultipleForm').submit();
+  }
+
+
+
+
+</script>
+<script>
+  $(document).ready(function () {
+    $('.js-select2').select2({
+      allowClear: true,
+      width: 'style'
+    });
+  });
+</script>

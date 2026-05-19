@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body  th:fragment="bordereaulist(userid)">
+  <div class="card shadow mb-4">
+<div class="card-body">
+    <input type="hidden" th:value="${userid}" id="userid" />
+                    <div class="table-responsive">
+                        <table class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline" id="tutorialTable" width="100%" cellspacing="0">
+                            <thead class="table dataTable no-footer">
+                            <tr>
+                                <th>Fiche bordereau</th>
+                                <th>Nombre des factures</th>
+                                <th>Montant</th>
+                                <th>status</th>
+                                <th>Date de création</th>
+                                <th>Commentaire</th>
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+    <footer >
+        <p>&copy;Chifco 2022</p>
+    </footer>
+    </div>
+  </div>
+    <script th:inline="javascript">
+        var oTable;
+  
+       var iduser = document.getElementById('userid').value;
+      
+        oTable = $("#tutorialTable").DataTable({
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            order: [],
+            responsive: {
+              details: {
+                type: "column",
+              },
+            },
+            searching: false,
+        
+            fixedHeader: true,
+            // scrollY:500,
+            ajax: "/payement/viewDetailsRecapBordereau/"+iduser,
+            lengthMenu: [
+              [10, 20, 50],
+              [10, 20, 50],
+            ],
+        
+            language: {
+              lengthMenu: "Affichage _MENU_ par page",
+              zeroRecords: "Rien trouvé - désolé",
+              emptyTable: "aucune donnée disponible",
+              info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+              infoEmpty: "Aucun enregistrement disponible",
+              paginate: {
+                first: "Première",
+                last: "Dernière",
+                next: ">>",
+                previous: "<<",
+              },
+              search: "Chercher:",
+            },
+            initComplete: function (json) {
+              //Make your callback here.
+            //  document.getElementById("tutorialTable_filter").style.display = "none";
+            },
+        
+            columnDefs: [
+              // {
+              //   className: "dtr-control",
+              //   orderable: false,
+              //   targets: 0,
+              // },
+              // { orderable: false, targets: 10 },
+            ],
+        
+            columns: [
+            
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                 
+                  if (row.bordereau_id) return `<a href='/bordereau/editbordereaux/`+row.bordereau_id+`'><i>
+                                        `+row.reference_bordereau+`</i></a>`
+                                        
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.numfacure) return row.numfacure;
+                  else return "";
+                },
+              },
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.montant) return row.montant.toFixed(3);
+                  else return "";
+                },
+              },
+              
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.status)
+                    return  row.status 
+                  else return "";
+                },
+              },
+             
+              {
+                data: null,
+                render: function (data, type, row) {
+                var options = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric'
+};
+                  if (row.created_date)
+                 return new Date(row.created_date).toLocaleString('en-GB' , options)
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.commentaire)
+                    return  row.commentaire 
+                  else return "";
+                },
+              },
+
+        
+              
+            ],
+          });
+        </script>
+</body>
+</html>

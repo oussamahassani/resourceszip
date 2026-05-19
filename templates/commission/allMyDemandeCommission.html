@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+<link rel="stylesheet" href="/css/customvariablestyle.css">
+    <title>Liste de toutes les commissions</title>
+
+</head>
+
+<body>
+<section layout:fragment="content">
+
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">                           
+                            <h1 class="m-0">
+                            	Liste des demandes de paiement en cours
+                            </h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+<section class="card m-2 p-2">
+             <div class="mr-2 ml-2">
+             
+             <div class="mb-4">
+	             <div class="py-3">
+		           <a data-toggle="modal" id="togglebutton" 
+		                       class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+		                            class="fas fa-filter fa-sm text-white-50"></i> Filtre</a>
+		           
+		           <button type="button" id="createGroupBtn" 
+		                       class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm ml-2"
+		                       disabled>
+		                       <i class="fas fa-layer-group"></i> Créer demande de paiement groupée</button>
+		           
+		    
+		          
+		          <form id="showMe3" method="get">
+                    <div class="row">                      
+						<div class="col-md-3" id="divDate">
+	                        <label class="col-form-label" for="date">Sélectionnez une date (année-mois)</label>
+							<input class="form-control" type="month" id="date" name="date" th:onchange="onchangeSearch(event);">
+	                    </div>
+                       	 <!-- Date pour fireFox -->
+	                    <div class="col-md-3" id="divDateFireFox" style="display: none;">
+	                        <label class="col-form-label " id="date_label_fireFox" >Entrez une date (année-mois) </label>
+							<input class="form-control ml-2" type="text" id="alternativeDate" name="dateFireFox" placeholder="Format attendu : 2023-01" th:onchange="onchangeSearch(event);">
+							<p id="errorMessage" style="display: none; color: red;">Le format doit être YYYY-MM (2023-01)</p>
+	                    </div> 
+	                    <div class="col-md-3">
+	                      <label class="col-form-label"
+	                          >Référence
+	                        </label>
+							<div class="input-group">
+						      <input type="text" class="form-control" id="reference" name="reference" placeholder="Référence" th:onchange="|onchangeSearch(event)|"/>
+						    </div>
+                      </div>                                      
+                    </div>
+					<div class="text-center">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm mt-3"
+                          th:onclick="onclicksherh(event)"
+                          id="buttonRecherche"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                  </form>
+	          </div> 
+		   			<table class="table table table-hover" id="demandeCommissionTable">
+		                            <thead>
+			                            <tr>
+			                            	<th><input type="checkbox" id="selectAll" /></th>
+			                            	<th>Date de demande</th>
+			                                <th>Référence</th>
+			                                <th>Mois / Année</th>
+			                                <th>Total HT</th>
+			                                <th>TVA</th>
+			                                <th>Montant TVA</th>
+			                                <th>Tota TTC</th>
+			                                <th>Statut</th>
+			                                <th>Type</th>
+			                                <th>Détails</th>
+			                            </tr>
+		                            
+		                            </thead>
+		                    </table>
+                   </div>
+</section>
+</section>
+</body>
+</html>
+<script>
+
+var oTable1;
+
+$(document)
+.ready(
+		function() {
+			   oTable1 = $('#demandeCommissionTable').DataTable({
+				   "language": {
+						"lengthMenu": "Affichage _MENU_ enregistrements par page",
+			            "zeroRecords": "Rien trouvé - désolé",
+			             "info": "Afficher _START_ -  _END_ de _TOTAL_ commissions ",
+			            "infoEmpty": "Aucun enregistrement disponible",
+			            paginate: {
+                            first: "<i class='fa fa-fast-backward'></i>",
+			                last: "<i class='fa  fa-fast-forward '></i>",
+			                next: "<i class='fa fa-solid fa-chevron-right'></i>",
+			                previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+			              },
+			        },
+			      processing: true,
+			      serverSide: true,
+			      ordering: true,
+			      searching : true,
+			      "processing": true, // activer le mode processing
+		      "serverSide": true, // activer le mode server-side
+	      "order": [ [ 1, 'asc' ] ],
+		      "ajax": "/demandeCommission/allMyDemandeCommission",
+			      lengthMenu: [
+			          [10, 20, 50 , 100 , 200,500],
+			          [10, 20, 50 , 100 , 200,500],
+			        ],
+			      columnDefs: [{
+			    	    orderable: false,
+			    	    targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+			      
+			    	  }],
+			      columns: [
+			    	  {
+			              data: null,
+			              render: function (data, type, row) {
+			            	  // Only show checkbox for IN_PROGRESS status
+			            	  if (row.statut === 'IN_PROGRESS') {
+			            		  return '<input type="checkbox" class="demande-checkbox" value="' + row.id + '" />';
+			            	  }
+			            	  return '<span class="text-muted">-</span>';
+			              }
+			           },
+			    	  {
+			              data: null,
+			              render: function (data, type, row) {			             		
+			            	// Convertissez la date en un objet Date JavaScript
+			                  var dateObj = new Date(row.createdDate);
+
+			                  // Obtenez le jour, le mois et l'année
+			                  var day = dateObj.getDate();
+			                  var month = dateObj.getMonth() + 1; // Les mois sont indexés de 0 à 11, donc ajoutez 1
+			                  var year = dateObj.getFullYear();
+
+			                  // Formatez la date au format "DD/MM/YYYY"
+			                  var formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year;
+
+			                  return formattedDate;
+			              }
+			           },
+			          {
+			              data: null,
+			              render: function (data, type, row) {			             		
+			             		 return row.refDemandeCommission;
+			              }
+			           },
+				    {
+			    		    data: null,
+			    		    render: function (data, type, row) {
+			    		        var moisNoms = [
+			    		            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+			    		            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+			    		        ];
+			    		        
+			    		        if (!isNaN(row.commission.mois) && row.commission.mois >= 1 && row.commission.mois <= 12) {
+			    		            return moisNoms[row.commission.mois-1]+" / "+row.commission.annee;
+			    		        } else {
+			    		            return ""; 
+			    		        }
+			    		    }
+			    	},
+			    	{
+			              data: null,
+			              render: function (data, type, row) {			             		
+			             		 return row.commission.totalHt.toFixed(3)+" TND";
+			              }
+			           },
+			           {
+				              data: null,
+				              render: function (data, type, row) {			             		
+				             		 return row.commission.tva+"%";
+				              }
+				        },
+			           {
+				              data: null,
+				              render: function (data, type, row) {			             		
+				             		 return row.commission.montantTva.toFixed(3)+" TND";
+				              }
+				        },
+			           {
+				              data: null,
+				              render: function (data, type, row) {			             		
+				             		 return row.commission.totalTtc.toFixed(3)+" TND";
+				              }
+				        },
+				        {
+				              data: null,
+				              render: function (data, type, row) {
+				            	  if(row.statut == "PAID"){
+				            		  return "<span class='badge badge-success'>Payé</span>";
+				            	  }else if(row.statut == "IN_PROGRESS"){
+				            		  return "<span class='badge badge-warning'>En cours</span>";
+				            	  }else if(row.statut == "REFUSED"){
+				            		  return "<span class='badge badge-danger'>Refusée</span>";
+				            	  }
+				            	  else if(row.statut == "AWAINTING_INVOICING"){
+				            		  return "<span class='badge badge-warning'>En cours</span>";
+				            		  return "<span class='badge badge-info'>En Attente de Règlement </span>";
+
+				            	  }
+				             		 return ""
+				              }
+				      },
+				      {
+			              data: null,
+			              render: function (data, type, row) {
+			            	  if(row.commission.isFreelance == true){
+			            		  return "<span class='badge badge-success'>Freelance</span>";
+			            	 
+			            	  }else{
+			            		  return "<span class='badge badge-dark'>Normal</span>";
+			            	  }
+			             		 
+			              }
+			      },
+			          {
+			              "data": null,
+			              "render": function(data, type, row) {
+			                  return "<button class='btn btn-primary' onclick='details(this)'>Détails</button>";
+			              }
+			          }
+			        ],
+			  });
+
+			   oTable1.on('processing.dt',function(e, settings, processing) {
+		    	
+			 });							
+		
+		});
+
+function details(column){
+	  var data = oTable1.row($(column).parents('tr')).data();
+	  let href = "/demandeCommission/details_demande_commission_page/" + data.id;
+	  window.location.href =href ; 
+}
+
+// Grouped demand functionality
+$('#selectAll').on('change', function() {
+    var isChecked = $(this).prop('checked');
+    $('.demande-checkbox').prop('checked', isChecked);
+    updateCreateGroupButton();
+});
+
+$(document).on('change', '.demande-checkbox', function() {
+    updateCreateGroupButton();
+});
+
+function updateCreateGroupButton() {
+    var checkedCount = $('.demande-checkbox:checked').length;
+    var createGroupBtn = $('#createGroupBtn');
+    
+    if (checkedCount >= 2) {
+        createGroupBtn.prop('disabled', false);
+        createGroupBtn.attr('title', checkedCount + ' demandes sélectionnées');
+    } else {
+        createGroupBtn.prop('disabled', true);
+        createGroupBtn.attr('title', 'Sélectionnez au moins 2 demandes');
+    }
+}
+
+$('#createGroupBtn').on('click', function() {
+    var selectedRows = [];
+    $('.demande-checkbox:checked').each(function() {
+        var rowData = oTable1.row($(this).closest('tr')).data();
+        if (rowData) {
+            selectedRows.push(rowData);
+        }
+    });
+    
+    if (selectedRows.length < 2) {
+   
+    
+        
+     	$(document).Toasts("create", {
+   	     title: "Erreur",
+   	     body: "Veuillez sélectionner au moins 2 demandes.",
+   	     class: "bg-danger",
+   	     autohide: true,
+   	     delay: 10000,
+   	   });
+        return;
+    }
+    
+    selectedRows.sort(function(a, b) {
+        return new Date(a.createdDate) - new Date(b.createdDate);
+    });
+
+    var selectedIds = selectedRows.map(function(row) {
+        return row.id;
+    });
+
+    var allInProgressRows = [];
+    oTable1.rows().every(function() {
+        var row = this.data();
+        if (row && row.statut === 'IN_PROGRESS') {
+            allInProgressRows.push(row);
+        }
+    });
+
+    allInProgressRows.sort(function(a, b) {
+        return new Date(a.createdDate) - new Date(b.createdDate);
+    });
+
+    var requiredIds = allInProgressRows.slice(0, selectedIds.length).map(function(row) {
+        return row.id;
+    });
+
+    var isValidSelection = selectedIds.length === requiredIds.length && selectedIds.every(function(id, index) {
+        return id === requiredIds[index];
+    });
+
+    if (!isValidSelection) {
+      
+       
+        
+    	$(document).Toasts("create", {
+      	     title: "Erreur",
+      	     body: "'Veuillez sélectionner les demandes les plus anciennes en premier (sélection continue depuis la première demande disponible).",
+      	     class: "bg-danger",
+      	     autohide: true,
+      	     delay: 10000,
+      	   });  
+        
+        return;
+    }
+    
+    var commentaire = prompt('Ajouter un commentaire (optionnel):');
+    
+    $.ajax({
+        url: '/demandeCommission/create-group',
+        type: 'POST',
+        data: {
+            demandeIds: selectedIds,
+            commentaire: commentaire || ''
+        },
+        success: function(response) {
+            if (response === 'SUCCESS') {
+                alert('');
+             	$(document).Toasts("create", {
+             	     title: "Succès",
+             	     body: "Demande groupée créée avec succès!",
+             	     class: "bg-sucess",
+             	     autohide: true,
+             	     delay: 10000,
+             	   });   
+                
+                oTable1.ajax.reload();
+                // Redirect to grouped commissions page
+                window.location.href = '/demandeCommission/all_my_grouped_demande_commission_page';
+            } else {
+                alert('Erreur: ' + response);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Erreur lors de la création: ' + error);
+        }
+    });
+});
+
+//filtre
+$("#togglebutton").click(function () {
+
+    $("#showMe3").toggle();
+});
+
+var date = ""
+var statut = ""
+var codeRevendeur = ""
+var reference = ""
+
+	function onchangeSearch(event) {
+    let name = event.target.name;
+  
+    switch (name) {
+      case "date": {
+    	  date = event.target.value;
+        break;
+      }
+      case "dateFireFox": {
+    	  date = event.target.value;
+          break;
+        } 
+      case "statut": {
+    	  statut = event.target.value;
+        break;
+      }
+      case "codeRevendeur": {
+    	  codeRevendeur = event.target.value;
+        break;
+      } 
+      case "reference": {
+    	  reference = event.target.value;
+          break;
+      }
+    }
+    
+  }
+
+function onclicksherh(event) {
+	  //event.preventdefault()
+	  event.preventDefault();
+
+	  //$('#tutorialTable').DataTable().ajax.reload();
+	  $("#demandeCommissionTable")
+	    .DataTable()
+	    .column(0)
+	    .search(
+	      JSON.stringify({
+	    	  date: date,
+	    	  statut: statut,
+	    	  codeRevendeur: codeRevendeur,
+	    	  reference : reference
+	      })
+	    )
+	    .draw();
+}
+
+const browser = navigator.userAgent;
+//Vérifier si le navigateur est Firefox
+if (browser.indexOf("Firefox") > -1) {
+	
+ const dateDiv = document.getElementById("divDate");
+ const dateDivFirefox = document.getElementById("divDateFireFox");
+ const alternativeInputElement = document.getElementById("alternativeDate");
+ const buttonRecherche = document.getElementById("buttonRecherche");
+ const errorMessageElement = document.getElementById("errorMessage");
+
+ 
+ dateDiv.style.display = "none";
+ dateDivFirefox.style.display = "block";
+ 
+ alternativeInputElement.addEventListener("input", function() {
+ 	
+ 	// Vérifier que la valeur a le format attendu (YYYY-MM)
+     const inputValue = alternativeInputElement.value;
+     const regex = /^(\d{4})-(\d{2})$/;
+     
+     if (inputValue !== null && inputValue !== "") {
+         if (regex.test(inputValue)) {
+         	// La valeur a le bon format
+             const [, year, month] = inputValue.match(regex);
+         	
+             if (parseInt(month, 10) >= 1 && parseInt(month, 10) <= 12) {
+                 alternativeInputElement.style.borderColor = "initial";
+                 errorMessageElement.style.display = "none";
+                 buttonRecherche.disabled = false;
+             } else {
+                 alternativeInputElement.style.borderColor = "red";
+                 errorMessageElement.style.display = "block";
+                 buttonRecherche.disabled = true;
+             }
+             
+         } else {
+             alternativeInputElement.style.borderColor = "red";
+             errorMessageElement.style.display = "block";
+             buttonRecherche.disabled = true;
+         }
+     }else{
+     	alternativeInputElement.style.borderColor = "initial";
+     	errorMessageElement.style.display = "none";
+     	buttonRecherche.disabled = false;
+     } 
+
+     
+ });
+}
+
+</script>

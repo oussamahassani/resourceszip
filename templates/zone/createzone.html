@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<section layout:fragment="content">
+    <style>
+        .selection-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+        .selection-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: #007bff;
+        }
+        .selection-header {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .selection-header h5 {
+            color: #007bff;
+            font-weight: 600;
+            margin: 0;
+        }
+        .search-input-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .search-input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .search-input-wrapper input {
+            padding-left: 35px;
+        }
+        .items-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+        }
+        .item-checkbox {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .item-checkbox:hover {
+            background: #f8f9fa;
+        }
+        .item-checkbox:last-child {
+            border-bottom: none;
+        }
+        .item-checkbox input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .item-checkbox label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .selected-items {
+            background: #e7f3ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .selected-badge {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .selected-badge:hover {
+            background: #dc3545;
+        }
+        .selected-badge i {
+            margin-left: 8px;
+            font-size: 11px;
+            pointer-events: none;
+        }
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .action-buttons {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        .counter-badge {
+            background: #007bff;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .items-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .items-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .items-list::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 3px;
+        }
+    </style>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                               Ajouter une Zone
+                            </h1>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow-lg">
+                        <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h6 class="m-0 font-weight-bold text-white">
+                                <i class="fas fa-plus-circle"></i> Création d'une nouvelle Zone
+                            </h6>
+                        </div>
+                        <div class="card-body" style="padding: 20px 30px;">
+                            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            
+                            <form id="zoneForm" action="#" th:action="@{/zone/createzone}" method="POST" th:object="${zone}">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-section-title">
+                                            <i class="fas fa-info-circle text-primary"></i> Informations de la Zone
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-barcode text-primary"></i> Code de la Zone <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: ZONE-001" th:field="*{code}" required="required"/>
+                                            <small class="form-text text-muted">Code unique identifiant la zone</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-tag text-primary"></i> Nom de la Zone <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Zone Nord" th:field="*{nom}" required="required"/>
+                                            <small class="form-text text-muted">Nom unique de la zone</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-align-left text-primary"></i> Description</label>
+                                            <textarea class="form-control" rows="3" placeholder="Description de la zone..." th:field="*{description}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="selection-card">
+                                            <div class="selection-header">
+                                                <h5>
+                                                    <i class="fas fa-map-marker-alt"></i> Gouvernorats
+                                                    <span class="counter-badge" id="gouvernoratsCount">0</span>
+                                                </h5>
+                                                <small class="text-muted">Sélectionnez un ou plusieurs gouvernorats pour cette zone (optionnel)</small>
+                                            </div>
+                                            
+                                            <div class="search-input-wrapper">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" id="searchGouvernorats" class="form-control" placeholder="Rechercher un gouvernorat...">
+                                            </div>
+                                            
+                                            <div class="items-list" id="gouvernoratsList">
+                                                <div th:each="gouv : ${gouvernorats}" class="item-checkbox">
+                                                    <input type="checkbox" 
+                                                           name="selectedGouvernorats" 
+                                                           th:id="'gouv_' + ${gouv.gouvernoratId}" 
+                                                           th:value="${gouv.gouvernoratId}"
+                                                           class="gouvernorat-checkbox">
+                                                    <label th:for="'gouv_' + ${gouv.gouvernoratId}" th:text="${gouv.gouvernoratName}"></label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="selected-items">
+                                                <strong><i class="fas fa-check-circle text-success"></i> Gouvernorats sélectionnés :</strong>
+                                                <div id="selectedGouvernoratsTags" class="mt-2">
+                                                    <small class="text-muted">Aucun gouvernorat sélectionné</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="selection-card">
+                                            <div class="selection-header">
+                                                <h5>
+                                                    <i class="fas fa-users"></i> Utilisateurs
+                                                    <span class="counter-badge" id="utilisateursCount">0</span>
+                                                </h5>
+                                                <small class="text-muted">Sélectionnez les utilisateurs qui travaillent dans cette zone (optionnel)</small>
+                                            </div>
+                                            
+                                            <div class="search-input-wrapper">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" id="searchUtilisateurs" class="form-control" placeholder="Rechercher un utilisateur par nom ou email...">
+                                            </div>
+                                            
+                                            <div class="items-list" id="utilisateursList">
+                                                <div th:each="user : ${utilisateurs}" class="item-checkbox">
+                                                    <input type="checkbox" 
+                                                           name="selectedUtilisateurs" 
+                                                           th:id="'user_' + ${user.userid}" 
+                                                           th:value="${user.userid}"
+                                                           class="utilisateur-checkbox">
+                                                    <label th:for="'user_' + ${user.userid}" 
+                                                           th:text="${user.firstName + ' ' + user.lastName+'( '+user.codeUser +' )'+ ' - tel :' + user.telephone + ''}"></label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="selected-items">
+                                                <strong><i class="fas fa-check-circle text-success"></i> Utilisateurs sélectionnés :</strong>
+                                                <div id="selectedUtilisateursTags" class="mt-2">
+                                                    <small class="text-muted">Aucun utilisateur sélectionné</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="active" th:field="*{active}" checked="checked"/>
+                                                <label class="custom-control-label" for="active">
+                                                    <i class="fas fa-power-off"></i> Zone Active
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="action-buttons text-center">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-save"></i> Créer la Zone
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-lg" id="resetButton">
+                                        <i class="fas fa-undo"></i> Réinitialiser
+                                    </button>
+                                    <a th:href="@{/zone/allzones/1}" class="btn btn-secondary btn-lg">
+                                        <i class="fas fa-arrow-left"></i> Annuler
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+        window.addEventListener('load', function() {
+            if (typeof jQuery !== 'undefined') {
+                jQuery(document).ready(function($) {
+                    console.log("Document ready - Zone form initialized");
+                    
+                    function updateGouvernoratDisplay() {
+                        $.ajax({
+                            type: "GET",
+                            url: "/zone/getSelectedGouvernorats",
+                            dataType: "json",
+                            success: function(data) {
+                                $('#gouvernoratsCount').text(data.length);
+                                
+                                $('.gouvernorat-checkbox').each(function() {
+                                    var id = $(this).val();
+                                    if (data.indexOf(Number(id)) !== -1) {
+                                        $(this).prop('checked', true);
+                                    } else {
+                                        $(this).prop('checked', false);
+                                    }
+                                });
+                                
+                                var container = $('#selectedGouvernoratsTags');
+                                container.empty();
+                                if (data.length === 0) {
+                                    container.html('<small class="text-muted">Aucun gouvernorat sélectionné</small>');
+                                } else {
+                                    for (var i = 0; i < data.length; i++) {
+                                        var id = data[i];
+                                        var checkbox = $('#gouv_' + id);
+                                        if (checkbox.length) {
+                                            var name = checkbox.next('label').text();
+                                            var badge = $('<span class="selected-badge" data-id="' + id + '" data-type="gouvernorat">' + name + ' <i class="fas fa-times-circle"></i></span>');
+                                            container.append(badge);
+                                        }
+                                    }
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log("Error getting gouvernorats:", error);
+                            }
+                        });
+                    }
+                    
+                    function updateUtilisateurDisplay() {
+                        $.ajax({
+                            type: "GET",
+                            url: "/zone/getSelectedUtilisateurs",
+                            dataType: "json",
+                            success: function(data) {
+                                $('#utilisateursCount').text(data.length);
+                                
+                                $('.utilisateur-checkbox').each(function() {
+                                    var id = $(this).val();
+                                    if (data.indexOf(Number(id)) !== -1) {
+                                        $(this).prop('checked', true);
+                                    } else {
+                                        $(this).prop('checked', false);
+                                    }
+                                });
+                                
+                                var container = $('#selectedUtilisateursTags');
+                                container.empty();
+                                if (data.length === 0) {
+                                    container.html('<small class="text-muted">Aucun utilisateur sélectionné</small>');
+                                } else {
+                                    for (var i = 0; i < data.length; i++) {
+                                        var id = data[i];
+                                        var checkbox = $('#user_' + id);
+                                        if (checkbox.length) {
+                                            var name = checkbox.next('label').text();
+                                            var badge = $('<span class="selected-badge" data-id="' + id + '" data-type="utilisateur">' + name + ' <i class="fas fa-times-circle"></i></span>');
+                                            container.append(badge);
+                                        }
+                                    }
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log("Error getting utilisateurs:", error);
+                            }
+                        });
+                    }
+                    
+                    $(document).on('change', '.gouvernorat-checkbox', function() {
+                        var id = $(this).val();
+                        var isChecked = $(this).is(':checked');
+                        var url = isChecked ? "/zone/addGouvernoratToSession" : "/zone/removeGouvernoratFromSession";
+                        
+                        console.log("Gouvernorat:", id, "Checked:", isChecked);
+                        
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { gouvernoratId: id },
+                            dataType: "json",
+                            success: function(response) {
+                                console.log("Response:", response);
+                                if (response.success) {
+                                    $('#gouvernoratsCount').text(response.count);
+                                    updateGouvernoratDisplay();
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log("Error:", error);
+                                $(this).prop('checked', !isChecked);
+                            }.bind(this)
+                        });
+                    });
+                    
+                    $(document).on('change', '.utilisateur-checkbox', function() {
+                        var id = $(this).val();
+                        var isChecked = $(this).is(':checked');
+                        var url = isChecked ? "/zone/addUtilisateurToSession" : "/zone/removeUtilisateurFromSession";
+                        
+                        console.log("Utilisateur:", id, "Checked:", isChecked);
+                        
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { userId: id },
+                            dataType: "json",
+                            success: function(response) {
+                                console.log("Response:", response);
+                                if (response.success) {
+                                    $('#utilisateursCount').text(response.count);
+                                    updateUtilisateurDisplay();
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log("Error:", error);
+                                $(this).prop('checked', !isChecked);
+                            }.bind(this)
+                        });
+                    });
+                    
+                    $(document).on('click', '.selected-badge[data-type="gouvernorat"]', function(e) {
+                        e.preventDefault();
+                        var id = $(this).data('id');
+                        $('#gouv_' + id).prop('checked', false).trigger('change');
+                    });
+                    
+                    $(document).on('click', '.selected-badge[data-type="utilisateur"]', function(e) {
+                        e.preventDefault();
+                        var id = $(this).data('id');
+                        $('#user_' + id).prop('checked', false).trigger('change');
+                    });
+                    
+                    $('#searchGouvernorats').on('keyup', function() {
+                        var searchTerm = $(this).val().toLowerCase();
+                        $('#gouvernoratsList .item-checkbox').each(function() {
+                            var text = $(this).find('label').text().toLowerCase();
+                            $(this).toggle(text.indexOf(searchTerm) > -1);
+                        });
+                    });
+                    
+                    $('#searchUtilisateurs').on('keyup', function() {
+                        var searchTerm = $(this).val().toLowerCase();
+                        $('#utilisateursList .item-checkbox').each(function() {
+                            var text = $(this).find('label').text().toLowerCase();
+                            $(this).toggle(text.indexOf(searchTerm) > -1);
+                        });
+                    });
+                    
+                    $('#resetButton').on('click', function() {
+                        $.ajax({
+                            type: "POST",
+                            url: "/zone/clearGouvernoratsSession",
+                            complete: function() {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/zone/clearUtilisateursSession",
+                                    complete: function() {
+                                        $('.gouvernorat-checkbox').prop('checked', false);
+                                        $('.utilisateur-checkbox').prop('checked', false);
+                                        $('#searchGouvernorats').val('');
+                                        $('#searchUtilisateurs').val('');
+                                        $('#gouvernoratsList .item-checkbox').show();
+                                        $('#utilisateursList .item-checkbox').show();
+                                        updateGouvernoratDisplay();
+                                        updateUtilisateurDisplay();
+                                        $('#zoneForm')[0].reset();
+                                        $('#active').prop('checked', true);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                    
+                    updateGouvernoratDisplay();
+                    updateUtilisateurDisplay();
+                });
+            } else {
+                console.log("jQuery not loaded!");
+            }
+        });
+    </script>
+</section>
+</body>
+</html>

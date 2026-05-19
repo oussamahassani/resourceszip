@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Detail Client</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<h1 class="m-0">Fiche Pack</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+
+				<div class="row">
+					<div class="col-12 grid-margin"></div>
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab"
+									role="tablist">
+									<li class="nav-item"><a class="nav-link active"
+										id="custom-tabs-info-tab" data-toggle="pill"
+										href="#custom-tabs-info" role="tab"
+										aria-controls="custom-tabs-info" aria-selected="true">Information pack</a>
+									</li>
+									
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info"
+										role="tabpanel" aria-labelledby="custom-tabs-info-tab">
+
+					
+										
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="card-block">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom d'pack:</label>
+																	<div class="col-sm-8" th:text="${pack.title}"></div>
+																	
+																</div>
+																	<div class="row" th:if="${pack.idPackBase!=null}">
+																	<label class="col-sm-4 col-form-label">Nom de pack parent:</label>
+																	<div class="col-sm-8" th:text="${packParent.title}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Description:</label>
+																	<div class="col-sm-8" th:text="${pack.description}"></div>
+																	
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Created Date:</label>
+																	<div class="col-sm-8" th:text="${pack.createdDate}"></div>
+																
+																</div>
+	                                                               <div class="row">
+																	<label class="col-sm-4 col-form-label">IsPromo:</label>
+																	<div class="col-sm-8" th:if="${pack.offre.isPromo} == true">oui</div>
+																	<div class="col-sm-8" th:if="${pack.offre.isPromo} != true" >non</div>
+
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Periode Validtion Promo:</label>
+																	<div class="col-sm-8" th:text="${pack.offre.periodeValidPromo}"></div>
+																	
+																</div>
+
+																
+
+																<div class="row" th:if="${pack.categoriePack} != null" >
+																	<label class="col-sm-4 col-form-label">Type:</label>
+																	<div class="col-sm-8" th:text="${pack.categoriePack.categorieProduitInternetNom}"></div>
+																	
+																</div>
+
+															
+
+
+														
+															</div>
+														</div>
+													</div>
+                                                        <div class="card-block">
+														<div class="card-block-header">
+															<h4>Tarification Pack</h4>
+															<div class="card-block-body">
+															<div class="row">
+																	<label class="col-sm-4 col-form-label">Prix Ht:</label>
+																	<div class="col-sm-8" th:text="${tarification.prixUnitaire}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Pourcentage Tva:</label>
+																	<div class="col-sm-8" th:text="${tarification.taxe}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Prix TTc :</label>
+																	<div class="col-sm-8" th:text="${tarification.prixTTc}"></div>
+																	
+																</div>
+															</div>
+															</div>
+															</div>
+												</div>
+												
+												<div class="col-sm-6 card-block">
+												<h4>Informations Produit</h4>
+													<div th:each="entryPack: ${entryPacks} ">
+														<div class="row">
+																	<label class="col-sm-4 col-form-label">show Produit :</label>
+																	<div class="col-sm-8" th:if="${entryPack.showProduitFacture} == true" >oui</div>
+																	<div class="col-sm-8" th:if="${entryPack.showProduitFacture} != true" >non</div>
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Produit :</label>
+																	<div class="col-sm-8" th:text="${entryPack.produit.produitNom}"></div>
+																	
+																</div>
+																<hr>
+													</div>
+												</div>
+												
+											</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+				
+			</div>
+		</section>
+		
+	</section>
+</body>
+</html>

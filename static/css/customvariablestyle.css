@@ -1,0 +1,51 @@
+#showMe{
+    display:none;
+}
+#showMe2{
+    display:none;
+}
+#showMe3{
+    display:none;
+}
+.showMe3{
+    display:none;
+}
+ .dataTables_filter { display: none; }
+
+
+
+textarea.comentaire {
+	width: 600px;
+	height: 120px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+	background-image: url(bg.gif);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+   .comentButton {background-color: lightblue;
+    color: white;
+    width: auto;
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 18px;
+    transition: background-color 0.45s ease, color 0.45s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    z-index: 5;
+    text-decoration: none;
+        background: #59049d ;
+
+    border-radius: 5px;
+    box-shadow: 0 3px 5px #777777;
+    }
+    .comentButton:hover {
+		background-color: #fdec25;
+
+	transform: scale(1.1);
+	border: 5px solid #fdec25;
+}
+

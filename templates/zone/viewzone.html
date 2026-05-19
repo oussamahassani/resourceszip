@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="content-header mb-4">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h1>Détails de la Zone</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a th:href="@{/zone/allzones/1}">Zones</a></li>
+                            <li class="breadcrumb-item active">Détails</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Informations de la Zone</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr><th width="30%">Code</th><td th:text="${zone.code}"></td></tr>
+                        <tr><th>Nom</th><td th:text="${zone.nom}"></td></tr>
+                        <tr><th>Description</th><td th:text="${zone.description}"></td></tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>
+                                <span th:if="${zone.active}" class="badge badge-success">Actif</span>
+                                <span th:unless="${zone.active}" class="badge badge-danger">Inactif</span>
+                            </td>
+                        </tr>
+                        <tr><th>Date de création</th>
+                            <td th:text="${#dates.format(zone.createdDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Gouvernorats dans cette Zone</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr><th>ID</th><th>Nom du Gouvernorat</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="gouv : ${gouvernorats}">
+                                <td th:text="${gouv.gouvernoratId}"></td>
+                                <td th:text="${gouv.gouvernoratName}"></td>
+                            </tr>
+                            <tr th:if="${gouvernorats.isEmpty()}">
+                                <td colspan="2" class="text-center">Aucun gouvernorat assigné</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Utilisateurs dans cette Zone</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr><th>ID</th><th>Nom Complet</th><th>Code user</th><th>Email</th><th>Tel</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${utilisateurs}">
+                                <td th:text="${user.userid}"></td>
+                                <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+                                 <td th:text="${user.codeUser}"></td>
+                                <td th:text="${user.email}"></td>
+                                 <td th:text="${user.telephone}"></td>
+                            </tr>
+                            <tr th:if="${utilisateurs.isEmpty()}">
+                                <td colspan="3" class="text-center">Aucun utilisateur assigné</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center mb-4">
+				<a th:href="@{/zone/editzone/{id}(id=${zone.zoneId})}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <a th:href="@{/zone/allzones/1}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+    </section>
+</section>
+</html>

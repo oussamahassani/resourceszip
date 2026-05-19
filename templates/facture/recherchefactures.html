@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="~{layout.html}">
+
+<head>
+  <title>Recherche Facture</title>
+  <style>
+    .loader-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1050;
+    }
+
+    .loader {
+      border: none;
+      width: 200px;
+      height: 200px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner {
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #3498db;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section layout:fragment="content">
+
+    <section class="content">
+
+
+      <div class="loader-container">
+        <div class="loader">
+          <div class="spinner"></div>
+          <div class="message">Paiement est en cours...</div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0">Paiement des factures</h1>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+
+          <div class="card-body">
+            <div class="col-md-10 m-3">
+              <form th:action="@{/PaymentFacturesrecherche}" id="recherchefactures" method="post">
+                <div class="row">
+
+                  <div class="form-group col-md-8">
+                    <label for="recherche" class="col-form-label">Rechercher par : Identifiant , Numéro de téléphone fixe
+                      ou Code client
+                    </label>
+                    <input name="recherche" placeholder="Identifiant , Numéro de téléphone fixe ou Code client"
+                      class="form-control" aria-describedby="rechercheHelp"> </input>
+                    <!--<small id="rechercheHelp" class="form-text text-muted">entrer le numero de telephone fixe ou le numero de cin de client.</small>-->
+                  </div>
+
+                  <div class="col-md-6">
+                    <input type="submit" id="rechercheButton" name="rechercheButton" class="btn btn-primary"
+                      value="Rechercher">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="reset" name="resetButton" class="btn btn-danger" value="Annuler"
+                      onclick='anullerpayement(this)'>
+
+                  </div>
+
+
+                </div>
+              </form>
+            </div>
+            <div id="loader" class="ml-5"></div>
+            <div id="resultatabel" class="m-2">
+            </div>
+            <div id="payment">
+            </div>
+            <div id="notfound">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </section>
+</body>
+
+</html>
+<script th:inline="javascript">
+  var array = []
+  var arrayAvoir = []
+  let typedepaiement = "espèce";
+  let Numcheque = "";
+  let Bankname = "";
+  let NumeroCarte = "";
+  let totalApayerGlobal = 0;
+  let totalApayerAvoir = 0;
+  function submitformimprimerrecufacture() {
+    document.imprimerrecufacture.submit()
+  }
+
+  function anullerpayement() {
+    array = []
+    arrayAvoir = []
+    $('#resultatabel').empty();
+    $('#notfound').empty();
+    $('#payment').empty();
+  }
+  function toggleCheckboxajax(column) {
+    var montantPayer = column.getAttribute('data-montant');
+    let isResilation = column.getAttribute('data-isResilation');
+
+    if (column.checked) {
+    	 array.push(column.id)
+      if(isResilation && isResilation == 'true'){
+    	// Select checkboxes with data-isResilation equal to null or false
+    	  var checkboxes = document.querySelectorAll('input[type="checkbox"][data-isResilation="null"], input[type="checkbox"][data-isResilation="false"]');
+    	  array =  [];
+    	  array.push(column.id)
+    	  // Loop through the selected checkboxes
+    	  checkboxes.forEach(function (checkbox) {
+    	      // Do something with each checkbox, e.g., check it
+    	      checkbox.checked = false;
+    	  });
+    	  totalApayerGlobal = Number(montantPayer);
+      }
+      else {
+    	
+    	
+      totalApayerGlobal = Number(totalApayerGlobal) + Number(montantPayer)
+    
+      }
+    }
+    else {
+      const fillterdarray = array.filter(el => el !== column.id);
+      array = fillterdarray;
+      if(isResilation && isResilation == 'true'){
+		  totalApayerGlobal = 0 ;  
+		  totalApayerGlobal = - totalApayerAvoir;
+		  array = [] ;
+		  
+		    let checkboxes = document.querySelectorAll('.ClassNameFacture[name="chekelement"]');
+	        checkboxes.forEach(function (checkbox) {
+	          checkbox.checked = false;
+	        });
+	  }
+      else{
+          totalApayerGlobal = Number(totalApayerGlobal) - Number(montantPayer)
+
+      }
+    }
+  
+    document.getElementById('totalApayerGlobalValue').innerText = Number(totalApayerGlobal).toFixed(3)
+    if (array.length > 0) {
+
+      $("#submitpayement").prop('disabled', false);
+      document.getElementById("factureliste").value = array;
+    }
+    else {
+      $("#submitpayement").prop('disabled', true);
+
+
+    }
+  }
+
+  function verificationValueSelectPayment(column) {
+
+    let extentionPayement = "<div></div>"
+    if (column.value == "Carte bancaire") {
+      typedepaiement = "Carte bancaire"
+      extentionPayement = `<div class="row mt-2">
+			   <div class="form-group col-md-6">
+			  <label for="NumeroCarte" class="col-form-label"> le numero de reçu</label>
+			  <input name="NumeroCarte" class="form-control  type="text" required id="NumeroCarte"/>
+			  </div>
+			   <div class="form-group col-md-6">
+				  <label for="Bankname" class="col-form-label">Bank</label>
+				  <input name="Bankname" class="form-control  type="text" required id="Bankname">
+				  </div>
+		  
+		  </div>`
+    }
+
+    else if (column.value == "Chéque") {
+      typedepaiement = "Chéque";
+      extentionPayement = `  <div class="row mt-2">
+		   <div class="form-group col-md-6">
+		  <label for="Numcheque" class="col-form-label">Numero de Chéque</label>
+		  <input name="Numcheque" class="form-control"  type="text" required id="Numcheque"/>
+		  </div>
+		   <div class="form-group col-md-6">
+			  <label for="Bankname" class="col-form-label">Bank</label>
+			  <input name="Bankname" class="form-control"  type="text" required id="Bankname">
+			  </div>
+	  
+	  </div>`
+    }
+    else {
+      typedepaiement = "espèce"
+    }
+
+    $('#donnerpayement').empty().append(extentionPayement);
+  }
+  $("#recherchefactures").validate({
+    rules: {
+      recherche: {
+
+        minlength: 2,
+        maxlength: 18,
+        required: true
+      },
+    },
+    messages: {
+      recherche: {
+        required: "Ce champ est obligatoire",
+        maxlength: "Veuillez ne pas saisir plus de 18 caractères.",
+        minlength: "Veuillez saisir plus de 2 caractères."
+      },
+    },
+    errorElement: "em",
+    errorPlacement: function (error, element) {
+      // Add the `invalid-feedback` class to the error element
+      error.addClass("invalid-feedback");
+
+      if (element.prop("type") === "checkbox") {
+        error.insertAfter(element.next("label"));
+      } else {
+        error.insertAfter(element);
+      }
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass("is-invalid").removeClass("is-valid");
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).addClass("is-valid").removeClass("is-invalid");
+    },
+  });
+  $('#recherchefactures').submit(function (event) {
+    array = [];
+    event.preventDefault(); // Prevent the form from submitting via the browser
+    var form = $(this);
+    $.ajax({
+      type: form.attr('method'),
+      url: form.attr('action'),
+      data: form.serialize()
+    }).done(function (data) {
+      var options = {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+      };
+      if (data.dataFacture.length > 0) {
+        var content = "<span class='text-danger' id='messageErreur' style='display:none;'>Pour effectuer un paiement, veuillez sélectionner les factures anciennes.</span>"
+        content += "<table   class='table rounded table-bordered table-hover display supertable table-striped dataTable no-footer dtr-inline'><thead><th></th><th>Numéro  Facture</th><th>Client</th><th>Code client</th><th>Num Cin</th><th>Num  de ligne fixe</th><th>	Montant à payer</th><th>Date de creation</th><th>Date d'échéance</th><th>visualiser </th></thead>"
+
+        for (i = 0; i < data.dataFacture.length; i++) {
+          content += '<tr><td>' + "<input type='checkbox' class='ClassNameFacture'  name='chekelement' onclick='toggleCheckboxajax(this)' id=" +
+            data.dataFacture[i].factureId +
+            " name='idChecked'  data-montant='" + data.dataFacture[i].montant_payer.toFixed(3) + "' data-isResilation='"+data.dataFacture[i].isFactureResilation+"' />" + '</td>';
+          content += '<td>' + data.dataFacture[i].ref_facture + '</td>';
+          content += '<td>' + data.dataFacture[i].abonnement.firstName + " " + data.dataFacture[i].abonnement.lastName + '</td>';
+          content += '<td>' + data.dataFacture[i].abonnement.referenceClient + '</td>';
+          content += '<td>' + data.dataFacture[i].abonnement.cin + '</td>';
+          content += '<td>' + data.dataFacture[i].abonnement.telFixe + '</td>';
+          content += '<td >' + data.dataFacture[i].montant_payer.toFixed(3) + '</td>';
+          content += '<td>' + new Date(data.dataFacture[i].createdDate).toLocaleString('en-GB', options) + '</td>';
+          content += '<td>' + new Date(data.dataFacture[i].date_echeance).toLocaleString('en-GB', options) + '</td>';
+          content += '<td><a href=/facture/' + data.dataFacture[i].factureId + ' target="_blank"><i class="fa fa-eye"  aria-hidden="true"></i></a></td>';
+
+
+          content += '</tr>';
+        }
+        for (i = 0; i < data.dataAvoir.length; i++) {
+          arrayAvoir.push(data.dataAvoir[i].avoirId);
+          content += '<tr><td>' + "<input type='checkbox' id=" +
+            data.dataAvoir[i].avoirId +
+            " name='idChecked' checked  disabled />" + '</td>';
+          content += '<td>' + data.dataAvoir[i].refAvoirClient + '</td>';
+          content += '<td>' + data.dataAvoir[i].abonnement.firstName + " " + data.dataAvoir[i].abonnement.lastName + '</td>';
+          content += '<td>' + data.dataAvoir[i].abonnement.referenceClient + '</td>';
+          content += '<td>' + data.dataAvoir[i].abonnement.cin + '</td>';
+          content += '<td>' + data.dataAvoir[i].abonnement.telFixe + '</td>';
+          content += '<td>-' + data.dataAvoir[i].montantAvoir.toFixed(3) + '</td>';
+          content += '<td>' + new Date(data.dataAvoir[i].createdDate).toLocaleString('en-GB', options) + '</td>';
+          content += '<td>' + " " + '</td>';
+          content += '<td><a href=/AvoirClient/viewDetail/' + data.dataAvoir[i].avoirId + ' target="_blank"><i class="fa fa-eye"  aria-hidden="true"></i></a></td>';
+
+
+          content += '</tr>';
+        }
+        content += "</table>"
+       
+        if (data.dataAvoir.length > 0) {
+          totalApayerAvoir = data.dataAvoir.map(el => el.montantAvoir).reduce((a, b) => a + b);
+        }
+
+        //	const totalApayerFacture = data.dataFacture.map(el => el.montant_payer).reduce((a,b) => a + b);
+
+        totalApayerGlobal = - totalApayerAvoir;
+        content += "<b><p id='totalApayerGlobal'> total a payer est : <span id='totalApayerGlobalValue'>"
+        content += Number(totalApayerGlobal).toFixed(3) + "</span></p></b>"
+
+        //action="/payement/PaymentFactures" method="post"
+        var payment = `
+        	                <form  action="/payement/PaymentFactures" method="post" class="mr-3 ml-3 mb-2"   onsubmit ='triggerModalConfirmePayement(event)'>
+        	              <label for="name" class="col-form-label">Mode de Paiement </label>
+        	            	  <div class="row">
+                           <select class="form-control col-md-6" required="required" name="methodepayment" onclick='verificationValueSelectPayment(this)' >
+                               <option value="espèce">espèce </option>
+                               <option
+                                      value="Carte bancaire">Carte bancaire</option>
+                               <option
+                                     value="Chéque" >Chéque</option>
+                           </select> </div>
+                           <div id="donnerpayement"></div>`;
+        payment += `<div >
+                           
+                       
+                              </div>
+                              
+                              
+                              <button  id="submitpayement"  class="btn btn-primary mt-2"  disabled = "true" >Payer</button>
+
+                              `
+
+
+
+
+        payment += " </form>";
+
+
+        payment += `
+                           <div
+class="modal fade"
+id="ModalConfirmePayement"
+data-backdrop="static"
+tabindex="-1"
+role="dialog"
+aria-labelledby="ModalLabel"
+aria-hidden="true"
+>
+                           
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="uploadModalLabel">
+        confirmation payement
+      </h5>
+    </div>
+
+    <form id="PaymentFactures"  action="/payement/PaymentFactures" method="post">
+      <div class="modal-body">
+<p>Êtes-vous certain de vouloir  approuver ce paiement ? </p>
+     <div id="dataformModule"></div>
+
+      </div>
+    
+      
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          id="fermer"
+        >
+          Fermer
+        </button>
+        <button type="submit" class="btn btn-primary" id="submitbuttonmodel">
+          Payer
+        </button>
+        
+  <div id="lastsenddata"></div>
+       
+      </div>`
+        payment += "<input id='avoirliste' name='avoirliste' type='hidden'value='" + arrayAvoir + "'>"
+        payment += "<input id='factureliste' name='factureliste' type='hidden' value='" + array + "'></form></div> </div></div>"
+
+        $('#resultatabel').empty().append(content);
+        $('#payment').empty().append(payment);
+        $('#notfound').empty();
+      }
+      else {
+        var notfound = "<h2 class='text-center text-danger font-weight-bol mt-4'>Aucune Facture Trouvée  <h2>"
+        $('#payment').empty();
+        $('#resultatabel').empty()
+        $('#notfound').empty().append(notfound);
+
+      }
+
+      // Optionally alert the user of success here...
+    }).fail(function (data) {
+
+      // Optionally alert the user of an error here...
+    });
+  })
+  $(document).on('submit', '#PaymentFactures', function (event) {
+    //   $('#PaymentFactures').submit(function(event) {
+    event.preventDefault(); // Prevent the form from submitting via the browser
+    var form = $(this);
+    $('.loader-container').show();
+
+
+    $("#submitbuttonmodel").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement...');
+    $("#submitpayement").prop('disabled', true);
+    $("#submitbuttonmodel").prop('disabled', true);
+
+    $.ajax({
+      type: form.attr('method'),
+      url: form.attr('action'),
+      responseType: 'arraybuffer',
+      data: form.serialize()
+    }).done(function (data) {
+      if (data == "erreur" || data == "erreurFirstFacture") {
+
+        if (data === "erreurFirstFacture") {
+          $(document).Toasts("create", {
+            title: "Erreur",
+            body: '<i class="fas fa-exclamation-triangle"></i> Le processus d\'abonnement n\'est pas encore complet pour ce client.',
+            class: "bg-danger",
+            autohide: true,
+            delay: 10000,
+          });
+        } else {
+          if (data == "erreur") {
+            $(document).Toasts("create", {
+              title: "Erreur de sélection",
+              body: "Veuillez vérifier votre sélection",
+              class: "bg-danger",
+              autohide: true,
+              delay: 10000,
+            });
+            document.getElementById("messageErreur").style.display = "block"
+          }
+        }
+
+
+        $('.loader-container').hide();
+        $("#submitbuttonmodel").prop('disabled', false);
+        $("#submitbuttonmodel").html('Payer');
+
+        fermerModal()
+
+        array = [];
+      //  arrayAvoir = []
+
+           	totalApayerGlobal = 0
+       
+                 totalApayerGlobal = - totalApayerAvoir;
+        	document.getElementById('totalApayerGlobalValue').innerText = totalApayerGlobal
+
+        var checkboxes = document.querySelectorAll('.ClassNameFacture[name="chekelement"]');
+        checkboxes.forEach(function (checkbox) {
+          checkbox.checked = false;
+        });
+
+      } else {
+        if (data) {
+          $('.loader-container').hide();
+
+          $('.modal-backdrop').remove();
+
+
+          array = [];
+          arrayAvoir = []
+          payment = `<div>
+
+       <form action='/payement/imprimer_recu_payment_A4' target='_blank' id='imprimerrecufacture' name='imprimerrecufacture' method='post'>
+
+       <label for='recherche' class='col-form-label'>
+
+       <span  style='white-space:nowrap'>Le paiement a été effectué avec succès: S'il vous plaît     <a   href='javascript:void(0)' onClick='submitformimprimerrecufacture()'><i class='fa fa-download'></i>
+                           téléchargerle reçu du paiement. </a> </span>
+
+
+                  <input id='factureliste'
+            name='factureliste' type='hidden' value='`+ data + `'>
+
+       </label >
+
+
+                  </form>
+
+
+                     </div>`
+
+          $('#resultatabel').empty();
+          $('#payment').empty().append(payment);
+          $('#notfound').empty();
+
+        } else {
+          $('.loader-container').hide();
+
+          $('.modal-backdrop').remove();
+          $(document).Toasts("create", {
+            title: "Il semble que la ou les factures sélectionnées ont déjà été payées.",
+            body: "",
+            class: "bg-danger",
+            autohide: true,
+            delay: 10000,
+          });
+          // Add an event listener to the toast
+          $('.toast').on('hidden.bs.toast', function () {
+            // Code to execute after the toast has been hidden
+            window.location.reload()
+          });
+
+        }
+      }
+
+
+
+    })
+      .fail(function (data) {
+
+        window.location.href = "/facture/recherchefactures";
+      });
+  })
+
+  function triggerModalConfirmePayement(e) {
+    e.preventDefault();
+   if (!isNaN(totalApayerGlobal) && totalApayerGlobal >= 0) {
+    let mybankdata = `<input type='hidden' name='Numcheque' value='` + Numcheque + `'/>
+<input type='hidden' name='Bankname' value='`+ Bankname + `'/>
+<input type='hidden' name='methodepayment' value='`+ typedepaiement + `'/>
+<input type='hidden' name='NumeroCarte' value='`+ NumeroCarte + `'/>`
+    $('#lastsenddata').empty().append(mybankdata);
+    $("#ModalConfirmePayement").modal();
+    }
+    else {
+        // Display an error message or take appropriate action
+          $(document).Toasts("create", {
+            title: "Erreur",
+            body: "Le montant à payer n'est pas valide. Veuillez entrer un nombre positif",
+            class: "bg-danger",
+            autohide: true,
+            delay: 10000,
+          });
+        
+        
+    }
+    return false;
+  }
+
+  $(document).on('change', '#Numcheque', function (e) {
+
+    Numcheque = e.target.value
+
+  })
+  $(document).on('change', '#Bankname', function (e) {
+
+    Bankname = e.target.value
+
+  })
+  $(document).on('change', '#NumeroCarte', function (e) {
+
+    NumeroCarte = e.target.value
+  })
+
+  $('#submitbuttonmodel').on('click', function () {
+    $('.modal-backdrop').remove();
+  });
+
+  //Fermer modem bootstrap
+  function fermerModal() {
+    var modal = document.getElementById('ModalConfirmePayement');
+    $(modal).modal('hide');
+  }
+</script>

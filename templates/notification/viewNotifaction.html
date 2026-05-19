@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Detail Client</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<h1 class="m-0">Fiche d’information abonné</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+
+				<div class="row">
+					<div class="col-12 grid-margin"></div>
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab"
+									role="tablist">
+									<li class="nav-item"><a class="nav-link active"
+										id="custom-tabs-info-tab" data-toggle="pill"
+										href="#custom-tabs-info" role="tab"
+										aria-controls="custom-tabs-info" aria-selected="true">Information</a>
+									</li>
+
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info"
+										role="tabpanel" aria-labelledby="custom-tabs-info-tab">
+
+										
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="card-block">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom evenement:</label>
+																	<div class="col-sm-8" th:text="${notificationconfig.eventAction}"></div>
+															
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Ville:</label>
+																	<div class="col-sm-8" th:text="${notificationconfig.villeName}"></div>
+																	
+																</div>
+
+															
+	
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Cree le:</label>
+																	<div class="col-sm-8" th:text="${notificationconfig.createdDate}"></div>
+																	
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Modifier le :</label>
+																	
+																	<div class="col-sm-8" th:text="${notificationconfig.modifiedDate}"></div>
+																</div>
+
+																<div>
+																	<label class=" col-form-label">Téléphone
+																		mobile:</label>
+																	<div class="col-sm-8"  th:each="phone: ${notificationconfig.phoneNumbers}" th:text="${phone.phoneNumbers}" ></div>
+																	
+																</div>
+
+
+																<div>
+																	<label class="col-form-label">Email
+																		:</label>
+																	<div class="col-sm-8" th:each="email: ${notificationconfig.emailAdresse}" ><span th:text="${email.emailAdresse}"></span></div>
+																
+																</div>
+
+
+
+
+
+														
+															</div>
+														</div>
+													</div>
+													<div class="card-block">
+														<h4>Cree par</h4>
+														<div class="card-block-body">
+															<span class="col-sm-8"
+																th:text="${notificationconfig.createdByUserId?.firstName  } "></span> <span
+																th:text="${notificationconfig.createdByUserId?.lastName}"></span>
+														</div>
+													</div>
+												</div>
+
+											</div>
+
+
+										
+
+								
+
+
+
+
+
+
+
+
+
+
+
+
+
+									</div>
+
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+				
+			</div>
+		</section>
+		
+	</section>
+</body>
+</html>
+

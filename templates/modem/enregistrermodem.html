@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Modems</title>
+
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Ajouter ou Modifier modem</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+
+                <div class="card-body">
+                    <div class="col-md-10">
+                        <form action="#" th:action="@{/createmodem}" th:object="${modem}" method="post">
+                            <div class="row">
+
+                                <div class="form-group col-md-8">
+                                    <label for="name" th:field="*{modemId}" class="col-form-label">Id Modem : </label>
+                                    <label for="name" th:text="*{modemId}" class="col-form-label"> </label>
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <label for="name" class="col-form-label">Numéro Serie du Modem</label>
+                                    <input type="text" th:field="*{numSerie}" class="form-control"
+                                           id="numSerie" placeholder="Numéro Serie du Modem" required="required"/>
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <label for="name" class="col-form-label">Modéle Modem</label>
+                                    <!--                                 <input type="text" th:field="*{modelModem}" class="form-control" -->
+                                    <!--                                             id="Nommodem" placeholder="Nom modem" /> -->
+
+
+                                     <select class="form-control" th:field="*{modelModem}">
+                                        <option th:each="t:${type}"
+                                                th:value="${t.categorieProduitInternetCode}"
+                                                th:utext="${t.categorieProduitInternetCode}"></option>
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <label for="email" class="col-form-label">Marque Modem</label>
+
+                                   <input type="text" th:field="*{marque}" class="form-control"
+                                           id="marque" placeholder="Marque du Modem" required="required"/>
+
+
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <label for="email" class="col-form-label">Email</label>
+                                    <input type="text" th:field="*{email}" class="form-control"
+                                           id="email" placeholder="email"/>
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <label for="email" class="col-form-label">Password</label>
+                                    <input type="text" th:field="*{password}" class="form-control"
+                                           id="seuil_rupture" placeholder="password"/>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <input type="submit" class="btn btn-primary" value=" Submit ">
+                                </div>
+                                <div class="col-md-6" sec:authorize="hasAnyAuthority('READ_MODEM')" >
+                                    <a th:href="@{/modemsadmin}" class="btn btn-danger">
+                                        <span class="text">Annuler</span>
+                                    </a>
+                                </div>
+                                <div class="col-md-6" sec:authorize="hasAnyAuthority('READ_MODEM_LIST_AREA', 'READ_MODEM_POS', 'READ_MODEM_OWNER')">
+                                    <a th:href="@{/modems}" class="btn btn-danger">
+                                        <span class="text">Annuler</span>
+                                    </a>
+                                </div>
+
+                                <input type="hidden" id="id" th:field="*{modemId}">
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    <input
+    type="hidden"
+    name="message"
+    id="message"
+    th:value="${message} ?  ${message} : ''"
+  />
+    </section>
+
+</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+     var messagenotif = document.getElementById("message").value;
+       if(messagenotif !== "" && messagenotif == "modemexiste"){
+      $(document).Toasts("create", {
+	        title: "Numero serie ou Email déjà utilisé",
+	        body: "",
+	        class: "bg-danger",
+	        autohide: true,
+	        delay: 10000,
+	      });
+      }
+</script>

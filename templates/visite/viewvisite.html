@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorator="layout">
+	
+
+<head>
+
+	<title>Detail Visite</title>
+	<link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+	    
+    
+     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKxvtRCjLD1q3X2HvDauPb2LGei83yEhU&callback=console.debug&libraries=maps,marker&v=beta">
+     </script>
+     <style>
+        #map {
+            height: 270px;
+            width: 100%;
+        }
+		.select2-container .select2-search--dropdown .select2-search__field {
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			padding: 5px;
+		}
+
+		.select2-container {
+			position: relative;
+		}
+		.select2-dropdown {
+			position: absolute;
+			z-index: 1061;
+		}
+	</style>
+</head>
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<h1 class="m-0">Fiche d’information visite</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+
+				<div class="row">
+					<div class="col-12 grid-margin"></div>
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+									<li class="nav-item"><a class="nav-link active" id="custom-tabs-info-tab"
+											data-toggle="pill" href="#custom-tabs-info" role="tab"
+											aria-controls="custom-tabs-info" aria-selected="true">Information</a>
+									</li>
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info" role="tabpanel"
+										aria-labelledby="custom-tabs-info-tab">
+											<input type="hidden" id="visite" name="visite" th:field="${visite.id}" />
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="card-block">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Type visite:</label>
+																	<div class="col-sm-8" th:text="${visite.typeVisite.nomType}">
+																	</div>
+															
+																</div>
+																<div class="row" th:if="${visite.typeVisite.nomType} == 'Autre'">
+																	<label class="col-sm-4 col-form-label">Autre type</label>
+																	<div class="col-sm-8" th:text="${visite.autreType}">
+																	</div>
+															
+																</div>
+																<div class="row"  th:if="${visite.revendeur} != null">
+																	<label
+																		class="col-sm-4 col-form-label">Revendeur:</label>
+																	<div class="col-sm-8" th:text="${visite.revendeur}">
+																	</div>
+																</div>
+																	<div class="row" th:if="${visite.revendeur} == null">																	
+																	<label class="col-sm-4 col-form-label">Autre lieu</label>
+																	<div class="col-sm-8" th:text="${visite.autreLieu}">
+																	</div>
+															
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Durée visite heures:</label>
+																	<div class="col-sm-8" th:text="${visite.dureeVisiteHeures}">
+																	</div>
+																</div>
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Durée visite minutes:</label>
+																	<div class="col-sm-8" th:text="${visite.dureeVisiteMinutes}">
+																	</div>
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Référence visite:</label>
+																	<div class="col-sm-8" th:text="${visite.reference_visite}"></div>
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Commentaire:</label>
+																	<div class="col-sm-8"
+																		th:text="${visite.commentaire}">
+																	</div>
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Date de création:</label>
+																	<div class="col-sm-8"
+																		th:text="${visite.createdDate}"></div>					
+																</div>
+																	<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Date de modification:</label>
+																	<div class="col-sm-8"
+																		th:text="${visite.modifiedDate}"></div>					
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">status:</label>
+																	<div class="col-sm-8" th:text="${visite.status}">
+																	</div>
+																</div>
+																 <div class="row"  sec:authorize="hasAnyAuthority('READ_VISIT_LIST')">
+													            <label class="col-sm-4 col-form-label">Lieu:</label>
+													            <div class="col-sm-8">
+													                <span th:text="${visite.latitude} + ', ' + ${visite.longitude}"></span>
+													            </div>
+													        </div>
+
+															</div>
+														</div>
+													</div>
+													<div class="card-block">
+
+														<div class="col-md-6">
+															<h5>Cree par</h5>
+															<span th:text="${visite.createdBy?.firstName  } "></span> <span
+																th:text="${visite.createdBy?.lastName}"></span>
+														</div>
+														<div class="col-md-6">
+															<h5>Editer par</h5>
+													<span th:text="${visite.editedBy?.firstName  } "></span> <span
+																th:text="${visite.editedBy?.lastName}"></span>
+														</div>
+													</div>
+												</div>
+									<div class="col-sm-6"  sec:authorize="hasAnyAuthority('READ_VISIT_LIST')">
+										    <div class="card-block ">
+										        <h4>Position sur map</h4>
+										        <div class="card-block-body">
+										            <p>Position de commercial lors de l'ajout de visite:</p>
+										            <div th:if="${visite.latitude != null and visite.longitude != null}">
+														 <input type="hidden" id="latitude" th:value="${visite.latitude}" />
+               											 <input type="hidden" id="longitude" th:value="${visite.longitude}" />
+										                <div id="map" style="height: 270px; width: 100%;"></div> 
+										
+										                <script>
+										                    function initMap() {
+										                     const latitude = parseFloat(document.getElementById("latitude").value);
+                       										 const longitude = parseFloat(document.getElementById("longitude").value);
+
+										console.log(latitude);
+											console.log(longitude);
+										                        const location = { lat: latitude, lng: longitude };
+										                        const map = new google.maps.Map(document.getElementById("map"), {
+										                            zoom: 15,
+										                            center: location,
+										                        });
+										
+										                        const marker = new google.maps.Marker({
+										                            position: location,
+										                            map: map,
+										                        });
+										                    }
+										                    window.onload = initMap;
+										                </script>
+										            </div>
+										            <div th:if="${visite.latitude == null or visite.longitude == null}">
+										                <p>Position est non valide.</p>
+										            </div>
+										        </div>
+										    </div>
+										</div>
+
+
+											</div>
+									</div>					
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			<input type="hidden" name="message" id="message" th:value="${message} ?  ${message} : ''" />
+		</section>
+	</section>
+</body>
+
+</html>
+<script>
+ $(document).ready(function() {
+    $('.js-select2').select2({ allowClear: true });
+  });
+</script>

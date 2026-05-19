@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+<meta charset="UTF-8">
+<title>List Offre</title>
+<link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+  <link rel="stylesheet" href="https://rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.css" />
+
+</head>
+<body>
+	 <style>
+    #checkedabonnementfixe {
+      display: none;
+    }
+
+    #addreferenceabonnement {
+      display: none;
+    }
+
+    #menu {
+      display: none;
+    }
+
+    table {
+      margin: 0 auto;
+      width: 100%;
+      clear: both;
+      border-collapse: collapse;
+      table-layout: fixed;
+      word-wrap: break-word;
+    }
+
+    table td {
+      width: 20%;
+    }
+
+    .tablebadge {
+      text-align: center;
+      color: white;
+      padding: "2px";
+      font-weight: 600;
+      border-radius: 2px;
+      padding: 4px 8px;
+    }
+    .selection>span {
+      height: auto !important;
+    }
+
+    .selection ul {
+      height: auto !important;
+
+    }
+
+    /* width */
+    .selection ul ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    .selection ul ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+      border-radius: 10px;
+    }
+
+    /* Handle */
+    .selection ul ::-webkit-scrollbar-thumb {
+      background: grey;
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    .selection ul ::-webkit-scrollbar-thumb:hover {
+      background: black;
+    }
+  </style>
+
+<section layout:fragment="content">
+      <section class="content">
+                           <div class="container-fluid">
+		   <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-12">
+                <h1 class="m-0">Liste des offres</h1>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        
+           <div class="row">
+          <div class="col-12">
+            <div class="card shadow mb-4">
+              <div class="blocFilter">
+
+                            <a href="addville.html" th:href="@{/offre/createOffres}"
+                             class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mb-3"
+                               sec:authorize="hasAnyAuthority('ADD_OFFRES')">
+                                <i class="fas fa-plus fa-sm text-white-50"></i> Ajouter un offre</a>
+                         <button id="togglebutton" class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3">Filtre</button>
+                                <!--                         debut de form filtre-->
+        <form id="showMe3" method="get" autocomplete="off">
+                  <div class="row">                                               
+                    <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="titre">Nom Offre</label> <input id="offre" type="text" name="offre"
+                        placeholder="Nom Offre" class="form-control" th:onchange="|onchangeSearch(event)|" />
+                    </div>
+                     <div class="col-md-3">                      
+	                      <label class="col-form-label" for="etat">Etat ( Actif / Non actif)</label>
+							<select  class="form-control" id="etat" name="etat" th:onchange="|onchangeSearch(event)|">
+							  <option value = ''>Etat</option>
+							  <option value="true">Actif </option>
+							  <option value="false">Non actif</option>
+							</select>
+ 						</div>  
+ 						 <div class="col-md-3">                      
+	                      <label class="col-form-label" for="promotion">En Promotion ( Oui / Non )</label>
+							<select  class="form-control" id="promotion" name="promotion" th:onchange="|onchangeSearch(event)|">
+							  <option value = ''>En Promotion</option>
+							  <option value="true">Oui </option>
+							  <option value="false">Non </option>
+							</select>
+ 						</div>                             
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-5 col-form-label"> Date de
+                          création: du</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de début"
+                            name="datedebut" id="datedebut" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">au</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de fin"
+                            name="datefin" id="datefin" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>        
+                      <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-5 col-form-label">Debut
+                          promotion entre:</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de début"
+                            name="datedebutPromo" id="datedebutPromo" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3  mt-3">
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">et</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" placeholder="Choisissez une date de fin"
+                            name="datefinPromo" id="datefinPromo" th:onchange="|onchangeSearch(event)|" />
+                        </div>
+                      </div>
+                    </div>             
+                  </div>
+                  <div class="text-center">
+                    <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                      th:onclick="onclicksherh(event)">Rechercher</button>
+                  </div>
+                </form>
+                </div>
+                </div>
+                </div>
+                </div>
+                       <div class="row">
+          <div class="col-12">
+            <div class="card shadow mb-4">
+              <div class="card-body">
+                <div>
+                  <div class="blocy">
+
+                            <table
+                        id="listeOffreTable"
+                        class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+                      >
+                        <!-- Header Table -->
+                        <thead class="table dataTable no-footer">
+                          <tr>
+                             <th scope="col">Date creation</th>
+                            <th scope="col">Nom offre</th>
+                         <th scope="col">En promotion</th>
+                            <th scope="col">Active</th>
+                            <th scope="col" >Action</th>
+
+                          </tr>
+                        </thead>
+                      </table>
+                       </div>
+                       </div>
+                        </div>
+                         </div>
+                          </div>
+                           </div>                          
+                   </div>
+
+      </section>
+      </section>
+</body>
+</html>
+<script th:inline="javascript">
+	
+	 let changeRecherche = true;
+var NomOffre = "";
+  var Etat = "";
+  var Promotion = "";
+  var dateStart = "";
+  var dateEnd = "";
+  var dateStartPromo = "";
+  var dateEndPromo = "";
+  $("#togglebutton").click(function () {
+      $("#showMe3").toggle();
+    });
+    function onchangeSearch(event) {
+    let name = event.target.name;
+
+    switch (name) {
+		
+      case "offre": {
+        NomOffre = event.target.value;
+        break;
+      }
+      case "etat": {
+        Etat = event.target.value;
+        break;
+      }
+      case "promotion": {
+        Promotion = event.target.value;
+        break;
+      }
+      case "datefin": {
+     dateEnd= event.target.value;
+        break;
+      }
+      case "datedebut": {
+        dateStart = event.target.value;
+        break;
+      }
+       case "datefinPromo": {
+        dateEndPromo = event.target.value;
+        break;
+      }
+      case "datedebutPromo": {
+        dateStartPromo = event.target.value;
+        break;
+      }
+    }
+    console.log(name);
+  }
+   function onclicksherh(event) {
+    //event.preventdefault()
+    event.preventDefault();
+
+    //$('#tutorialTable').DataTable().ajax.reload();
+    $("#listeOffreTable")
+      .DataTable()
+      .column(0)
+      .search(
+        JSON.stringify({
+          offre: NomOffre,
+          etat: Etat, 
+          promotion: Promotion,      
+          datefin:dateEnd,
+          datedebut:dateStart,
+           dateEndPromo: dateEndPromo,
+          dateStartPromo: dateStartPromo,
+     
+        })
+      )
+      .draw();
+  }
+
+// nom data tabel 
+var oTable;
+
+oTable = $("#listeOffreTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    order: [3, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: true,
+
+    fixedHeader: true,
+    // scrollY:500,
+    ajax: "/offre/allMyOffres",
+    lengthMenu: [
+      [10, 20, 50],
+      [10, 20, 50],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "Première",
+        last: "Dernière",
+        next: ">>",
+        previous: "<<",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+        },
+
+    columnDefs: [
+    	   { orderable: false, targets: 4 },
+    ],
+
+    columns: [
+    
+      {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.createdDate)
+        		return new Date(row.createdDate).toLocaleDateString("en-GB");
+        	else
+           return "";
+        },
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+          if (row.title) return row.title ;
+          else return "";
+        },
+      },
+   
+      {
+        data: null,
+        render: function (data, type, row) {
+         if (row.isPromo) return "oui";
+          else return "non";
+        },
+      },
+      
+      {
+        data: null,
+        render: function (data, type, row) {
+            if (row.isActive)
+            return  "oui"
+            else return "non";
+          
+        },
+      },
+     
+      
+
+      { data: null ,
+  render: function (data, type, row) {
+	 
+	  let action = `<a href='/offre/viewOffre/`+row.offreId +`''>
+	   <button type="button" class="d-none d-sm-inline-block btn-sm  btn-primary  shadow-sm">
+                        Details  <i class="fa fa-eye" aria-hidden="true"></i></button> 
+                    </a>          
+          <a href='/offre/updateOffre/` +row.offreId +`''><button class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">Modifier <i  class="fa  fa-edit"></i></button>
+          </a>`
+
+          
+          return action ; 
+  }},
+  
+    ],
+  });
+</script>

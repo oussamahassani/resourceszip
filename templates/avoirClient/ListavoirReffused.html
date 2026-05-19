@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="layout"
+>
+  <head>
+    <title>Avoir Client en cours de verification</title>
+    <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+    <style>
+      #checkedabonnementfixe {
+  display: none;
+}
+
+    </style>
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Content Header (Page header) -->
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <h1 class="m-0">Liste des Avoir Client annulés  </h1>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="blocFilter">
+                  <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+                  
+                  <!-- Ajoutez un formulaire caché pour l'extraction en masse -->
+					<form id="myExtractEnMasseForm" method="GET" action="/AvoirClient/extractenmasse" style="display: none;">
+					  <!-- Les champs de saisie nécessaires pour l'extraction en masse -->
+					  <input type="hidden" name="startDate" id="startDateInput" />
+					  <input type="hidden" name="endDate" id="endDateInput" />
+					  <input type="hidden" name="reference" id="referenceInput" />
+					  <input type="hidden" name="usedBy" id="usedByInput" />
+					  <input type="hidden" name="avoirStatut" id="avoirStatutInput" />
+					  <input type="hidden" name="authorizationAdd" id="authorizationAddInput" />
+					  <input type="hidden" name="createdBy" id="createdByInput" />
+					  <input type="hidden" name="montantAvoir" id="montantAvoirInput" />
+					  <input type="hidden" name="motifAvoir" id="motifAvoirInput" />
+					  <input type="hidden" name="abonnement" id="abonnementInput" />
+					  <input type="hidden" name="datePayementDebut" id="datePayementDebut" />
+					  <input type="hidden" name="datePayementFin" id="datePayementFin" />
+					    <input type="hidden" name="isNotPublic" id="isNotPublic" value="exist" />
+					</form>
+					
+        		<div class="blocFilter">
+              
+                  </div>
+                  
+                  <form id="showMe3" method="get">
+                    <div class="row">
+
+                      <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes"
+                          >Date de création
+                        </label>
+						<div class="input-group">
+						      <input type="date" class="form-control" id="startDate" name="startDate" placeholder="Date de début" th:onchange="|onchangeSearch(event)|"/>
+						      <div class="input-group-prepend input-group-append">
+						        <span class="input-group-text">à</span>
+						      </div>
+						      <input type="date" class="form-control" id="endDate" name="endDate" placeholder="Date de fin" th:onchange="|onchangeSearch(event)|"/>
+						    </div>
+                      </div>
+                               <div class="col-sm-6 col-md-3">
+                      <label class="col-form-label" for="villes"
+                          >Date de paiement
+                        </label>
+						<div class="input-group">
+						      <input type="date" class="form-control" id="datePayementDebut" name="datePayementDebut" placeholder="Date de début" th:onchange="|onchangeSearch(event)|"/>
+						      <div class="input-group-prepend input-group-append">
+						        <span class="input-group-text">à</span>
+						      </div>
+						      <input type="date" class="form-control" id="datePayementFin" name="datePayementFin" placeholder="Date de fin" th:onchange="|onchangeSearch(event)|"/>
+						    </div>
+                      </div>
+                       <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="reference">Référence</label>
+                        <input
+                          id="reference"
+                          type="text"
+                          name="reference"
+                          placeholder="Référence de la Facture d'Avoir"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      
+                       <div class="col-sm-3">
+                        <label class="col-form-label" for="usedBy"
+                          >Utilisé par</label
+                        >
+                        <select
+                          id="usedBy"
+                          name="usedBy"
+                          data-control="select2"
+                           data-placeholder="Sélectionner un utilisateur"
+                          class="form-control js-select2"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                          <option value="">Utilisé par</option>
+                          <option
+                            th:each="user : ${users}"
+                            th:value="${user.userid}"
+                            th:text="${user.codeUser} + ' / ' + ${user.firstName} + ' ' + ${user.lastName}"
+                          ></option>
+                        </select>
+						</div>
+                      
+                
+                      
+            
+                      
+                      <div class="col-sm-3">
+                        <label class="col-form-label" for="usedBy"
+                          >Crée par</label
+                        >
+                        <select
+                          id="createdBy"
+                          name="createdBy"
+                          data-control="select2"
+                           data-placeholder="Sélectionner un utilisateur"
+                          class="form-control js-select2"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                          <option value="">Utilisé par</option>
+                          <option
+                            th:each="user : ${users}"
+                            th:value="${user.userid}"
+                            th:text="${user.codeUser} + ' / ' + ${user.firstName} + ' ' + ${user.lastName}"
+                          ></option>
+                        </select>
+						</div>
+
+                      <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="Nom">Montant Total</label>
+                        <input
+                          id="montantAvoir"
+                          type="text"
+                          name="montantAvoir"
+                          placeholder="montant Avoir"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="Prenom"
+                          >motif Avoir</label
+                        >
+                        <input
+                          id="motifAvoir"
+                          type="text"
+                          name="motifAvoir"
+                          placeholder="motif Avoir"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="CIN">Identification Client</label>
+                        <input
+                          id="abonnement"
+                          type="text"
+                          name="abonnement"
+                          placeholder="Identification"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      
+                    </div>
+                    <div class="row">
+                      
+                      <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+            <form
+                    id="myExtractEnMasseForm"
+                    class="form-sample"
+                    method="get"
+                    action=""
+                    style="display: none"
+                  >
+                              <!--        <div th:if = "${_csrf.parameterName">
+                                       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                       </div>-->
+                  </form>
+          <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                  <div>
+                    <div class="blocy">
+                      <table
+                        id="tutorialTable"
+                        class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+                      >
+                      
+                            <thead class="table dataTable no-footer">
+                          <tr>
+                           <!--  <th>
+                              <input
+                                name="select_all"
+                                value="1"
+                                type="checkbox"
+                              />
+                            </th> --> 
+                            <th>Référence avoir</th>
+                            <th>Référence abonnement</th>
+                            <th>Date de création</th>                            
+                            <th>Montant TTC</th>
+                            <th>Motif</th>
+                            <th>Autorisation d ajout au bordereau </th>
+                            <th>Reference Facture</th>
+                            <th>Type </th>
+                            <th>Createur</th>  
+                            <th>Action</th>
+                          </tr>
+                        </thead>            
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+         
+
+
+
+        </div>
+      
+      </section>
+    </section>
+  </body>
+</html>
+<script th:inline="javascript">
+    var chekfixeexiste = null ; 
+  var oTable;
+  var avoirStatut = "";
+  var montantAvoir = "";
+  var motifAvoir = "";
+  var abonnement = "";
+  var startDate = "";
+  var endDate = "";
+  var reference = "";
+  var usedBy = "";
+  var authorizationAdd = "";
+  var createdBy = "";
+  var datePayementDebut = "";
+  var datePayementFin = "" ;
+  
+  /*<![CDATA[*/
+
+  var listedes_ids = /*[[${listedes_ids}]]*/ "default";
+  var userrole = /*[[${userrole}]]*/ "default";
+
+  /*]]>*/
+
+  function updatecheklist() {
+    if (listedes_ids.length !== 0) {
+      listedes_ids.forEach(function (item, index, array) {
+        var elem = document.getElementById(item);
+        if (elem !== null) {
+          document.getElementById(item).checked = true;
+        }
+      });
+    }
+  }
+
+/*  $("#downloadenmasse").click(function (e) {
+    e.preventDefault();
+    if (listedes_ids.length !== 0) {
+      var url = "/avoirClient/extractenmasse";
+      $("#myForm").attr("action", url);
+      $("#myForm").submit();
+    } else {
+      if (!alert("Veuillez selectionner les demandes à extraire")) {
+        window.location.reload();
+      }
+    }
+  });
+  */
+  function toggleCheckboxajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+    this.toggleCheckbox(column, data.demandeId);
+  }
+  function toggleCheckbox(element, id) {
+    if (element.checked === true) {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/avoirClient/addid",
+        data: JSON.stringify(id),
+        dataType: "json",
+        timeout: 100000,
+        success: function (data) {
+          listedes_ids.push(id);
+          updatecheklist();
+          //document.location.reload(true)
+        },
+        error: function (e) {
+          console.log("ERROR: ", e);
+        },
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/avoirClient/removeid",
+        data: JSON.stringify(id),
+        dataType: "json",
+        timeout: 100000,
+        success: function (data) {
+          let newelm = listedes_ids.filter((el) => el !== id);
+          listedes_ids = newelm;
+        
+          updatecheklist();
+          // document.location.reload(true)
+        },
+        error: function (e) {
+          console.log("ERROR: ", e);
+        },
+      });
+    }
+  }
+
+  function cacherliste() {
+    var hiddenDiv = document.getElementById("showMe");
+    var hiddenDiv2 = document.getElementById("showMe2");
+    var checkedabonnementfixe =  document.getElementById("checkedabonnementfixe");
+    checkedabonnementfixe.style.display =  "none"
+    hiddenDiv.style.display = "none";
+    hiddenDiv2.style.display = "none";
+  }
+  function onchangeSearch(event) {
+    let name = event.target.name;
+
+    switch (name) {
+      case "avoirStatut": {
+    	  avoirStatut = event.target.value;
+        break;
+      }
+      case "montantAvoir": {
+    	  montantAvoir = event.target.value;
+
+        break;
+      }
+      case "motifAvoir": {
+    	  motifAvoir = event.target.value;
+        break;
+      }
+      case "abonnement": {
+    	  abonnement = event.target.value;
+        break;
+      }
+      case "startDate": {
+    	  startDate = event.target.value;
+        break;
+      }
+      case "endDate": {
+    	  endDate = event.target.value;
+        break;
+      }
+      case "reference": {
+    	  reference = event.target.value;
+          break;
+       }
+      case "usedBy": {
+    	  usedBy = event.target.value;
+          break;
+       }
+      case "authorizationAdd": {
+    	  authorizationAdd = event.target.value;
+          break;
+       }
+      case "createdBy": {
+    	  createdBy = event.target.value;
+          break;
+       }
+      case "datePayementDebut": {
+    	  datePayementDebut = event.target.value;
+          break;
+       }
+      case "datePayementFin": {
+    	  datePayementFin = event.target.value;
+          break;
+       }
+
+    }
+  }
+  function onclicksherh(event) {
+    event.preventDefault();
+
+    $("#tutorialTable")
+      .DataTable()
+      .column(0)
+      .search(
+        JSON.stringify({
+        	abonnement: abonnement,
+        	motifAvoir: motifAvoir,
+        	montantAvoir: montantAvoir,
+        	avoirStatut: avoirStatut,
+        	startDate: startDate,
+        	endDate: endDate,
+        	reference: reference,
+        	usedBy: usedBy,
+        	authorizationAdd: authorizationAdd,
+        	createdBy: createdBy,
+        	datePayementDebut : datePayementDebut,
+        	datePayementFin : datePayementFin,
+        	typeAVr:""
+
+        })
+      )
+      .draw();
+  }
+  function showdetailsajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+    let href =
+      "/avoirClient/getDetailAvoirClient/" + data.demandeId;
+    window.location.href = href;
+  }
+
+
+  $(document).ready(function () {
+
+
+    $("#togglebutton").click(function () {
+      $("#showMe3").toggle();
+    
+    });
+
+
+    $("#showMe3").validate({
+      rules: {
+
+        montantAvoir: {
+          digits: true,
+
+        },
+      },
+      messages: {
+    	  montantAvoir: {
+        
+                digits : "Merci de n'entrer que des chiffres."
+        },
+
+        
+      },
+      errorElement: "em",
+      errorPlacement: function (error, element) {
+        // Add the `invalid-feedback` class to the error element
+        error.addClass("invalid-feedback");
+
+        if (element.prop("type") === "checkbox") {
+          error.insertAfter(element.next("label"));
+        } else {
+          error.insertAfter(element);
+        }
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass("is-invalid").removeClass("is-valid");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).addClass("is-valid").removeClass("is-invalid");
+      },
+    });
+  });
+  
+  oTable = $("#tutorialTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ordering: true,
+      order: [2, "desc"],
+      searching: true,
+      // scrollY:500,
+      ajax: "/AvoirClient/getAllAvoirClienRefused",
+      lengthMenu: [
+        [10, 20, 50],
+        [10, 20, 50],
+      ],
+
+      language: {
+        lengthMenu: "Affichage _MENU_ par page",
+        zeroRecords: "Rien trouvé - désolé",
+        emptyTable: "aucune donnée disponible",
+        info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+        infoEmpty: "Aucun enregistrement disponible",
+        paginate: {
+          first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+        },
+        search: "Chercher:",
+      },
+      initComplete: function (json) {
+        //Make your callback here.
+       // updatecheklist();
+        //document.getElementById("tutorialTable_filter").style.opacity = "0";
+      },
+      columnDefs: [
+
+    		  {
+      		    targets: [0, 1, 5 , 8 , 9],
+      		    orderable: false
+      		  }
+      ],
+
+      columns: [
+         /* {
+              data: null,
+              render: function (data, type, row) {
+                return (
+                		
+                  "<input type='checkbox' name='chekelement' onclick='toggleCheckboxajax(this)' id=" +
+                  row.avoirId +
+                  " name='idChecked' />"
+                );
+              },
+            },*/
+            {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.refAvoirClient) return row.refAvoirClient;
+                  else return "";
+                },
+              },
+        {
+          data: null,
+          render: function (data, type, row) {
+            if (row.abonnementReferenceClient) return row.abonnementReferenceClient;
+            else return "";
+          },
+        },
+        {
+            data: null,
+            render: function (data, type, row) {
+                if (row.createdDate) {
+                    var date = new Date(row.createdDate);
+                 // Récupération des composants de la date
+                    var jour = date.getDate();
+                    var mois = date.getMonth() + 1; // Les mois sont indexés à partir de 0, donc on ajoute 1
+                    var annee = date.getFullYear();
+                    
+                 // Formatage de la date
+                    var dateFormatee = (jour < 10 ? '0' + jour : jour) + '/' + (mois < 10 ? '0' + mois : mois) + '/' + annee;
+                 
+                    return dateFormatee;
+                  } else {
+                    return "";
+                  }
+            },
+          },
+        {
+          data: null,
+          render: function (data, type, row) {        
+            if (row.montantAvoir){
+            	let formatedValue =  row.montantAvoir.toFixed(3);
+            return "<span class='badge badge-success'> -" + formatedValue + "</span>";
+            }
+            else return "";
+          },
+        },
+
+  
+        {
+            data: null,
+            render: function (data, type, row) {
+           	 if(row.commentaireAvoir!= null){
+           		
+           		 return "<span class='badge badge-success'>" + row.commentaireAvoir + "</span>";           	 
+           	 }
+           	 return '<span class="badge badge-danger"></span>';
+            }
+         },
+          {
+              data: null,
+              render: function (data, type, row) {
+            	  if(row.usedByFirstName != null){
+            			  if(row.canRevendeurViewed == true){
+            				  return '<span class="badge badge-success">Autorisé</span>';
+            			  }else{
+            				  return '<span class="badge badge-danger">Non autorisé</span>';
+            			  }
+            		  
+            	  }else{
+            		  return "---------"
+            	  }
+            	 
+              }
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+              	  if(row.facture){
+              		  return row.facture;
+              		}else {
+              			return '<span class="badge badge-danger">----</span>';
+              	  }
+                }
+              },
+              
+              { data: null,
+              	render : function (data , type , row){
+      			
+              
+                		 return row.isJestCo == true ? '<span class="badge badge-success">Geste  co</span>' : '<span class="badge badge-danger">Avoir</span>';
+
+                	 return '';
+              }
+              },
+     
+        { data: null,
+        	render : function (data , type , row){
+			
+        	if(row.creeParFirstName != null){
+          		 return row.creeParFirstName+" "+row.creeParLastName;
+          	 }
+          	 return '';
+        }},
+
+        {
+          data: null,
+          render: function (data, type, row) {
+            let action =  "<div><a href='/AvoirClient/viewDetail/"+row.avoirId + "'><i type='button' class='fa fa-eye'></i></a>"
+            
+            
+         return action
+          },
+        },
+
+      ],
+    });
+  $("#downloadenmasse").click(function (e) {
+	    e.preventDefault();
+	 
+	   // Mettre à jour les valeurs des champs cachés avec les valeurs des variables
+	      document.getElementById("startDateInput").value = startDate;
+	      document.getElementById("endDateInput").value = endDate;
+	      document.getElementById("referenceInput").value = reference;
+	      document.getElementById("usedByInput").value = usedBy;
+	      document.getElementById("avoirStatutInput").value = avoirStatut;
+	      document.getElementById("authorizationAddInput").value = authorizationAdd;
+	      document.getElementById("createdByInput").value = createdBy;
+	      document.getElementById("montantAvoirInput").value = montantAvoir;
+	      document.getElementById("motifAvoirInput").value = motifAvoir;
+	      document.getElementById("abonnementInput").value = abonnement;
+	      document.getElementById("datePayementDebut").value = datePayementDebut;
+	      document.getElementById("datePayementFin").value = datePayementFin;
+
+	      
+	     
+	      // Soumettre le formulaire
+	      $("#myExtractEnMasseForm").submit();
+  });
+  
+  $(document).ready(function() {
+      $('.js-select2').select2({ allowClear: true});
+    });
+</script>

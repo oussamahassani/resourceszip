@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="layout"
+>
+  <head>
+    <title>Status</title>
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Content Header (Page header) -->
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <h1 class="m-0">Détails demande du parrainage</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 grid-margin">
+              <div class="card shadow mb-4">
+   <input type="hidden" name="message" id="message" th:value="${message} ?  ${message} : ''" /> 
+
+                <div class="card-body">
+            
+										
+											<div class="row"  >
+										
+												<div class="col-sm-6" >
+													<div class="card-block">
+														<div class="card-block-header">
+															<h5>Informations du parrain </h5>
+															<div class="card-block-body">
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Reference:</label>
+																<div class="col-sm-8" th:text="${findParinage.referenceParinage}"></div>
+																	
+																</div>
+																
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom complet Parrain:</label>
+																			<div class="col-sm-8" th:text="${findParinage.nomParrain}"></div>
+																
+																	
+																</div>
+
+																<div class="row pb-5">
+																	<label class="col-sm-4 col-form-label">Cin Parrain:</label>
+																	<div class="col-sm-8" th:text="${findParinage.cinParrain}"></div>
+																	
+																</div>
+
+															
+
+
+																<hr/>
+																<h5>Informations du Parrainé</h5>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom complet Parrainé
+																		:</label>
+																	<div class="col-sm-8" th:text="${findParinage.nomParinee}"></div>
+																	
+																</div>
+															<div class="row ">
+																	<label class="col-sm-4 col-form-label">Cin Parrainé:</label>
+																	<div class="col-sm-8" th:text="${findParinage.cinParinee}"></div>
+																	
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Numéro de téléphone du Parrainé:</label>
+																	<div class="col-sm-8" th:text="${findParinage.telFixe}"></div>
+																	
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Date de création
+																		:</label>
+																	<div class="col-sm-8" th:text="${findParinage.createdDate}"></div>
+																	
+																</div>
+															
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Email:</label>
+																	<div class="col-sm-8"
+																		th:text="${findParinage.email}"></div>
+																	
+																</div>
+
+																
+
+															
+															
+														
+															</div>
+														</div>
+													</div>
+											
+
+											
+											
+														
+													</div>
+										
+												<div class="col-sm-6">
+													<div class="card-block">
+														<h4> Statut</h4>
+														<div class="card-block-body">
+							
+
+															<div class="row">
+																<label class="col-sm-4 col-form-label">statut:</label>
+																<div class="col-sm-8"
+																	th:if="${findParinage.statut == 'VALIDATE'}"
+																	>Validée</div>
+																<div class="col-sm-8"
+																	th:if="${findParinage.statut == 'ATTENTE'}"
+																	>En attente</div>
+																	<div class="col-sm-8"
+																	th:if="${findParinage.statut == 'CANCAL'}"
+																	>Annulée</div>
+
+    
+																
+															</div>
+															
+											 <div class="row" th:if="${findParinage.commentaire != null and findParinage.commentaire!=''}" style="margin-top: 10px;">
+							      <label class="col-sm-4 col-form-label">Commentaire :</label>
+							      <div class="col-sm-8" th:text="${findParinage.commentaire}"></div>
+							    </div>				
+
+															
+						
+													
+														</div>
+													</div>
+													
+                                                    
+                                                       
+													<div class="card-block"  >
+														<h4>Les documents</h4>
+														<div class="card-block-body">
+														    <div class="row">
+														        <div class="col-form-label">Photo Recto de la CIN :</div>
+														         <div>
+														            <!-- Afficher CIN sous forme image -->
+														            <img th:if="${findParinage.cinVerso != null and (findParinage.cinVerso.toLowerCase().endsWith('.jpg') or findParinage.cinVerso.toLowerCase().endsWith('.jpeg') or findParinage.cinVerso.toLowerCase().endsWith('.png'))}"
+														                 th:src="@{${'/parinage/'+findParinage.cinVerso}}"
+														                 id="prev" style="height: 200px; width: 200px;cursor: pointer;" />
+														            
+														            <!-- Afficher CIN sous forme PDF -->
+														            <a th:if="${findParinage.cinVerso != null and findParinage.cinVerso.toLowerCase().endsWith('.pdf')}"
+														               th:href="@{${'/parinage/'+findParinage.cinVerso}}"
+														               target="_blank">
+														                <span>Copie numérique du CIN au format PDF</span>
+														            </a>
+														        </div>
+														    </div>
+														    
+														    <div class="row">
+														        <div class="col-form-label">Photo Verso de la CIN :</div>
+														        <div>
+														            <!-- Afficher CIN sous forme image -->
+														            <img th:if="${findParinage.cinRecto != null and (findParinage.cinRecto.toLowerCase().endsWith('.jpg') or findParinage.cinRecto.toLowerCase().endsWith('.jpeg') or findParinage.cinRecto.toLowerCase().endsWith('.png'))}"
+														                 th:src="@{${'/parinage/'+findParinage.cinRecto}}"
+														                 id="prev2" style="height: 200px; width: 200px;cursor: pointer;" />
+														            
+														            <!-- Afficher CIN sous forme PDF -->
+														            <a th:if="${findParinage.cinRecto != null and findParinage.cinRecto.toLowerCase().endsWith('.pdf')}"
+														               th:href="@{${'/parinage/'+findParinage.cinRecto}}"
+														               target="_blank">
+														                <span>Copie numérique du CIN au format PDF</span>
+														            </a>
+														        </div>
+														    </div>
+														</div>
+
+													</div>
+
+												</div>
+											
+											</div>
+										
+									
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="hasediterole" th:value="${hasediterole}" id="hasediterole"/>
+        </div>
+      </section>
+    </section>
+
+  </body>
+</html>
+<script th:inline="javascript">
+  $(document).ready(function () {
+  var messagenotif = document.getElementById("message").value;
+  console.log(messagenotif);
+    if (messagenotif === 'parrainage modified') {
+      $(document).Toasts("create", {
+        title: "Succès",
+        body: "Statut parrainage modifié",
+        class: "bg-success",
+        autohide: true,
+        delay: 5000,
+      });
+    }
+    if (messagenotif === 'comment is required') {
+      $(document).Toasts("create", {
+        title: "Erreur",
+        body: "Le commentaire est obligatoire si le statut est annulé.",
+        class: "bg-danger",
+        autohide: true,
+        delay: 8000,
+      });
+    }
+  });
+</script>

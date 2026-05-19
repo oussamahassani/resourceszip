@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+    layout:decorator="layout">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="container m-5">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="alert alert-danger text-center" role="alert">
+                            <h4>Échec du paiement</h4>
+                            <p>Malheureusement, votre paiement n'a pas été réussi.</p>
+                        </div>
+                        <button class="btn btn-primary btn-block" id="retry-button">Veuillez réessayer le
+                            paiement</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+
+</html>
+
+
+<script th:inline="javascript">
+    let currentURL = window.location.href;
+
+    //Parse the URL to extract the query string
+    let urlParams = new URLSearchParams(currentURL.split('?')[1]);
+
+    //Get the value of the "order_id" parameter
+    let orderId = urlParams.get('payment_ref');
+     
+    let ordClickTo =  urlParams.get('orderId'); 
+    //Check if the parameter exists and has a value
+    if (orderId !== null || ordClickTo !== null ) {
+        // Add a click event listener to the "Retry Payment" button
+        document.getElementById('retry-button').addEventListener('click', function () {
+            // Add your logic to retry the payment here
+            var form = $('<form></form>');
+            form.attr('method', 'get');
+            // Utilisation de la syntaxe Thymeleaf pour générer l'URL
+            form.attr('action', '/payment/clictopay/returnToBordereau');
+
+            // Ajout d'un champ input de type hidden pour stocker le tableau avoirIds
+            var orderIdField = $('<input></input>');
+            orderIdField.attr('type', 'hidden');
+            orderIdField.attr('name', 'orderId');
+            if(orderId !== null){
+                orderIdField.val(orderId);
+            }
+            else {
+                orderIdField.val(ordClickTo);
+
+            }
+            form.append(orderIdField);
+
+
+
+            //loeader 
+            $('.loader-container').show();
+
+            // Ajout du formulaire à la page et soumission automatique
+            $('body').append(form);
+            form.submit();
+        });
+    } else {
+        console.log('Order ID parameter not found in the URL.');
+    }
+
+</script>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<thead>
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <style>
+     .table-striped>tbody>tr.backgroundColorred{
+background-color: #D90000 !important;
+ color: #D90000;
+}
+.table-striped>tbody>tr.backgroundColorOrange{
+background-color: #e9009f !important;
+ color: #EF6500
+}
+.table-striped>tbody>tr.backgroundColorYellow{
+background-color: #EFB800 !important;
+ color: #EFC100 ;
+}
+.backgroundColorBlack{
+ color:  #000000 ;
+}
+</style>
+</thead>
+<body>
+<div th:fragment="NotPayedencaisment(NotPayedencaisment)">
+  <div class="card shadow mb-4">
+    <div class="card-body">
+<input type="hidden" th:value="${NotPayedencaisment}" id="NotPayedEncaisment" />
+                    <div >
+                 
+                        <table 	class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline" id="tutorialTableNotPayedEncaisment" width="100%" cellspacing="0">
+                            <thead class="table dataTable no-footer">
+                            <tr>
+                                <th>Num° Facture</th>
+                                <th>Nom Client</th>
+                                <th>Montant </th>
+                                <!-- <th>Taux TVA</th> -->
+                                <th>Commission</th>
+                                <th>Payé le jr</th>
+                                <th> Type de paiement</th>
+                                <th>Payée</th>
+                                <th>Etat</th>
+                                <!-- <th>Editer</th> -->
+
+                            </tr>
+                            </thead>
+                             <!-- <tbody>
+                           
+                              <tr th:each="ob:${NotPayedencaisment}">
+                         <td th:value=${ob.facture.factureId} name="ref"><a
+                                        th:href="@{/facture/{ref}(ref=${ob.facture.factureId})}"><i
+                                        th:text=${ob.facture.ref_facture}></i></a></td>
+                                <td th:text=${ob.facture.client.firstName}></td>
+                                <td th:text=${ob.facture.montant_payer}></td>
+                                <td th:text=${ob.facture.tauxTva}></td>
+                                <td th:text=${ob.commissionrevendeur}></td>
+                                <td th:text=${ob.facture.date_echeance}></td>
+                                <td th:text=${ob.typedepayment}></td>
+                                <td>
+                                    <span th:if="${ob.facture.etat_facture}" style="color:green">Oui</span>
+                                    <span th:unless="${ob.facture.etat_facture}" style="color:red">Non</span></td>
+                                <td>
+                                   
+                                </td>
+
+
+                            </tr> 
+                            </tbody>-->
+                        </table>
+                    </div>
+                    </div>
+  </div>
+    <footer >
+        <p>&copy;Chifco 2022</p>
+    </footer>
+    <script th:inline="javascript">
+        var oTable;
+       var iduser = document.getElementById('NotPayedEncaisment').value;
+        oTable = $("#tutorialTableNotPayedEncaisment").DataTable({
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            order: [4, "ASC"],
+            responsive: {
+              details: {
+                type: "column",
+              },
+            },
+            searching: false,
+        
+            fixedHeader: true,
+            // scrollY:500,
+            ajax: "/payement/viewDetailsRecapFactureNversee/"+iduser,
+            lengthMenu: [
+              [10, 20, 50],
+              [10, 20, 50],
+            ],
+        
+            language: {
+              lengthMenu: "Affichage _MENU_ par page",
+              zeroRecords: "Rien trouvé - désolé",
+              emptyTable: "aucune donnée disponible",
+              info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+              infoEmpty: "Aucun enregistrement disponible",
+              paginate: {
+                first: "Première",
+                last: "Dernière",
+                next: ">>",
+                previous: "<<",
+              },
+              search: "Chercher:",
+            },
+            initComplete: function (json) {
+              //Make your callback here.
+            //  document.getElementById("tutorialTable_filter").style.display = "none";
+            },
+        
+            columnDefs: [
+              // {
+              //   className: "dtr-control",
+              //   orderable: false,
+              //   targets: 0,
+              // },
+              // { orderable: false, targets: 10 },
+            ],
+        
+            columns: [
+            
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.facture != null &&  row.facture.ref_facture) return `<a href='/facture/`+row.facture.factureId+`'><i>
+                                        `+row.facture.ref_facture+`</i></a>`
+                  else if(row.avoirClient != null && row.avoirClient.avoirId ){
+                                       return `<a href='/AvoirClient/viewDetail/`+row.avoirClient.avoirId+`'><i>
+                                              `+row.avoirClient.refAvoirClient+`</i></a>`
+                                        }
+                                        
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.facture != null && row.facture.abonnement) return row.facture.abonnement.firstName;
+                  else if (row.avoirClient != null && row.avoirClient.abonnement != null) return row.avoirClient.abonnement.firstName;
+                  else return "";
+                },
+              },
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.facture != null && row.facture.montant_payer) return row.facture.montant_payer.toFixed(3);
+                  else if (row.avoirClient != null && row.avoirClient.montantAvoir) return row.avoirClient.montantAvoir.toFixed(3);
+                  else return "";
+                },
+              },
+              
+              // {
+              //   data: null,
+              //   render: function (data, type, row) {
+              //     if (row.facture.tauxTva)
+              //       return  row.facture.tauxTva 
+              //     else return "";
+              //   },
+              // },
+             
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.commissionRevendeur)
+                    return  row.commissionRevendeur.toFixed(3)
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                var options = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric'
+};
+
+                  if (row.date)
+                 return new Date(row.date).toLocaleString('en-GB' ,options)
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.typeDePayment)
+                    return  row.typeDePayment 
+                  else return "";
+                },
+              },
+              {
+                  data: null,
+                  render: function (data, type, row) {
+                   
+                     if(row.facture!= null && row.facture.etat_facture == true)
+                     return "<span  style='color:green'>Oui</span>"
+                     else if(row.avoirClient!= null && row.avoirClient.isClientPayed == true)
+                         return "<span  style='color:green'>Oui</span>"
+                     else  return "<span  style='color:red'>Non</span>"
+        
+                     
+                    
+                  },
+                },
+                {
+
+                    data: null,
+                    render: function (data, type, row) {
+                    	if(row.date)
+                    		{
+                    		const currentDate = new Date();
+                  		const createdDate = new Date(data.date)
+
+                		// Calculate the difference in milliseconds
+                		const timeDifference = currentDate - createdDate;
+                		const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+                          if (daysDifference >= 25) {
+                          	  return " plus de 25 jours"
+                          }
+                          else   if (daysDifference >= 20 && daysDifference < 25) {
+                        	  
+                          	  return " plus de 20 jours"
+                        	  
+                          }
+                else   if (daysDifference >= 15 && daysDifference < 20) {
+                        	  
+                       return " plus de 15 jours"
+                        	  
+                          }
+                else return ""
+                    		}
+                     
+                    	else return "";
+                    },
+                  },
+              
+            ],
+            createdRow: function( row, data, dataIndex){
+          	  
+        		const currentDate = new Date();
+        		const createdDate = new Date(data.date)
+
+      		// Calculate the difference in milliseconds
+      		const timeDifference = currentDate - createdDate;
+      		const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+                if (daysDifference >= 25) {
+              	    $(row).addClass('backgroundColorred');
+                }
+                else   if (daysDifference >= 20 && daysDifference < 25) {
+              	  
+              	     $(row).addClass('backgroundColorOrange');
+              	  
+                }
+      else   if (daysDifference >= 15 && daysDifference < 20) {
+              	  
+             $(row).addClass('backgroundColorYellow');
+              	  
+                }
+                
+      else 
+    	  $(row).addClass('backgroundColorBlack');
+                    
+            },
+          });
+        </script>
+    </div>
+</body>
+</html>
+

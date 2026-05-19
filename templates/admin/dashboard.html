@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Dashboard</title>
+          <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.css" />
+  <style>
+	    .content-header {
+            margin-bottom: 20px; /* Adjust this value as needed */
+        }
+        .row.mt-2 {
+            margin-top: 10px; /* Adjust this value as needed */
+        }
+      
+	  .grid-margin2 {
+    margin: 10px;
+}
+
+.card-title{
+	
+	font-weight: bold;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+.card-statistics {
+    top: 0px;
+    left: 0px;
+    width: auto;
+    height: 134px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 11px;
+    opacity: 1;
+}
+.card-statistics2 {
+    margin-left: 10px;
+    width: auto;
+    height: 134px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 11px;
+    opacity: 1;
+}
+
+.left-side-shape {
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    width: 42px;
+    height: 134px;
+    background: #1FBE9D 0% 0% no-repeat padding-box;
+    border-radius: 13px 11px 11px 11px;
+    opacity: 1;
+}
+.custom-heading {
+    width: auto;
+    height: 33px;
+    text-align: left;
+    font: normal normal medium 35px/40px 'Azo Sans';
+    letter-spacing: 0px;
+    color: #590E9D;
+    opacity: 0.57;
+}
+.custom-paragraph {
+  
+    width:180px;
+    height: auto;
+    text-align: left;
+    font: normal normal medium 27px/37px 'Azo Sans';
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+    margin-bottom:10px ;
+ 
+}
+.custom-paragraph2 {
+  
+    width: auto;
+    height: 15px;
+    text-align: left;
+    font: normal normal medium 13px/15px 'Azo Sans';
+    letter-spacing: 0px;
+    color: #989898;
+    opacity: 1;
+     margin-bottom:10px ;
+  
+}
+.custom-paragraph3 {
+  
+    width: auto;
+    height: 15px;
+    text-align: left;
+    font: normal normal medium 10px/15px 'Azo Sans';
+    letter-spacing: 0px;
+    color: #590E9D;
+    opacity: 1;
+      font-size: 8px;
+    margin-bottom: 15px;
+}
+.taille-19 {
+    position: absolute; /* If you need to position it absolutely */
+   margin-left: 160px;
+    width: auto;
+    height: 23px;
+    text-align: right;
+    font: normal normal medium 19px/23px 'Azo Sans';
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+}
+
+    .grid-margin2 {
+        margin: 10px;
+    }
+
+    .card-gragh {
+        border-radius: 11px;
+        box-shadow: 0px 3px 6px #00000029;
+        margin-bottom: 20px;
+         flex-direction: column;
+    }
+
+    .card-title5 {
+      background: none;
+    border-bottom: 0;
+    font-weight: 700;
+    padding-left: 16px ;
+    padding-top: 10px ;
+    padding-bottom: 10px ;
+    }
+
+    .rectangle {
+        border: 1px solid #dee2e6;
+         padding: 10px;
+        border-radius: 8px;
+       background-color: #e8e3f7;
+        margin-bottom: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
+         margin-top: 10px;
+    }
+     .rectangle3 {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+       
+        border-radius: 8px;
+       background-color: #e8e3f7;
+       margin-top: 10px;
+        margin-left: 20px;
+        margin-right: 20px;        
+    }
+ .rectangle2 {
+        border: 1px solid #dee2e6;
+     padding: 10px;
+        border-radius: 8px;
+       background-color: #e8e3f7;      
+        margin-top:-100px;
+    }
+    .custom-number {
+        font-size: 18px;
+        color: black;
+        margin-bottom: 10px;
+    }
+
+    input[type="date"].form-control {
+        height: auto;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+     .chart-container {
+    margin: 30px; 
+    background-color: white; 
+}
+.canvas-container {
+    padding: 20px;
+    background: white; 
+     position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+.canvas-container canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+.custom-card {
+	
+    margin-right: 10px; /* Default margin for larger screens */
+    margin-bottom: 100px; /* Add margin-bottom for better spacing */
+}
+
+@media (max-width: 1200px) {
+    .custom-card {
+        margin-right: 5px; /* Reduce margin for medium screens */
+    }
+}
+
+@media (max-width: 992px) {
+    .custom-card {
+        margin-right: 0px; /* No margin for smaller screens */
+        margin-left: 0px; /* Optional: Remove left margin for a full-width layout */
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-card {
+        margin-right: 0px; 
+        margin-left: 0px; 
+    }
+}
+.responsive-img {
+    height: auto;
+    width: 100%;
+    max-width: 60px; 
+    object-fit: contain; 
+    margin-right: 0; 
+       margin-left: 120px; 
+}
+@media (max-width: 1800px) {
+    .responsive-img {
+        margin-left: 60px;
+    }
+}
+@media (max-width: 1500px) {
+    .responsive-img {
+        margin-left: 40px;
+    }
+}
+@media (max-width: 1200px) {
+    .responsive-img {
+        margin-left: 30px;
+    }
+}
+
+@media (max-width: 992px) {
+    .responsive-img {
+        margin-left: 160px;
+    }
+}
+
+@media (max-width: 768px) {
+    .responsive-img {
+        margin-left: 180px;
+        width: 80px; 
+    }
+}
+@media (max-width: 500px) {
+    .responsive-img {
+        margin-left: 110px;
+        width: 70px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<section layout:fragment="content">
+    <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row ">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Tableau de bord</h1>
+                        </div>
+                    </div>
+                </div>
+     </div>
+    <div class="container-fluid">
+  <div class="row justify-content-center">
+    <!-- First Card -->  
+    <!-- Second Card -->
+    <div class="col-sm-12 col-md-6 col-lg-3 mb-4 stretch-card" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_CARDS_ADMIN')">
+      <div class="left-side-shape" style="background: #F80457;"></div>    
+      <div class="card card-statistics">
+        <div class="card-body">
+          <div class="clearfix">
+            <div class="taille-19">
+              <img th:src="@{/img/Groupe 14559.png}" class="responsive-img" alt="Card Image">
+            </div>
+            <div class="float-left ml-4">
+              <h1 class="custom-heading ml-3" th:text="${nouvelleAbonnementsThisMonth}"></h1>
+              <h5 class="custom-paragraph ml-3"><strong>Nouveaux client(s)</strong></h5>
+              <p class="custom-paragraph2 ml-3 mb-2">
+                <strong th:style="${percentageChange.startsWith('-') ? 'color: red;' : 'color: green;'}" th:text="${percentageChange}"></strong>
+              </p>                     
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>   
+    <!-- Third Card -->
+    <div class="col-sm-12 col-md-6 col-lg-3 mb-4 stretch-card" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_CARDS_ADMIN')">
+      <div class="left-side-shape" style="background: #E5B000;"></div>    
+      <div class="card card-statistics">
+        <div class="card-body">
+          <div class="clearfix">
+            <div class="taille-19">
+              <img th:src="@{/img/Groupe 14558.png}" class="responsive-img" alt="Card Image">
+            </div>
+            <div class="float-left ml-4">
+              <h1 class="custom-heading ml-3" th:text="${todayCountDemande}"></h1>
+              <h5 class="custom-paragraph ml-3"><strong>Demande(s) abonnements</strong></h5>
+          <p class="custom-paragraph2 ml-3 mb-2">
+            <strong th:style="'color: green;'" th:text="${yesterdayCountDemande}">0</strong>
+        </p>                    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fourth Card -->
+    <div class="col-sm-12 col-md-6 col-lg-3 mb-4 stretch-card" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_CARDS_ADMIN')">
+      <div class="left-side-shape"></div>              
+      <div class="card card-statistics">
+        <div class="card-body">
+          <div class="clearfix">
+            <div class="taille-19">
+              <img th:src="@{/img/Groupe 14561.png}" class="responsive-img" alt="Card Image">
+            </div>
+            <div class="float-left ml-4">
+              <h1 class="custom-heading ml-3" th:text="${TotalRevendeurActifs}"></h1>
+              <h5 class="custom-paragraph ml-3"><strong>Total revendeurs actifs</strong></h5>
+              <p class="custom-paragraph2 ml-3 mb-2">
+                <strong>Revendeurs avec accès limité:</strong>
+                <span th:text="${NbreRevendeur}" style="color: red;"></span>
+              </p>
+              <p class="custom-paragraph2 ml-3">
+                <strong>Revendeurs avec accès complet</strong>
+                <span class="font-weight-medium" th:text="${NbreRevendeurActive}" style="color: green;"></span>
+              </p>
+               
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     <div class="col-sm-12 col-md-6 col-lg-3 mb-4 stretch-card" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_CARDS_ADMIN')">
+      <div class="left-side-shape" style="background: #590E9D;"></div>    
+      <div class="card card-statistics">
+        <div class="card-body">
+          <div class="clearfix">
+            <div class="taille-19">
+              <img th:src="@{/img/Groupe 14560.png}" class="responsive-img" alt="Card Image">
+            </div>
+            <div class="float-left ml-4">
+              <h1 class="custom-heading ml-3" th:text="${resilierAbonnement}"></h1>
+              <h5 class="custom-paragraph ml-3"><strong>Abonnements résiliés</strong></h5>
+              <p class="custom-paragraph2 ml-3 mb-2">
+                <strong th:style="${resilierAbonnementLastMonth.startsWith('-') ? 'color: red;' : 'color: green;'}" th:text="${resilierAbonnementLastMonth}"></strong>
+              </p>                     
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+   <!-- Gestionaire de stock cards --> 
+    <!--
+    <div class="row justify-content-space-around mb-0" >
+     <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 ml-1" sec:authorize="hasAnyAuthority('READ_CARD_MODEMS_ACTIV')">
+		     <div class="card card-statistics" >
+        <div class="card-body">
+            <div class="clearfix">
+				<div class="taille-19">
+		     <img th:src="@{/img/router.png}" width="60px" style="margin-left: 30px;">
+		</div>
+                <div class="text-end pt-1 float-left ml-4">
+                    <p class="mb-0 mt-0 text-left text-muted"><strong>Modem Actifs</strong></p>
+                    <div class="fluid-container">
+                        <h4 class="font-weight-medium text-left mb-0" th:text="${countModemActif}"></h4>
+                    </div>
+                </div>                
+            </div>
+       <p class="text-muted mt-0 mb-3 ml-4">
+                <i class="mdi mdi-alert-octagon mr-1" aria-hidden="true" th:text="${countModemNonActif}"></i>
+            </p>          
+        </div>
+    </div>  
+</div>
+   <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6  ml-1" sec:authorize="hasAnyAuthority('READ_CARD_MODEMS_AFFECT_GSTOCK')">
+       <div class="card card-statistics">
+        <div class="card-body">
+            <div class="clearfix">
+				<div class=" float-right icon icon-lg icon-shape  shadow-dark  border-radius-xl mt-n4 ">
+		     <img th:src="@{/img/affectedModem.png}" width="50px" style="margin-left: 10px;">
+		</div>
+                <div class="text-end pt-1 float-left ml-4">
+                    <p class="mb-0 mt-0 text-left text-muted"><strong>Modems afféctés</strong></p>
+                    <div class="fluid-container">
+                        <h4 class="font-weight-medium text-left mb-0" th:text="${nbrModemAffectedToday}"></h4>
+                    </div>
+                </div>
+                
+            </div>
+       <p class="text-muted mt-0 mb-3 ml-4">
+                <i class="mdi mdi-alert-octagon mr-1" aria-hidden="true" th:text="${nbrModemAffectedCurrentMonth}"></i>
+            </p>          
+        </div>
+    </div>
+</div>
+<div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 grid-margin stretch-card ml-1"  sec:authorize="hasAnyAuthority('READ_CARD_MODEM_DEMAND_GSTOCK')">
+     <div class="card card-statistics" style="background-color: white; border: 1px solid white; border-radius: 5px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="card-body">
+            <div class="clearfix">
+				<div class=" float-right icon icon-lg icon-shape  shadow-dark  border-radius-xl mt-n4 ">
+		     <img th:src="@{/img/demandModem.png}" width="50px" style="margin-left: 10px;">
+		</div>
+                <div class="text-end pt-1 float-left ml-4">
+                    <p class="mb-0 mt-0 text-left text-muted"><strong>Modems Demandés</strong></p>
+                    <div class="fluid-container">
+                        <h4 class="font-weight-medium text-left mb-0" th:text="${nbrDemandModemToday}"></h4>
+                    </div>
+                </div>
+                
+            </div>
+       <p class="text-muted mt-0 mb-3 ml-4">
+                <i class="mdi mdi-alert-octagon mr-1" aria-hidden="true" th:text="${nbrDemandModemCurrentMonth}"></i>
+            </p>          
+        </div>
+    </div>
+</div> 
+    </div>
+  -->
+    <!-- end of gestionaire de stock cards -->
+   <div class="container-fluid">  
+    <div class="row  mb-0">
+        <!-- Left Card Section -->
+        <div class="col-lg-8 col-md-12 col-sm-12 mb-2 mt-2" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">
+            <div class="card card-weather mb-3">
+                <div class="card-title5 border-0">
+                    <h3 class="card-title5">Chiffre d'affaire (HT)</h3>                              
+                </div>
+                <div class="form-inline">
+                    <label for="yearSelect" class="mr-2 ml-4">Année:</label>
+                    <select id="yearSelect" name="year" class="form-control mr-2" onchange="handleYearChange35(this)">
+                        <option th:each="year : ${#numbers.sequence(2019, 2035)}"
+                                th:value="${year}"
+                                th:text="${year}"
+                                th:selected="${year == #dates.createNow().getYear()}"></option>
+                    </select>
+
+                    <label for="monthSelect" class="mr-2">Mois:</label>
+                    <select id="monthSelect" name="month" class="form-control" onchange="handleMonthChange35(this)">
+                        <option value="">Tous</option> <!-- Default option for all months -->
+                        <option th:value="1">Janvier</option>
+                        <option th:value="2">Février</option>
+                        <option th:value="3">Mars</option>
+                        <option th:value="4">Avril</option>
+                        <option th:value="5">Mai</option>
+                        <option th:value="6">Juin</option>
+                        <option th:value="7">Juillet</option>
+                        <option th:value="8">Août</option>
+                        <option th:value="9">Septembre</option>
+                        <option th:value="10">Octobre</option>
+                        <option th:value="11">Novembre</option>
+                        <option th:value="12">Décembre</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Cards Section -->
+        <div class="col-lg-4 col-md-6 col-sm-6 mt-2 " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+            <!-- First Card -->
+            <div class="card card-weather mb-1">
+                <div class="card-title5 border-0">
+                    <h3 class="card-title5">Répartition des technologies d'abonnement</h3>
+                </div>
+                <div class="chart-container" style="margin-top: -15px;">
+                    <canvas id="browserTrafficChart2"></canvas>
+                </div>
+            </div>
+
+            <!-- Second Card -->
+            <div class="card card-weather" style="margin-top: 27px;">
+                <div class="card-title5 border-0">
+                    <h3 class="card-title5">Bordereaux confirmés _ En instances (TTC)</h3>
+                </div>
+                  <div class="chart-container" style="margin-top: -8px;">
+                    <canvas id="browserTrafficChart10"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      <div class="row mb-0">
+		   <div class="col-lg-6 col-md-12 col-sm-12 mb-2 mt-2" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+            <div class="card card-weather mb-3">
+                <div class="card-title5 border-0">
+                    <h3 class="card-title5">Encaissement(TTC)</h3>                              
+                </div>
+                <div class="form-inline">
+                    <label for="yearSelect" class="mr-2 ml-4">Année:</label>
+                    <select id="yearSelect10" name="year" class="form-control mr-2" onchange="handleYearChange(this)">
+                        <option th:each="year : ${#numbers.sequence(2019, 2035)}"
+                                th:value="${year}"
+                                th:text="${year}"
+                                th:selected="${year == #dates.createNow().getYear()}"></option>
+                    </select>
+
+                    <label for="monthSelect" class="mr-2">Mois:</label>
+                    <select id="monthSelect10" name="month" class="form-control" onchange="handleMonthChange(this)">
+                        <option value="">Tous</option> <!-- Default option for all months -->
+                        <option th:value="1">Janvier</option>
+                        <option th:value="2">Février</option>
+                        <option th:value="3">Mars</option>
+                        <option th:value="4">Avril</option>
+                        <option th:value="5">Mai</option>
+                        <option th:value="6">Juin</option>
+                        <option th:value="7">Juillet</option>
+                        <option th:value="8">Août</option>
+                        <option th:value="9">Septembre</option>
+                        <option th:value="10">Octobre</option>
+                        <option th:value="11">Novembre</option>
+                        <option th:value="12">Décembre</option>
+                    </select>
+                </div>
+                <div class="chart-container mt-3">
+                    <canvas id="areaChart10"></canvas>
+                </div>
+            </div>
+        </div>
+              <div class="col-lg-6 col-md-12 col-sm-12  stretch-card ml-0 mr-0 mt-1" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+    <div class="card card-weather" >
+        <div class="card-title5 border-0">
+            <h3 class="card-title5">Analyse des versements des factures(TTC)</h3>
+        </div>
+        <div class="form-inline">
+            <label for="yearSelect2" class="mr-2 ml-4">Année:</label>
+            <select id="yearSelect2" name="year" class="form-control mr-2" onchange="handleYearChange2(this)">
+                <option th:each="year : ${#numbers.sequence(2019, 2035)}"
+                        th:value="${year}"
+                        th:text="${year}"
+                        th:selected="${year == #dates.createNow().getYear()}"></option>
+            </select>
+        </div>
+        <div class="chart-container mt-3">
+            <canvas id="areaChart2"></canvas>
+        </div>
+    </div>
+</div>
+		    <div class="col-lg-6 col-md-12 col-sm-12  stretch-card ml-0 mr-0" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">  
+		    <input type="hidden" id="gouvernoratLabels"  th:value="${gouvernoratLabels}" />       
+         <input type="hidden" id="demandeCounts"  th:value="${demandeCounts}" />  
+            <div class="card card-weather" >
+					 <div class="card-title5 border-0">
+                                <h3 class="card-title5">Répartition des abonnements actifs par gouvernorat</h3>                                                                     
+               <div class="row ml-3">
+            <div class="col-sm-6 col-md-3">
+
+                 <input type="month" id="monthInput3" class="form-control mb-3"
+                       th:value="null" />
+            </div>   
+              <div class="col-sm-6 col-md-3">
+                <select id="chefsecteurSelect3" name="distributeur3" class="form-control">
+                    <option value="">Total</option>
+                    <th:block th:each="ld : ${listeDistributeur}">
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+            </div> 
+               <div class="col-sm-6 col-md-3">
+                    <select id="gouvernorat2" name="gouvernorat" class="form-control" >
+                        <option value="">Gouvernorat</option>
+                        <option th:each="ville : ${villes}" th:value="${ville.gouvernoratId}"
+                          th:text="${ville.gouvernoratName}"></option>
+                      </select>
+                    </div>
+            </div> 
+             </div>
+              <div class="canvas-container">
+                <canvas id="barChart2"></canvas>
+            </div>
+            </div>     
+        </div>
+		  <div class="col-lg-6 col-md-12 col-sm-12 stretch-card " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+            <div class="card card-weather" >
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5">Suivi des demandes d'abonnement par date de création</h3>   
+<div class="row ml-3">      
+			    <div class="col-sm-6 col-md-3">
+                <select id="filterOption10" class="form-control">
+                    <option value="total10">Total</option>
+                    <option value="byChefSecteur10">Par chef secteur</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <input type="month" id="monthInput2" class="form-control"
+                       th:value="null" />
+            </div>
+            <div class="row ml-3" id="chefSecteurRow10" style="display: none;">
+            <div class="col-sm-6 col-md-7">
+                <select id="chefsecteurSelect2" name="distributeur2" class="form-control">
+                    <option value="">Chef Secteur</option>
+                    <th:block th:each="ld : ${listeDistributeur}">						
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+            </div>
+        </div>
+        
+            </div>                       
+                            </div>           
+             <div class="canvas-container">
+                <canvas id="barChart3"></canvas>
+            </div>              
+        </div>
+      </div>			   
+<div class="col-lg-6 col-md-12 col-sm-12 stretch-card" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">
+    <div class="card card-weather" >
+        <div class="card-title5 border-0">
+            <h3 class="card-title5">Performance des abonnements </h3>
+        </div>           
+        <div class="row ml-3">
+			    <div class="col-sm-6 col-md-3">
+                <select id="filterOption" class="form-control">
+                    <option value="total">Total</option>
+                    <option value="byChefSecteur">Par chef secteur</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <input type="month" id="dateInput" class="form-control"
+                       th:value="null" />
+            </div>
+            <div class="row ml-3" id="chefSecteurRow" style="display: none;">
+            <div class="col-sm-6 col-md-7">
+                <select id="chefsecteurSelect" name="distributeur" class="form-control">
+                    <option value="">Chef Secteur</option>
+                    <th:block th:each="ld : ${listeDistributeur}">						
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+            </div>
+        </div>
+        </div>
+
+        <div class="chart-container mt-3">
+            <canvas id="barChart6"></canvas>
+        </div>
+    </div>
+</div>
+  <div class="col-lg-6 col-md-12 col-sm-12 stretch-card" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+            <div class="card card-weather" >
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5"> Classification des demandes</h3>   
+<div class="row ml-3">
+	 <div class="col-sm-6 col-md-3">
+                <select id="filterOption3" class="form-control">
+                    <option value="total3">Total</option>
+                    <option value="byChefSecteur3">Par chef secteur</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+
+                 <input type="month" id="monthInput5" class="form-control"
+                       th:value="null" />
+            </div>   
+              <div class="col-sm-6 col-md-3">
+				      <div class="row ml-3" id="chefSecteurRow2" style="display: none;">
+                <select id="chefsecteurSelect5" name="distributeur5" class="form-control">
+                    <option value="">Chef Secteur</option>
+                    <th:block th:each="ld : ${listeDistributeur}">
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+                </div>
+            </div> 
+            </div>  
+               </div>           
+             <div class="chart-container mt-3">
+                <canvas id="barChart33"></canvas>
+            </div>              
+        </div>
+      </div>
+     <div class="col-lg-6 col-md-12 col-sm-12  stretch-card " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+            <div class="card card-weather">
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5"> Montant payé non versé par chef secteurs(TTC)</h3>                           
+                            </div>  
+                                <div class="row ml-3">
+             
+              <div class="col-sm-6 col-md-3">
+                <select id="chefsecteurSelect7" name="distributeur7" class="form-control">
+                    <option value="">Total</option>
+                    <th:block th:each="ld : ${listeDistributeur}">
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+            </div> 
+            </div>                               
+              <div class="canvas-container mb-2">
+                <canvas id="barChart34"></canvas>
+            </div>            
+        </div>
+      </div>
+         <div class="col-lg-6 col-md-12 col-sm-12  stretch-card " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR','VIEW_FINANCE_CHART')">
+            <div class="card card-weather">
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5"> Suivi des Revendeurs</h3>                          
+                            </div> 
+                                        <div class="row ml-3">
+             
+              <div class="col-sm-6 col-md-3">
+                <select id="chefsecteurSelect8" name="distributeur8" class="form-control">
+                    <option value="">Total</option>
+                    <th:block th:each="ld : ${listeDistributeur}">
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+            </div> 
+            </div>                                      
+              <div class="canvas-container mb-2">
+                <canvas id="barChart5"></canvas>
+            </div>            
+        </div>
+      </div>
+ <div class="col-lg-4 col-md-12 col-sm-12  stretch-card " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">
+            <div class="card card-weather">
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5">  Évolution des demandes de migration</h3>   
+                        
+                            </div>   
+                       <div class="form-inline">
+            <label for="yearSelect3" class="mr-2 ml-4">Année:</label>
+          <select id="year10" name="year10" class="form-control mr-2">
+               <option th:each="year : ${#numbers.sequence(2019, 2035)}"
+                                th:value="${year}"
+                                th:text="${year}"
+                                th:selected="${year == #dates.createNow().getYear()}" ></option>
+            </select>
+        </div>              
+              <div class="canvas-container mb-2">
+                <canvas id="barChart10"></canvas>
+            </div>            
+        </div>
+      </div>
+       <div class="col-lg-4 col-md-12 col-sm-12  stretch-card " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">
+            <div class="card card-weather">
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5"> Évolution des demandes de transfert</h3>                         
+                            </div>   
+                               <div class="form-inline">
+            <label for="yearSelect4" class="mr-2 ml-4">Année:</label>
+            <select id="year11" name="year11" class="form-control mr-2" >
+              <option th:each="year : ${#numbers.sequence(2019, 2035)}"
+                                th:value="${year}"
+                                th:text="${year}"
+                                th:selected="${year == #dates.createNow().getYear()}" ></option>
+            </select>
+        </div>             
+              <div class="canvas-container mb-2">
+                <canvas id="barChart11"></canvas>
+            </div>            
+        </div>
+      </div>
+            <div class="col-lg-4 col-md-12 col-sm-12  stretch-card " sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">
+            <div class="card card-weather">
+				 <div class="card-title5 border-0">
+                                <h3 class="card-title5">Évolution des demandes de changement débit</h3>   
+                        
+                            </div>   
+                            <div class="form-inline">
+            <label for="yearSelect5" class="mr-2 ml-4">Année:</label>
+            <select id="year12" name="year12" class="form-control mr-2">
+                <option th:each="year : ${#numbers.sequence(2019, 2035)}"
+                        th:value="${year}"
+                        th:text="${year}"
+                        th:selected="${year == #dates.createNow().getYear()}"></option>
+            </select>
+        </div>                
+              <div class="canvas-container mb-2">
+                <canvas id="barChart12"></canvas>
+            </div>            
+        </div>
+      </div>  
+          <!-- top revendeur table -->
+           <div class="col-lg-6 col-md-12 col-sm-12 mb-1 ml-0" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">
+                <div class="card" >
+            <div class="card-title5 border-0">
+				 <h3 class="card-title5">Top Revendeur par chiffre d'affaire/demandes réalisés</h3><br>
+				 </div>
+				 <div class="row" style="margin-top: -50px;">
+            <div class="col-12 mb-2 ">          
+            <div class="blocFilter mb-2">
+      			<button
+                    id="togglebuttonToprev"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-0 mb-5 ml-5 mt-3">
+                    Filtre
+                  </button>
+                  <form id="showMe2" method="post">
+                    <div class="row">
+						      <div class="col-sm-6 col-md-3 mt-0">
+						<label  class="col-form-label" for="date">Année & mois</label>
+					<input class="form-control" type="month" id="date" name="selectedDate" placeholder="aaa"  th:onchange="|onchangeSearchTopRev(event)|"> 
+					</div>                  
+                      <div class="col-sm-6 col-md-3" sec:authorize="hasAnyAuthority('READ_RETAIL_SUMMARY_LIST_ALL')">
+                        <label class="col-form-label" for="distributeur"
+                          >Liste Distributeur
+                        </label>
+                        <select
+                         id="distributeur"
+                          name="distributeur"
+                          class="form-control"
+                         th:onchange="|onchangeSearchTopRev(event)|"
+                        >
+                          <option value="">Liste Distributeur</option>
+                          <option
+                            th:each="ld : ${listeDistributeur}"
+                            th:value="${ld.userid}"
+                            th:text="${ld.firstName}+' '+${ld.lastName}"
+                          ></option>
+                        </select>
+                      </div>   
+                      <div class="col-sm-6 col-md-3" >
+                        <label class="col-form-label" for="order by"
+                          >Organiser par
+                        </label>
+                        <select
+                         id="orderby"
+                          name="orderby"
+                          class="form-control"
+                         th:onchange="|onchangeSearchTopRev(event)|"
+                        >
+                          <option value="chiffre_affaire">Chiffre d'affaire (par défaut)</option>
+                         <option value="countAllDemandeAccepted">Demandes réalisés</option>
+                        </select>
+                      </div>   
+                    </div>
+				<div class="text-center mt-2">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherhTop(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                  </form>
+            </div>
+                  </div>
+                  </div>
+                <div class="card-body">
+                  <div>
+                    <div class="blocy">
+                      <table
+                        id="topRevendeur"
+                        class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline">
+                        <thead class="table dataTable no-footer">
+                          <tr>                             
+                                <th>Nom et prénom</th>
+                             
+                              <th>Chiffre d'affaire </th>  
+                              <th>Demande Réalisé</th>
+                              <th>Rang </th>
+                          </tr>
+                        </thead>
+                          <tbody>
+                    </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <div class="col-lg-6 col-md-12 col-sm-12  stretch-card ml-0 mr-0" sec:authorize="hasAnyAuthority('READ_ADMINISTRATEUR')">  
+            <div class="card card-weather" >
+					 <div class="card-title5 border-0">
+                                <h3 class="card-title5">Parc clients</h3>                               
+                           <div class="row ml-3">
+			    <div class="col-sm-6 col-md-3">
+                <select id="filterOption2" class="form-control">
+                    <option value="total2">Total</option>
+                    <option value="byChefSecteur2">Par chefs secteurs</option>
+                </select>
+            </div>
+             <div class="row ml-3" id="chefSecteurRow22" style="display: none;">
+            <div class="col-sm-6 col-md-7">
+                <select id="chefsecteurSelect22" name="distributeur" class="form-control">
+                    <option value="">Chef Secteur</option>
+                    <th:block th:each="ld : ${listeDistributeur}">						
+                        <option th:value="${ld.userid}" th:text="${ld.firstName}+' '+${ld.lastName}"></option>
+                    </th:block>
+                </select>
+            </div>
+        </div>           
+       		 </div>             
+             </div>
+              <div class="canvas-container">
+                <canvas id="clientBarChart"></canvas>
+            </div>
+            </div>     
+        </div>                       
+    </div>      
+</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+	 /*<![CDATA[*/ 
+     var isprivreadcard = /*[[${isprivreadcard}]]*/ [];
+  var hasfinancePriv = /*[[${hasfinancePriv}]]*/ [];  
+		 var hasReadAdminsitPriv = /*[[${hasReadAdminsitPriv}]]*/ [];  
+ /*]]>*/
+ if(hasfinancePriv || hasReadAdminsitPriv){
+$(document).ready(function () {
+    var barChart33;
+    function sendDateValues33() {
+        var filterOption3 = $('#filterOption3').val(); 
+        var distributeur5 = filterOption3 === 'byChefSecteur' ? $('#chefsecteurSelect5').val() : null; // Conditional distributor value
+        var month5 = $('#monthInput5').val(); 
+
+        $.ajax({
+            url: '/demandeabonnement/NombreRejectCommercial',
+            type: 'GET',
+            data: {
+                date: month5,
+                type: filterOption3,
+                distributeur: distributeur5
+            },
+            success: function (response) {
+                var labels33 = response.map(item => item.chefSecteur || " ");
+                var demandeAbonnementCount33 = response.map(item => item.totalDemandeAbonnement);
+                var demandeRejetés = response.map(item => item.rejectedCommercialCount);
+                var demandeAcceptés = response.map(item => item.acceptCommercialCount);
+                var attenteCommercialCounts = response.map(item => item.attenteCommercialCount);
+                updateChart33(labels33, demandeAbonnementCount33, demandeRejetés, demandeAcceptés, attenteCommercialCounts);
+            },
+            error: function (error) {
+                console.error('Error sending data:', error);
+            }
+        });
+    }
+    function updateChart33(labels, demandeAbonnementCount33, demandeRejetés, demandeAcceptés, attenteCommercialCounts) {
+        var ctx = document.getElementById('barChart33').getContext('2d');
+        
+        if (barChart33) {
+            barChart33.destroy(); 
+        }
+        var data33 = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Total demande abonnements',
+                    data: demandeAbonnementCount33,
+                    backgroundColor: '#CCC1E5',
+                    borderColor: '#CCC1E5',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Rejet commercial',
+                    data: demandeRejetés,
+                    backgroundColor: 'rgba(255, 0, 0, 0.8)',
+                    borderColor: 'rgba(255, 0, 0, 0.8)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'En attente de classification',
+                    data: attenteCommercialCounts,
+                    backgroundColor: 'rgb(238, 130, 238)',
+                    borderColor: 'rgb(238, 130, 238)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Acceptée pour Commission',
+                    data: demandeAcceptés,
+                    backgroundColor: '#90da46',
+                    borderColor: '#90da46',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        var options33 = {
+            indexAxis: 'y', // Horizontal bar chart
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            var label = data33.datasets[tooltipItem.datasetIndex].label || '';
+                            var value = data33.datasets[tooltipItem.datasetIndex].data[tooltipItem.dataIndex];
+                            
+                            return label;
+                        }
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        };
+        barChart33 = new Chart(ctx, {
+            type: 'bar',
+            data: data33,
+            options: options33
+        });
+    }
+    sendDateValues33();
+   $('#filterOption3').change(function () {
+        if ($('#filterOption3').val() === 'byChefSecteur') {
+            $('#chefSecteurRow2').show(); 
+        } else {
+            $('#chefSecteurRow2').hide();
+        }
+    sendDateValues33();
+    });
+   
+    $('#monthInput5').on('change', sendDateValues33);
+    $('#filterOption3, #chefsecteurSelect5').on('change', sendDateValues33);
+});
+
+
+	//Factures payé non versé      
+    var barChart34;
+    function updateChart34(labels, montantPayéNonVersé) {
+        const ctx = document.getElementById('barChart34').getContext('2d');
+        if (barChart34) {
+            barChart34.destroy();
+        }
+        var options34 = {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toFixed(3) + ' TND'; 
+                        }
+                    }
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        label += value.toFixed(3) + ' TND'; 
+                        return label;
+                    }
+                }
+            },
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        };
+        barChart34 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Montant payé non versé (TND)',
+                    data: montantPayéNonVersé,
+                    backgroundColor: '#ffaa99',
+                    borderColor: '#ffaa99',
+                    borderWidth: 1
+                }]
+            },
+            options: options34
+        });
+    }
+   $(document).ready(function() {
+    function fetchDataAndUpdateChart() {
+		var distributeur7 = $('#chefsecteurSelect7').val()|| null;
+
+        $.ajax({
+            url: '/bordereau/montantPayéNonVersé',
+            type: 'GET',
+             data: {
+           
+               distributeur:distributeur7
+            },
+
+            success: function(response) {
+                const labels34 = response.map(item => item.chefSecteurName);
+                const montantPayéNonVersé = response.map(item => item.montantPayéNonVersé);
+                updateChart34(labels34, montantPayéNonVersé);
+            },
+            error: function(error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+    fetchDataAndUpdateChart();
+       $('#chefsecteurSelect7').on('change', fetchDataAndUpdateChart);
+});
+
+
+    var barChart10;
+    var barChart11;
+    var barChart12;
+
+    const monthNames3 = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    ];
+	  $(document).ready(function () {
+     const currentYearoperation = new Date().getFullYear();
+    const selectedYear10 = document.getElementById('year10');
+      selectedYear10.value = currentYearoperation;  
+ sendDateToController10(selectedYear10.value);
+    const selectedYear11 = document.getElementById('year11');
+      selectedYear11.value = currentYearoperation;  
+ sendDateToController11(selectedYear11.value);
+   const selectedYear12 = document.getElementById('year12');
+      selectedYear12.value = currentYearoperation;  
+ sendDateToController12(selectedYear12.value);
+    function sendDateToController11(year11) {
+        $.ajax({
+            url: '/operationAbonnement/Transfert',
+            type: 'GET',
+            data: { year: year11,type:'T' },
+            success: function (response) {
+                updateChart11(response);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    function sendDateToController10(selectedYear10) {
+        $.ajax({
+            url: '/operationAbonnement/migration',
+            type: 'GET',
+            data: { year: selectedYear10 ,type:'M'},
+            success: function (response) {
+                updateChart10(response);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    function sendDateToController12(year12) {
+        $.ajax({
+            url: '/operationAbonnement/ChangementDB',
+            type: 'GET',
+            data: { year: year12 ,type:'CH'},
+            success: function (response) {
+                updateChart12(response);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    function updateChart10(data) {
+        var labels10 = monthNames3;
+        var totalOperations10 = data.map(item => item.totalOperations === null ? 0 : item.totalOperations);
+        var succeededOperations10 = data.map(item => item.succeededOperations === null ? 0 : item.succeededOperations);
+    var ctx = document.getElementById('barChart10').getContext('2d');
+            if (barChart10) {
+            barChart10.destroy();
+        }
+        var data10 = {
+                    labels: labels10,
+                    datasets: [
+                        {
+                            label: 'Total Migrations',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            data: totalOperations10
+                        },
+                        {
+                            label: 'Migrations réussies',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            data: succeededOperations10
+                        }
+                    ]
+                };
+            
+          var options10 = {
+                 scales: {
+        xAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }],
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    },
+                legend: {
+        display: true,
+        position: 'bottom'
+    }
+            };
+
+          
+          barChart10 = new Chart(ctx, {
+                type: 'bar',
+                data: data10,
+                options: options10
+            });
+        }
+     $('#year10').on('change', function() {
+        selectedYear = $(this).val();
+        sendDateToController10(selectedYear);
+    });      
+     function updateChart11(data) {
+        var labels11 = monthNames3;
+        var totalOperations11 = data.map(item => item.totalOperations === null ? 0 : item.totalOperations);
+        var succeededOperations11 = data.map(item => item.succeededOperations === null ? 0 : item.succeededOperations);
+    var ctx = document.getElementById('barChart11').getContext('2d');
+            if (barChart11) {
+            barChart11.destroy();
+        }
+        var data11 = {
+                    labels: labels11,
+                    datasets: [
+                        {
+                            label: 'Total Transfert',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            data: totalOperations11
+                        },
+                        {
+                            label: 'Transfert réussies',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            data: succeededOperations11
+                        }
+                    ]
+                };
+            
+          var options11 = {
+                 scales: {
+        xAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }],
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    },
+                legend: {
+        display: true,
+        position: 'bottom'
+    }
+            };        
+          barChart11 = new Chart(ctx, {
+                type: 'bar',
+                data: data11,
+                options: options11
+            });
+        }
+     $('#year11').on('change', function() {
+        selectedYear = $(this).val();
+        sendDateToController11(selectedYear);
+    });        
+      function updateChart12(data) {
+        var labels12 = monthNames3;
+        var totalOperations12 = data.map(item => item.totalOperations === null ? 0 : item.totalOperations);
+        var succeededOperations12 = data.map(item => item.succeededOperations === null ? 0 : item.succeededOperations);
+    var ctx = document.getElementById('barChart12').getContext('2d');
+            if (barChart12) {
+            barChart12.destroy();
+        }
+        var data12 = {
+                    labels: labels12,
+                    datasets: [
+                        {
+                            label: 'Total Changement débit',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            data: totalOperations12
+                        },
+                        {
+                            label: 'Changement débit réussies',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            data: succeededOperations12
+                        }
+                    ]
+                };
+            
+          var options12 = {
+                 scales: {
+        xAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }],
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    },
+                legend: {
+        display: true,
+        position: 'bottom'
+    }
+            };
+
+          
+          barChart12 = new Chart(ctx, {
+                type: 'bar',
+                data: data12,
+                options: options12
+            });
+        }
+     $('#year12').on('change', function() {
+        selectedYear = $(this).val();
+        sendDateToController12(selectedYear);
+    });
+
+});
+	//end 		
+	var areaChart2;
+var areaData2 = {
+    labels: [],
+    datasets: [{
+        label: 'Total factures versées par site et app',
+        data: [],
+        borderColor: '#587ce4',
+        borderWidth: 2,
+        fill: false
+    },
+    {
+        label: 'Total factures non versées (REV+PVI)',
+        data: [],
+        borderColor: '#66cc00',
+        borderWidth: 2,
+        fill: false
+    },
+    {
+        label: 'Total factures impayées échues',
+        data: [],
+        borderColor: '#ffcc00',
+        borderWidth: 2,
+        fill: false
+    },
+    {
+        label: ' Total factures impayées non échues',
+        data: [],
+        borderColor: '#ff6600',
+        borderWidth: 2,
+        fill: false
+    },
+    {
+        label: 'Total avoirs',
+        data: [],
+        borderColor: '#00ccff',
+        borderWidth: 2,
+        fill: false
+    },
+     {
+        label: 'Total factures versées (REV+PVI)',
+        data: [],
+        borderColor: '#8142ff',
+        borderWidth: 2,
+        fill: false
+    },
+    ]
+};
+var areaOptions2 = {
+   tooltips: {
+        callbacks: {
+            label: function(tooltipItem, data) {
+                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                var value = tooltipItem.yLabel;
+                return datasetLabel + ': ' + parseFloat(value).toFixed(3) + ' TND';
+            }
+        }
+    },
+    scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return parseFloat(value).toFixed(3) + ' TND';
+                }
+            }
+        }]
+    }
+};
+
+$(document).ready(function() {
+    const currentYear2 = new Date().getFullYear();
+    const yearSelect2 = document.getElementById('yearSelect2');
+    yearSelect2.value = currentYear2;
+    if ($("#areaChart2").length) {
+        var areaChartCanvas2 = $("#areaChart2").get(0).getContext("2d");
+        areaChart2 = new Chart(areaChartCanvas2, {
+            type: 'line',
+            data: areaData2,
+            options: areaOptions2
+        });
+    }
+
+    sendDateToController2(currentYear2);
+});
+
+function handleYearChange2(selectElement) {
+    const year2 = selectElement.value;
+    sendDateToController2(year2);
+}
+
+function sendDateToController2(year2) {
+    $.ajax({
+        url: '/bordereau/financials',
+        type: 'GET',
+        data: { year: year2 },
+        success: function(response) {
+            updateChart2(response);
+        },
+        error: function(error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
+
+const monthNames2 = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+function updateChart2(data) {
+    let labels = data.map(item => monthNames2[item.month - 1]);
+    let totalFactureVerse = data.map(item => parseFloat(item.totalFactureVerse).toFixed(3));
+    let totalFactureNonverse = data.map(item => parseFloat(item.totalFactureNonverse).toFixed(3));
+    let totalFactureImpNoEch = data.map(item => parseFloat(item.TotalFactureImpNoEch).toFixed(3));
+    let totalFactureImpEch = data.map(item => parseFloat(item.totalfactureImpEch).toFixed(3));
+       let bordereauCount = data.map(item => parseFloat(item.bordereauCount).toFixed(3));
+    let totalAvoir = data.map(item => parseFloat(item.totalAvoir).toFixed(3));
+
+    areaChart2.data.labels = labels;
+    areaChart2.data.datasets[0].data = totalFactureVerse;
+    areaChart2.data.datasets[1].data = totalFactureNonverse;
+    areaChart2.data.datasets[2].data = totalFactureImpNoEch;
+    areaChart2.data.datasets[3].data = totalFactureImpEch;
+    areaChart2.data.datasets[4].data = totalAvoir;
+        areaChart2.data.datasets[5].data = bordereauCount;
+    areaChart2.update();
+}
+	//end
+	//chart chiffre d'affaire net et brute'
+     var areaChart;
+        var areaData = {
+            labels: [],
+            datasets: [{
+                label: 'Chiffre d\'Affaire Net',
+                data: [],
+                borderColor: '#587ce4',
+                borderWidth: 2,
+                fill: false
+            },
+            {
+                label: 'Chiffre d\'Affaire Brut',
+                data: [],
+                borderColor: '#EE82EE',
+                borderWidth: 2,
+                fill: false
+            },
+          
+            ]
+        };
+        var areaOptions = {
+            tooltips: {
+        callbacks: {
+            label: function(tooltipItem, data) {
+                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                var value = tooltipItem.yLabel;
+                return datasetLabel + ': ' + parseFloat(value).toFixed(3) + ' TND';
+            }
+        }
+    },
+    scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return parseFloat(value).toFixed(3) + ' TND';
+                }
+            }
+        }]
+    }
+        };
+
+        $(document).ready(function() {
+            const currentYear = new Date().getFullYear();
+            const yearSelect = document.getElementById('yearSelect');
+            yearSelect.value = currentYear;
+            if ($("#areaChart").length) {
+                var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+                areaChart = new Chart(areaChartCanvas, {
+                    type: 'line',
+                    data: areaData,
+                    options: areaOptions
+                });
+            }
+
+            sendDateToController(currentYear, '');
+        });
+
+        function handleYearChange35(selectElement) {
+            const year = selectElement.value;
+            const month = document.getElementById('monthSelect').value;
+            sendDateToController(year, month);
+        }
+
+        function handleMonthChange35(selectElement) {
+            const month = selectElement.value;
+            const year = document.getElementById('yearSelect').value;
+            sendDateToController(year, month);
+        }
+
+        function sendDateToController(year, month) {
+            $.ajax({
+                url: '/bordereau/encaiss',
+                type: 'GET',
+                data: { year: year, month: month },
+                success: function(response) {
+                    updateChart(response, month);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+ const monthNames = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    ];
+  function updateChart(data, month) {
+    let labels, chiffreAffaireNette, chiffreAffaireBrute;
+
+    if (month) {
+        labels = data.map(item => item.day);
+    } else {
+        labels = data.map(item => monthNames[item.month - 1]);
+    }
+
+    chiffreAffaireNette = data.map(item => parseFloat(item.chiffreAffaireNette).toFixed(3));
+    chiffreAffaireBrute = data.map(item => parseFloat(item.chiffreAffaireBrute).toFixed(3));   
+    areaChart.data.labels = labels;
+    areaChart.data.datasets[0].data = chiffreAffaireNette;
+    areaChart.data.datasets[1].data = chiffreAffaireBrute; 
+    areaChart.update();
+}
+//encaiseement et avoir chart
+ var areaChart10;
+        var areaData10 = {
+            labels: [],
+            datasets: [
+              {
+                label: 'Encaissement versé',
+                data: [],
+                borderColor: '#66cc00',
+                borderWidth: 2,
+                fill: false
+            },
+               {
+                label: 'Encaissement non versé',
+                data: [],
+                borderColor: '#ff6600',
+                borderWidth: 2,
+                fill: false
+            },
+          
+            ]
+        };
+        var areaOptions10 = {
+            tooltips: {
+        callbacks: {
+            label: function(tooltipItem, data) {
+                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                var value = tooltipItem.yLabel;
+                return datasetLabel + ': ' + parseFloat(value).toFixed(3) + ' TND';
+            }
+        }
+    },
+    scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return parseFloat(value).toFixed(3) + ' TND';
+                }
+            }
+        }]
+    }
+        };
+
+        $(document).ready(function() {
+            const currentYear = new Date().getFullYear();
+            const yearSelect = document.getElementById('yearSelect10');
+            yearSelect.value = currentYear;
+            if ($("#areaChart10").length) {
+                var areaChartCanvas = $("#areaChart10").get(0).getContext("2d");
+                areaChart10 = new Chart(areaChartCanvas, {
+                    type: 'line',
+                    data: areaData10,
+                    options: areaOptions10
+                });
+            }
+
+            sendDateToController10(currentYear, '');
+        });
+
+        function handleYearChange(selectElement) {
+            const year = selectElement.value;
+            const month = document.getElementById('monthSelect10').value;
+            sendDateToController10(year, month);
+        }
+
+        function handleMonthChange(selectElement) {
+            const month = selectElement.value;
+            const year = document.getElementById('yearSelect10').value;
+            sendDateToController10(year, month);
+        }
+
+        function sendDateToController10(year, month) {
+            $.ajax({
+                url: '/bordereau/encaissementEtAvoir',
+                type: 'GET',
+                data: { year: year, month: month },
+                success: function(response) {
+                    updateChart46(response, month);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+ const monthNames10 = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    ];
+  function updateChart46(data, month) {
+    let labels,MontantPayéVersé,MontantPayéNonversé;
+
+    if (month) {
+        labels = data.map(item => item.day);
+    } else {
+        labels = data.map(item => monthNames10[item.month - 1]);
+    }  
+      MontantPayéVersé = data.map(item => parseFloat(item.MontantPayéVersé).toFixed(3));
+        MontantPayéNonversé = data.map(item => parseFloat(item.MontantPayéNonversé).toFixed(3));
+    
+    areaChart10.data.labels = labels;
+
+        areaChart10.data.datasets[0].data = MontantPayéVersé;
+            areaChart10.data.datasets[1].data = MontantPayéNonversé;
+  
+    areaChart10.update();
+}
+//end encaissement et avoir chart
+ 
+  $(document).ready(function () {
+    $.ajax({
+      url: '/BordereauConfirm',
+      type: 'GET',
+      success: function (response) {
+        updateChart10(response);
+      },
+      error: function (error) {
+        console.error('Error fetching data:', error);
+      }
+    });
+
+    function updateChart10(response) {
+
+      var dataValues10 = [
+        parseFloat(response.percentageConfirm),  // Bordereau Confirmé percentage
+        parseFloat(response.percentageInstance)  // Bordereau en Instance percentage
+      ];
+      var labels10 = ["Bordereau Confirmé", "Bordereau en Instance"];
+      var browserTrafficData10 = {
+        datasets: [{
+          data: dataValues10,
+          backgroundColor: [
+            'rgb(175, 152, 231)', '#82D1FF'
+          ],
+          borderColor: [
+            'rgb(175, 152, 231)', '#82D1FF'
+          ],
+        }],
+        labels: labels10
+      };
+
+    var doughnutPieOptions10 = {
+        responsive: true,
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        },
+        plugins: {
+            datalabels: {
+                color: '#000',
+                formatter: function(value, context) {
+                    return value.toFixed(2) + '%';
+                },
+                font: {
+                    weight: 'bold'
+                },
+                anchor: 'end',
+                align: 'start',
+                offset: 8 
+            }
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.labels[tooltipItem.index];
+                    var value = data.datasets[0].data[tooltipItem.index];
+                    return label + ': ' + value.toFixed(2) + '%';
+                },
+                afterBody: function(tooltipItem, data) {
+                    var montant = (tooltipItem[0].index === 0) ? response.totalBordAllConfirm : response.totalBordAllInstance;
+                    return 'Total: ' + montant;
+                }
+            }
+        },
+        legend: {
+            position: 'right',
+            align: 'start',
+        },
+        cutoutPercentage: 0,
+      };
+      if ($("#browserTrafficChart10").length) {
+        var pieChartCanvas = $("#browserTrafficChart10").get(0).getContext("2d");
+        var pieChart = new Chart(pieChartCanvas, {
+          type: 'pie',
+          data: browserTrafficData10,
+          options: doughnutPieOptions10
+        });
+      }
+    }
+  });	
+   $(document).ready(function () {
+    var barChart3;
+    function sendDateValues2() {
+          //  var distributeur = $('#chefsecteurSelect2').val();
+             var month = $('#monthInput2').val().trim();
+              var filterOption10 = $('#filterOption10').val(); 
+                var distributeur = filterOption10 === 'byChefSecteur10' ? $('#chefsecteurSelect2').val() : null;
+        if (month === "") {
+            month = null;
+        }
+
+            $.ajax({
+                url: '/demandeabonnement/NombreDemande',
+                type: 'GET',
+                data: {
+                    date: month,
+                      type: filterOption10, 
+                    distributeur: distributeur
+                },
+                success: function (response) {
+                    var labels2 = response.map(item => item.chefSecteur || " ");
+                    var demandeAbonnementCount = [];
+                    var demandeMiseService = [];
+                    var demandeModemAffected = [];             
+                    var instanceCount = [];
+                    var constructionCount = [];
+                    var proformatCount = [];
+                    var canceledCount = [];
+                    var refusedCount = [];
+           
+                    response.forEach(function (item) {
+                        demandeAbonnementCount.push(item.demandeAbonnementCount);
+                        demandeMiseService.push(item.demandeMiseService);
+                        demandeModemAffected.push(item.demandeModemAffected);
+                          instanceCount.push(item.instanceCount);
+                           constructionCount.push(item.constructionCount);
+                            proformatCount.push(item.proformatCount);
+                             canceledCount.push(item.canceledCount);
+                                refusedCount.push(item.refusedCount);
+                    });
+
+                    updateChart(labels2, demandeAbonnementCount, demandeMiseService, demandeModemAffected, 
+                    instanceCount,constructionCount,proformatCount,canceledCount,refusedCount);
+                },
+                error: function (error) {
+                    console.error('Error sending data:', error);
+                }
+            });
+        };    
+         $('#filterOption10').change(function () {
+        if ($('#filterOption10').val() === 'byChefSecteur10') {
+            $('#chefSecteurRow10').show(); 
+        } else {
+            $('#chefSecteurRow10').hide();
+        }
+        sendDateValues2();
+    });
+    $('#dateInput, #chefsecteurSelect').change(sendDateValues2);
+    sendDateValues2(); 
+    function updateChart(labels, demandeAbonnementCount, demandeMiseService, demandeModemAffected, 
+     instanceCount,constructionCount,proformatCount,canceledCount,refusedCount) {
+        var ctx = document.getElementById('barChart3').getContext('2d');
+        if (barChart3) {
+            barChart3.destroy();
+        }
+
+        var data3 = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Total demande abonnements',
+                    data: demandeAbonnementCount,
+                    backgroundColor: '#CCC1E5',
+                    borderColor: '#CCC1E5',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Demande mise en service',
+                    data: demandeMiseService,
+                    backgroundColor: 'rgba(75, 192, 192, 1)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Demande modem affecté',
+                    data: demandeModemAffected,
+                    backgroundColor: '#82D1FF',
+                    borderColor: '#82D1FF',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Instance',
+                    data: instanceCount,
+                    backgroundColor: '#ffcc00',
+                    borderColor: '#ffcc00',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Construction ligne',
+                    data: constructionCount,
+                    backgroundColor: '#92beca',
+                    borderColor: '#92beca',
+                    borderWidth: 1
+                },
+              
+                   {
+                    label: 'Annulé par client',
+                    data: canceledCount,
+                    backgroundColor: '#f9d6cf',
+                    borderColor: '#f9d6cf',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Refusé par TT',
+                    data: refusedCount,
+                    backgroundColor: '#ff6347',
+                    borderColor: '#ff6347',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        var options3 = {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        if (tooltipItem.datasetIndex >= 8) {
+                            label += value + ' %';
+                        } else {
+                            label += value;
+                        }
+                        return label;
+                    }
+                }
+            },
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        };
+
+        barChart3 = new Chart(ctx, {
+            type: 'bar',
+            data: data3,
+            options: options3
+        });
+    }
+
+    sendDateValues2();
+    $('#monthInput2').on('change', sendDateValues2);
+    $('#chefsecteurSelect2').on('change', sendDateValues2);
+});
+   $(document).ready(function () {
+    var barChart6;
+    function fetchAbonnementStats() {
+        var selectedDate = $('#dateInput').val();
+        var filterOption = $('#filterOption').val(); 
+        var selectedChefSecteurId = filterOption === 'byChefSecteur' ? $('#chefsecteurSelect').val() : null;
+        $.ajax({
+            url: '/client/AbonnementStats',
+            type: 'GET',
+            data: {
+                date: selectedDate,
+                type: filterOption, 
+                userId: selectedChefSecteurId
+            },
+            success: function (data) {
+                var labels = [];
+          
+                var resiliationCounts = [];
+        
+                var assignedCounts = [];
+    
+                var proformatCounts = [];
+         
+                var miseenserviceCounts = [];
+          
+                data.forEach(function (item) {
+                    labels.push(item.chefSecteurName || " ");
+                    resiliationCounts.push(item.resiliationCount);
+                    assignedCounts.push(item.assignedCount);
+                    proformatCounts.push(item.proformatCount);
+                    miseenserviceCounts.push(item.miseenserviceCount);
+                });
+                updateChart(labels, resiliationCounts, assignedCounts, proformatCounts, miseenserviceCounts);
+            }
+        });
+    }
+    $('#filterOption').change(function () {
+        if ($('#filterOption').val() === 'byChefSecteur') {
+            $('#chefSecteurRow').show(); 
+        } else {
+            $('#chefSecteurRow').hide();
+        }
+        fetchAbonnementStats();
+    });
+    $('#dateInput, #chefsecteurSelect').change(fetchAbonnementStats);
+    fetchAbonnementStats();
+    function updateChart(labels, resiliationCounts, assignedCounts, proformatCounts, miseenserviceCounts) {
+        var ctx = document.getElementById('barChart6').getContext('2d');
+        if (barChart6) {
+            barChart6.destroy();
+        }
+        var data = {
+            labels: labels,
+            datasets: [             
+                { label: 'Modem est affecté', data: assignedCounts, backgroundColor: 'rgba(153, 102, 255, 1)', borderColor: 'rgba(153, 102, 255, 1)', borderWidth: 1 },
+                { label: 'Proformat payé non transformé à facture', data: proformatCounts, backgroundColor: '#66cc00', borderColor: '#66cc00', borderWidth: 1 },
+                { label: 'Mise en service', data: miseenserviceCounts, backgroundColor: '#ee82ee', borderColor: '#ee82ee', borderWidth: 1 },
+                { label: 'Résilié', data: resiliationCounts, backgroundColor: '#ffcc00', borderColor: '#ffcc00', borderWidth: 1 }
+            ]
+        };
+
+        var options = {
+            scales: {
+                xAxes: [{ ticks: { beginAtZero: true } }],
+                yAxes: [{ ticks: { beginAtZero: true } }]
+            },
+            legend: { display: true, position: 'top' }
+        };
+        barChart6 = new Chart(ctx, { type: 'bar', data: data, options: options });
+    }
+});
+    $(document).ready(function () {
+        var barChart5;
+        function fetchRevendeurStats() {
+			var distributeur8 = $('#chefsecteurSelect8').val()|| null;
+            $.ajax({
+                url: '/bordereau/RevendeursStats', 
+                type: 'GET',
+                 data: {
+               distributeur:distributeur8
+            },
+
+                success: function (response) {
+                    var labels = response.map(item => item.chefSecteurName);
+                    var activeCounts = response.map(item => item.activeRevendeurCount);
+                    var inactiveCounts = response.map(item => item.inactiveRevendeurCount);
+                    var totalCounts = response.map(item => item.totalRevendeurCount);
+                     var montantpayéenonversé = response.map(item => item.montantpayéenonversé);
+
+                    updateChart(labels, activeCounts, inactiveCounts, totalCounts,montantpayéenonversé);
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
+        function updateChart(labels, activeCounts, inactiveCounts, totalCounts,montantpayéenonversé) {
+            var ctx = document.getElementById('barChart5').getContext('2d');
+            if (barChart5) {
+                barChart5.destroy();
+            }
+            var activePercentages = activeCounts.map((count, index) => {
+                var total = totalCounts[index];
+                return total ? ((count / total) * 100).toFixed(2) : 0;
+            });
+
+            var inactivePercentages = inactiveCounts.map((count, index) => {
+                var total = totalCounts[index];
+                return total ? ((count / total) * 100).toFixed(2) : 0;
+            });
+
+            var data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Revendeurs actifs',
+                        data: activeCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Revendeurs inactifs',
+                        data: inactiveCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                     
+                    
+                ]
+            };
+
+            var options = {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var dataset = data.datasets[tooltipItem.datasetIndex];
+                            var currentValue = dataset.data[tooltipItem.index];
+                            var label = dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += currentValue;
+                            label +=  (tooltipItem.datasetIndex === 0 ? ' (' +activePercentages[tooltipItem.index]+ '%)' : (tooltipItem.datasetIndex === 1 ? '(' +inactivePercentages[tooltipItem.index]+ '%)':'') );
+                            return label;
+                        }
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            };
+
+            barChart5 = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: data,
+                options: options
+            });
+        }
+
+        fetchRevendeurStats(); 
+              $('#chefsecteurSelect8').on('change', fetchRevendeurStats);
+    });
+	var oTable;
+	$(document).ready(function() {		
+ /*<![CDATA[*/
+     var modelModemCounts = /*[[${modelModemCounts}]]*/ [];
+
+    
+ /*]]>*/
+ if(modelModemCounts!= null){
+    var labels = modelModemCounts.map(function(item) {
+        return item.label;
+    });
+    var dataValues = modelModemCounts.map(function(item) {
+        return item.count;
+    });
+    };
+  var browserTrafficData2 = {
+    datasets: [{
+        data: dataValues,
+        backgroundColor: [
+      'rgb(201, 198, 198)', 'rgb(255, 61, 103)', 'rgb(75, 192, 192)', '#faf090',
+		'rgb(255,255,0,0.7)',
+		'rgb(238,130,238,0.7)',
+		'rgb(0,191,255,0.7)',
+		'rgb(64,224,208,0.7)'
+           
+        ],
+        borderColor: [
+  'rgb(201, 198, 198)', 'rgb(255, 61, 103)', 'rgb(75, 192, 192)', '#faf090',
+		'rgb(255,255,0,0.7)',
+		'rgb(238,130,238,0.7)',
+		'rgb(0,191,255,0.7)',
+		'rgb(64,224,208,0.7)'
+        ],
+    }],
+    labels: labels
+};
+var doughnutPieOptions = {
+    responsive: true,
+  animation: {
+        animateScale: true,
+        animateRotate: true
+    },
+
+    plugins: {
+        datalabels: {
+            color: '#000',
+            formatter: function(value, context) {
+                return context.chart.data.labels[context.dataIndex] + ': ' + value;
+            },
+            font: {
+                weight: 'bold'
+            },
+            anchor: 'end',
+            align: 'start',
+            offset: 8 
+        }
+    },
+    legend: {
+        position: 'right',
+        align: 'start',
+    },
+     cutoutPercentage: 50,
+    
+};
+    if ($("#browserTrafficChart2").length) {
+    var doughnutChartCanvas = $("#browserTrafficChart2").get(0).getContext("2d");
+    var doughnutChart = new Chart(doughnutChartCanvas, {
+      type: 'doughnut',
+      data: browserTrafficData2,
+      options: doughnutPieOptions
+    });
+  }
+ var options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        };
+  }); 	
+  //bar chart2
+$(document).ready(function () {
+    var barChart2;
+    function sendDateValues() {
+        var month = $('#monthInput3').val();
+        var distributeur2 = $('#chefsecteurSelect3').val();
+        var gouvernoratId = $('#gouvernorat2').val();
+
+        $.ajax({
+            url: '/demandeabonnement/countByGouvernorat',
+            type: 'GET',
+            data: {
+                date: month,
+                distributeur: distributeur2 || null,
+                gouvernoratId: gouvernoratId || null // If no gouvernorat is selected, pass null
+            },
+            success: function (response) {
+                var labels = response.map(item => item.gouvernoratName);
+                var data = response.map(item => item.demandeCount);
+                updateChart3(labels, data);
+            },
+            error: function (error) {
+                console.error('Error sending data:', error);
+            }
+        });
+    }
+
+    function updateChart3(labels, data) {
+        var ctx = document.getElementById('barChart2').getContext('2d');
+
+        if (barChart2) {
+            barChart2.destroy();
+        }
+        var data2 = {
+            labels: labels,
+            datasets: [{
+                label: 'Nombre Abonnements actifs',
+                data: data,
+                backgroundColor: [
+                    'rgba(234, 142, 160, 0.7)',
+                    'rgba(183, 167, 218, 0.7)',
+                    'rgba(134, 203, 182, 0.7)',
+                    'rgba(250, 240, 144, 0.7)',
+                    'rgba(135, 196, 231, 0.7)',
+                    'rgba(162, 217, 210, 0.7)',
+                    'rgba(243, 234, 137, 0.7)',
+                    'rgba(100, 163, 180, 0.7)',
+                    'rgba(198, 197, 197, 0.7)',
+                    'rgba(213, 181, 214, 0.7)',
+                    'rgba(249, 168, 128, 0.7)',
+                    'rgba(140, 194, 166, 0.7)',
+                    'rgba(237, 148, 126, 0.7)',
+                    'rgba(238, 230, 134, 0.7)',
+                    'rgba(247, 178, 162, 0.7)',
+                    'rgba(247, 196, 187, 0.7)',
+                    'rgba(235, 237, 126, 0.7)',
+                    'rgba(253, 225, 224, 0.7)',
+                    'rgba(210, 183, 154, 0.7)',
+                    'rgba(163, 211, 249, 0.7)',
+                    'rgba(243, 235, 139, 0.7)',
+                    'rgba(183, 208, 181, 0.7)',
+                    'rgba(58, 65, 111, 0.7)',
+                    'rgba(168, 184, 216, 0.7)',
+                    'rgba(248, 0, 87, 0.7)',
+                    'rgba(23, 193, 232, 0.7)',
+                    'rgb(153, 100, 135, 0.7)',
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(234, 142, 160, 1)',
+                    'rgba(183, 167, 218, 1)',
+                    'rgba(134, 203, 182, 1)',
+                    'rgba(250, 240, 144, 1)',
+                    'rgba(135, 196, 231, 1)',
+                    'rgba(162, 217, 210, 1)',
+                    'rgba(243, 234, 137, 1)',
+                    'rgba(100, 163, 180, 1)',
+                    'rgba(198, 197, 197, 1)',
+                    'rgba(213, 181, 214, 1)',
+                    'rgba(249, 168, 128, 1)',
+                    'rgba(140, 194, 166, 1)',
+                    'rgba(237, 148, 126, 1)',
+                    'rgba(238, 230, 134, 1)',
+                    'rgba(247, 178, 162, 1)',
+                    'rgba(247, 196, 187, 1)',
+                    'rgba(235, 237, 126, 1)',
+                    'rgba(253, 225, 224, 1)',
+                    'rgba(210, 183, 154, 1)',
+                    'rgba(163, 211, 249, 1)',
+                    'rgba(243, 235, 139, 1)',
+                    'rgba(183, 208, 181, 1)',
+                    'rgba(58, 65, 111, 1)',
+                    'rgba(168, 184, 216, 1)',
+                    'rgba(248, 0, 87, 1)',
+                    'rgba(23, 193, 232, 1)',
+                    'rgb(153, 100, 135, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var options2 = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    generateLabels: function (chart) {
+                        var data = chart.data;
+                        if (data.labels.length && data.datasets.length) {
+                            return data.labels.map(function (label, i) {
+                                var meta = chart.getDatasetMeta(0);
+                                var style = meta.controller.getStyle(i);
+                                return {
+                                    text: label,
+                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                    strokeStyle: data.datasets[0].borderColor[i],
+                                    lineWidth: data.datasets[0].borderWidth,
+                                    hidden: false,
+                                    index: i
+                                };
+                            });
+                        }
+                        return [];
+                    }
+                }
+            }
+        };
+        barChart2 = new Chart(ctx, {
+            type: 'bar',
+            data: data2,
+            options: options2
+        });
+    }
+
+    sendDateValues();
+    $('#monthInput3').on('change', sendDateValues);
+    $('#chefsecteurSelect3').on('change', sendDateValues);
+    $('#gouvernorat2').on('change', sendDateValues);
+});
+
+  //end barchart2
+  // bar chart 6
+  
+  //end bar chart 6
+   
+ //top revendeur
+ let selectDate="";
+ let gouvernorat = ""  ; 
+let distributeur =  "" ; 
+let orderBy="";
+
+function onchangeSearchTopRev(event) {
+    let name = event.target.name;
+  
+    switch (name) {
+		case "selectedDate": {
+			 selectDate = event.target.value;
+			 break;
+		}
+      case "gouvernorat": {    
+    	  gouvernorat = event.target.value;
+    	  villes = "" ; 
+    	  if (gouvernorat == "") villes = "";
+        break;
+      }      
+      case "distributeur": {
+    	  distributeur = event.target.value;
+        break;
+      }
+       case "orderby": {
+    	  orderBy = event.target.value;
+        break;
+      }
+    }
+  }
+$("#togglebuttonToprev").click(function () {
+    $("#showMe2").toggle();
+  });
+
+$("#gouvernorat").change(function () {
+    sendAjaxRequest();
+  });
+  
+ function onclicksherhTop(event) {
+    event.preventDefault();
+    $("#topRevendeur")
+      .DataTable()
+      .column(0)
+      .search(
+        JSON.stringify({
+		selectedDate:selectDate,
+         gouvernorat: gouvernorat,      
+         distributeur: distributeur,
+         orderBy: orderBy,          
+        })
+      )
+      .draw();
+  }
+   
+  var TopRevendeurTable;
+TopRevendeurTable = $("#topRevendeur").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    order: [3, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: true,
+    fixedHeader: true,
+    ajax: "/payement/toprevendeur",
+    lengthMenu: [
+    	[5,10, 20, 50 , 100 , 200,500],
+    	[5,10, 20, 50 , 100 , 200,500],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+           first: "<i class='fa fa-fast-backward'></i>",
+          last: "<i class='fa  fa-fast-forward '></i>",
+          next: "<i class='fa fa-solid fa-chevron-right'></i>",
+          previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+
+    
+    },
+
+    columnDefs: [
+      {
+        className: "dtr-control",
+        orderable: false,
+        targets: 0,
+      },
+    ],
+    columns: [
+          {
+              data: null,
+              render: function (data, type, row) {
+              	if(row.lastname &&  row.firstname )
+              		return  row.firstname + "  " + row.lastname ;
+              	if(row.lastname)              		
+                 return row.lastname;
+              	else if(row.firstname)              		
+              		return row.firstname;
+              },
+            },
+      {
+              data: null,
+              render: function (data, type, row) {
+              if(row.chiffre_affaire)
+              	return Number(row.chiffre_affaire).toFixed(3) ;
+              	return 0;
+              }
+            },
+		{
+          data: null,
+          render: function (data, type, row) {
+          	if(row.countAllDemandeAccepted){          		        
+          	   return row.countAllDemandeAccepted ;
+          	}         
+          	return "0";           
+          },
+        },
+           {
+            data: null,
+            render: function (data, type, row, meta) {
+                var pageIndex = TopRevendeurTable.page.info().page;
+                var length = TopRevendeurTable.page.info().length;
+                var rank = pageIndex * length + meta.row + 1;
+                if (rank === 1) {
+                return '<img src="/img/firstplace.png" alt="FirstPlace" width="20px" height="20px">';
+            } else if (rank === 2) {
+                return '<img src="/img/secondplace.png" alt="secondPlace" width="20px" height="20px">';
+            } else if (rank === 3) {
+                return '<img src="/img/thirdplace.png" alt="ThirdPlace" width="20px" height="20px">';
+            } else {
+               
+                return '<strong>'+rank+'<strong>';
+            }
+            },
+        },
+    ],
+
+  });
+ 
+$(document).ready(function () {
+    var clientBarChart;
+    function initializeChart(data) {
+        var ctx = document.getElementById('clientBarChart').getContext('2d');
+        var labels = data.map(function(item) {
+            return item.first_name ? item.first_name + ' ' + item.last_name : ' ';
+        });
+
+        var chartData = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Actif',
+                    data: data.map(function(item) {
+                        return item.countActiveClient;
+                    }),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'En recouvrement',
+                    data: data.map(function(item) {
+                        return item.countRecouvrement;
+                    }),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Résilié',
+                    data: data.map(function(item) {
+                        return item.countResilier;
+                    }),
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total',
+                    data: data.map(function(item) {
+                        return item.countAllClient;
+                    }),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        clientBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    function updateChart(data) {
+        if (clientBarChart) {
+            clientBarChart.data.labels = data.map(function(item) {
+                return item.first_name ? item.first_name + ' ' + item.last_name : ' ';
+            });
+
+            clientBarChart.data.datasets[0].data = data.map(function(item) {
+                return item.countActiveClient;
+            });
+            clientBarChart.data.datasets[1].data = data.map(function(item) {
+                return item.countRecouvrement;
+            });
+            clientBarChart.data.datasets[2].data = data.map(function(item) {
+                return item.countResilier;
+            });
+            clientBarChart.data.datasets[3].data = data.map(function(item) {
+                return item.countAllClient;
+            });
+
+            clientBarChart.update();
+        } else {
+            initializeChart(data);
+        }
+    }
+    function sendDateValues35() {
+        var filterOption2 = $('#filterOption2').val();
+        var selectedChefSecteurId2 = (filterOption2 === 'byChefSecteur2') ? $('#chefsecteurSelect22').val() : null;
+        $.ajax({
+            url: '/client/client-data',
+            type: 'GET',
+            data: {
+                filterOption2: filterOption2,
+                distributeur: selectedChefSecteurId2
+            },
+            success: function (response) {
+                if (response.length > 0) {
+                    updateChart(response);
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+    $('#filterOption2').change(function () {
+        if ($('#filterOption2').val() === 'byChefSecteur2') {
+            $('#chefSecteurRow22').show();
+        } else {
+            $('#chefSecteurRow22').hide();
+        }
+        sendDateValues35(); 
+    });
+        $('#chefsecteurSelect22').change(sendDateValues35);
+    sendDateValues35();
+});
+
+}
+</script>
+
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Modifier une gouvernorat</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <form class="form-sample" action="#" th:action="@{|/ville/editgouvernorat/${ville.gouvernoratId}|}"
+                                  method="POST" th:object="${ville}">
+                                <label class="col-sm-3 col-form-label">Nom de la gouvernorat</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="villeName"
+                                           th:field="${ville.gouvernoratName}"
+                                           th:required="required"/>
+                                </div>
+                                <div th:if="${existedCode != null}" class="alert alert-danger notification"
+                                     role="alert">
+                                    <p>gouvernorat existe deja</p>
+                                </div>
+                                <div class="card-footer" style="margin-top: 20px; text-align: center;">
+                                    <button type="submit" class="btn btn-success" style="margin-right: 20px;">Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger" style="margin-left: 20px;"
+                                            onclick="history.go(-1);">Annuler
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+</html>

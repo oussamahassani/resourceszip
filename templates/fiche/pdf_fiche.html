@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Fiche</title>
+
+    <!--    <link th:href="@{/vendors/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">-->
+
+    <style type="text/css">
+        :required {
+            border: 2px dotted orange;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+
+       <div class="card shadow mb-4">
+                      
+                   <div class="card-body">
+                        
+                          <form th:action="@{/imprimer}" method="post">
+                          
+                          
+                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                         <h1 class="h3 mb-0 text-gray-800">Details Fiche</h1>
+                      
+                    </div>
+                              <div class="row">      
+                               
+                                      <div class="form-group col col-md-auto">
+         <label for="name" class="col-form-label" style="font-weight:bold;">ID Fiche :</label> 
+                          <label for="name" class="col-form-label" th:utext="${fiche.IdFiche}"></label> 
+                                      </div>
+                                      
+                            <div class="form-group col col-md-auto">
+       <label for="name" class="col-form-label" style="font-weight:bold;">Reference Fiche :</label> 
+                          <label for="name" class="col-form-label" th:utext="${fiche.ref_fiche}"></label> 
+                             </div>
+                        
+                            <div class="form-group col col-md-auto">
+        <label for="name" class="col-form-label" style="font-weight:bold;">Date Creation : </label> 
+                          <label for="name" class="col-form-label" th:utext="${fiche.date}"></label> 
+                             </div>       
+                            
+                            </div> 
+                            
+                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                         <h1 class="h3 mb-0 text-gray-800">Details Destinataire</h1>
+                      
+                    </div>
+                                    <div class="row">      
+                            
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label" style="font-weight:bold;">ID destinataire : </label> 
+                                <label for="name" class="col-form-label" th:utext="${users.userid}"></label> 
+                             </div>
+                             
+                           <div class="form-group col col-md-auto">
+                           <label for="name" class="col-form-label" style="font-weight:bold;">Nom destinataire :</label> 
+                          <label for="name" class="col-form-label" th:utext="${users.firstName}"></label> 
+                           </div> 
+                           
+                         <div class="form-group col col-md-auto">
+                           <label for="name" class="col-form-label" style="font-weight:bold;">Email destinataire :</label> 
+                           <label for="name" class="col-form-label" th:utext="${users.email}"></label> 
+                        </div>       
+                            
+                            </div>     
+                                  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                   <h1 class="h3 mb-0 text-gray-800">Liste modems affecté</h1>
+                      
+                    </div>
+                            <div class="row">     
+                                                 
+                         <div class="form-group col col-md-auto">
+                           <label for="name" class="col-form-label" style="font-weight:bold;">Quantité affectée :</label> 
+                           <label for="name" class="col-form-label" th:utext="${quantite}"></label> 
+                        </div> 
+                           <table class="table table-bordered" width="100%" cellspacing="0" >
+                                  <thead>
+                       <tr>
+                             
+						<th>Reference modem</th>
+						<th>Numero Serie</th>	
+						<th>Model</th>
+						<th>Marque</th>					
+						<th>Email</th>
+						<th>Password</th>
+						</tr>
+					</thead>
+				
+					<tbody>
+					<tr th:each="ob:${modems}">
+						<td th:text=${ob.reference}></td>
+						<td th:text=${ob.numSerie}></td>
+						<td th:text=${ob.modelModem}></td>
+						<td th:text=${ob.marque}></td>
+	                    <td th:text=${ob.email}></td>
+	                    <td th:text=${ob.password}></td> 
+	           
+					</tr>
+                    </tbody>
+                                </table> 
+                              </div>              
+               
+                             <div class="col-md-6">
+                                <input data-toggle="modal" data-target="#confirmerimpression"  class="btn btn-primary" value=" Imprimer ">
+                                    <a th:href="@{/fiches}" class="btn btn-danger">
+                                        <span class="text">Annuler</span>
+                                    </a>
+                                                       </div>
+                           
+                           
+                              <div class="modal fade" id="confirmerimpression" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Imprimer Fiche</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Cliquez sur Confirmer si vous voulez continuer l'impression.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+                 <input type="submit" class="btn btn-primary" value="Confirmer"> </input> 
+                </div>
+            </div>
+        </div>
+    </div>
+                           
+    
+                   
+                  </form> 
+                        </div>
+
+                    </div>
+                    
+                    
+</section>
+</body>
+</html>

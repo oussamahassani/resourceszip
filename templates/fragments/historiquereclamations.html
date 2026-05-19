@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="historique(reclamationHistory)">
+<div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="historiqueDataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>Réf réclamation</th>
+                                <th>Type</th>
+                                <th>Motifs</th>
+                                <th>statut</th>
+                                <th>Date réclamation tt</th>
+                                <th>Date création CRM </th>
+                                <th>Date état tt</th>
+                                <th>Cree par</th>
+                                
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                           
+                                   <tr th:each="ob:${reclamationHistory}">
+                                <td>
+								    <a th:href="@{/reclamations/getReclamation/{id}(id=${ob.reclamationid})}" 
+								       th:text="${ob.ref_reclamation}" target="_blank"></a>
+								</td>
+
+                                 <td th:text="${ob.serviceType.categorytype}"></td>
+                                 <td th:text="${ob.motif.nomMotif}"></td>
+                                 <td th:text="${ob.status.nomStatut}"></td>
+                                 <td th:text="${ob.date_reclamationtt}"></td>
+                                <td th:text="${ob.createdDate}"></td>
+                               <!--<td th:text="${#dates.format(ob.createddate, 'dd-MM-yyyy')} "></td>--> 
+                                <td th:text="${ob.date_etattt}"></td>
+                               <td>
+							    <em th:if="${ob.createdby != null}"
+							        th:text="${ob.createdby.firstName + ' (' + ob.createdby.codeUser + ')'}">
+							    </em>
+							</td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    <footer >
+        <p>&copy;Chifco 2022</p>
+    </footer>
+        <script>
+    $(document).ready(function () {
+        $('#historiqueDataTable').DataTable({
+            "language": {
+                "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                "sInfo": "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
+                "sInfoEmpty": "Affichage de l'élément 0 à 0 sur 0 éléments",
+                "sInfoFiltered": "(filtré de _MAX_ éléments au total)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ",",
+                "sLengthMenu": "Afficher _MENU_ éléments",
+                "sLoadingRecords": "Chargement...",
+                "sProcessing": "Traitement...",
+                "sSearch": "Rechercher :",
+                "sZeroRecords": "Aucun élément correspondant trouvé",
+                "oPaginate": {
+                    "sFirst": "Premier",
+                    "sPrevious": "<",
+                    "sNext": ">",
+                    "sLast": "Dernier"
+                },
+
+            },
+            order: [1, "desc"],
+            columnDefs: [{
+	    	    orderable: false,
+	    	    targets: [0 , 2],
+	    	    
+	      
+	    	  }],
+	    	    destroy: true,
+	    	    searching: false
+        });
+    });
+</script>
+    </div>
+</body>
+</html>

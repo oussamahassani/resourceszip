@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorator="layout">
+
+<head>
+
+	<title>Detail réclamation</title>
+	<link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+	<style>
+		.select2-container .select2-search--dropdown .select2-search__field {
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			padding: 5px;
+		}
+
+		.select2-container {
+			position: relative;
+		}
+
+		.select2-dropdown {
+			position: absolute;
+			z-index: 1061;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<h1 class="m-0">Fiche d’information réclamation</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-12 grid-margin"></div>
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+									<li class="nav-item"><a class="nav-link active" id="custom-tabs-info-tab"
+											data-toggle="pill" href="#custom-tabs-info" role="tab"
+											aria-controls="custom-tabs-info" aria-selected="true">Information</a>
+									</li>								
+									<li class="nav-item" sec:authorize="hasAnyAuthority('READ_HISTORIQUE_CLIENT')"><a
+											class="nav-link" id="historique-tabs-action-tab" data-toggle="pill"
+											href="#historique-tabs-action" role="tab"
+											aria-controls="historique-tabs-action" aria-selected="false">Historique </a>
+									</li>
+								
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info" role="tabpanel"
+										aria-labelledby="custom-tabs-info-tab">
+										<div class="row">
+										
+									<button type="button" class="btn btn-info" data-toggle="modal" data-target="#interventionModal" sec:authorize="hasAnyAuthority('CREATE_INTERVENTION')"
+									   th:if="${!(reclamation.category == 'Client'
+                and reclamation.serviceType != null
+                and reclamation.serviceType.categorytype == 'Technique')}">
+							 		 <i class="fa fa-plus-circle"></i> Créer une intervention
+										</button>
+
+							
+							<!-- Modal -->
+							<div class="modal fade" id="interventionModal" tabindex="-1" aria-labelledby="interventionModal" aria-hidden="true">
+							  <div class="modal-dialog">
+							    <div class="modal-content">
+							      <!-- Modal Header -->
+							      <div class="modal-header">
+							        <h5 class="modal-title" id="interventionModalLabel">Crée une intervention</h5>
+							        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+							      </div>
+							      <!-- Modal Body -->
+							      <div class="modal-body">
+							        <!-- Intervention Form -->
+							       <form sec:authorize="hasAnyAuthority('CREATE_INTERVENTION')"
+						              th:action="@{/reclamations/addIntervention}" method="POST">
+						          <!-- Reclamation ID -->
+						          <input type="hidden" name="reclamationid" th:value="${reclamation.reclamationid}" />
+						
+						          <!-- Status -->
+						          <!-- Dynamic Status Dropdown using nomStatut -->
+									<div class="mb-3">
+									  <label for="status" class="form-label">Statut</label>
+									  <select class="form-select" id="status" name="status" required>
+									    <option value="">-- Choisir un statut --</option>
+									    <option th:each="status : ${statusList}"
+									            th:value="${status.nomStatut}"
+									            th:text="${status.designation}">
+									    </option>
+									  </select>
+									</div>						
+						          <!-- Description -->
+						          <div class="mb-3">
+						            <label for="description" class="form-label">Description</label>
+						            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+						          </div>
+						
+									          <!-- Submit Button -->
+									          <div class="modal-footer">
+									            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+									            <button type="submit" class="btn btn-primary">Créer</button>
+									          </div>
+									        </form>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+										<!--end modal for créer une intervention -->
+										<!-- add technician intervention -->
+										<button type="button" class="btn btn-warning ml-2" data-toggle="modal" data-target="#interventionModalTech" sec:authorize="hasAnyAuthority('CREATE_INTERVENTION_AGENT')"
+									   th:if="${canSeeMycomplaints != null and canSeeMycomplaints  }">
+							 		 <i class="fa fa-plus-circle"></i> Intervention technicien
+										</button>
+
+							
+							<!-- Modal -->
+							<div class="modal fade" id="interventionModalTech" tabindex="-1" aria-labelledby="interventionModalTech" aria-hidden="true">
+							  <div class="modal-dialog">
+							    <div class="modal-content">
+							      <!-- Modal Header -->
+							      <div class="modal-header">
+							        <h5 class="modal-title" id="interventionModalLabel">Crée une intervention</h5>
+							        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+							      </div>
+							      <!-- Modal Body -->
+							      <div class="modal-body">
+							        <!-- Intervention Form -->
+							       <form sec:authorize="hasAnyAuthority('CREATE_INTERVENTION_AGENT')"
+						              th:action="@{/reclamations/addInterventionTech}" method="POST">
+						          <!-- Reclamation ID -->
+						          <input type="hidden" name="reclamationid" th:value="${reclamation.reclamationid}" />
+						
+						          <!-- Status -->
+						          <!-- Dynamic Status Dropdown using nomStatut -->
+									<div class="mb-3">
+									  <label for="status" class="form-label">Statut</label>
+									  <select class="form-select" id="status" name="status" required>
+									    <option value="">-- Choisir un statut --</option>
+									    <option value="Affectée">Affectée</option>
+									    <option value="Prise en charge">Prise en charge</option>
+									    <option value="En attente client">En attente client</option>
+									    <option value="En attente matériel">En attente matériel</option>
+									    <option value="Diagnostic en cours">Diagnostic en cours</option>
+									    <option value="Adresse incorrecte">Adresse incorrecte</option>
+									    <option value="Panne externe">Panne externe</option>
+									    <option value="Hors périmètre">Hors périmètre</option>
+									    <option value="Résolue">Résolue</option>
+									    <option value="Replanifié">Replanifié</option>
+									    
+									  </select>
+									</div>						
+						          <!-- Description -->
+						          <div class="mb-3">
+						            <label for="description" class="form-label">Description</label>
+						            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+						          </div>
+						
+									          <!-- Submit Button -->
+									          <div class="modal-footer">
+									            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+									            <button type="submit" class="btn btn-primary">Créer</button>
+									          </div>
+									        </form>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+																												
+							<button th:if="${reclamation.client} != null and ${reclamation.serviceType.categorytype} == 'Technique' "
+							        type="button" class="btn btn-primary ml-2"
+							        data-toggle="modal" data-target="#referencettModal"
+							        sec:authorize="hasAnyAuthority('CREATE_REFERENCE_TT')">
+							  <i class="fa fa-plus-circle"></i>
+							  <span th:text="${reclamation.referencett != null and !#strings.isEmpty(reclamation.referencett) ? 'Modification des informations TT' : 'Ajouter des informations TT'}"></span>
+							</button>
+
+								<!-- Modal -->
+							<div class="modal fade" id="referencettModal" tabindex="-1" aria-labelledby="referencettModal" aria-hidden="true">
+							  <div class="modal-dialog">
+							    <div class="modal-content">
+							      <!-- Modal Header -->
+							      <div class="modal-header">
+							       <h5 class="modal-title" id="interventionModalLabel"
+								    th:text="${reclamation.referencett != null and !#strings.isEmpty(reclamation.referencett) ? 'Modification des informations TT' : 'Ajouter des informations TT'}">
+								    Ajouter des informations TT
+								</h5>
+
+							        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+							      </div>
+							      <!-- Modal Body -->
+							      <div class="modal-body">
+							        <!-- Intervention Form -->
+							       <form sec:authorize="hasAnyAuthority('CREATE_REFERENCE_TT')"
+						              th:action="@{/reclamations/addreferencett}" method="POST">
+						          <!-- Reclamation ID -->
+						          <input type="hidden" name="reclamationid" th:value="${reclamation.reclamationid}" />
+						          <input type="hidden" name="state" th:value="${reclamation.referencett != null and !#strings.isEmpty(reclamation.referencett) ? 'old' : 'new'}" />
+						          <div class="mb-3">
+						            <label for="description" class="form-label">Référence TT</label>
+						            <input class="form-control" id="referencett" name="referencett" rows="3" required
+						           th:value="${reclamation.referencett != null ? reclamation.referencett : ''}" />
+						          </div>
+						            <div class="mb-3">
+						            <label for="description" class="form-label">Etat TT</label>
+						            <select class="form-select" id="etattt" name="etattt" required>
+									    <option value="">-- Choisir un etat tt --</option>
+									    <option th:each="status : ${statusList}"
+									            th:value="${status.nomStatut}"
+									            th:text="${status.designation}"
+									             th:selected="${reclamation.etattt != null and status.nomStatut == reclamation.etattt}" >
+									    </option>
+									  </select>
+						           <!-- <input class="form-control" id="etattt" name="etattt" rows="3" required
+						           th:value="${reclamation.etattt != null ? reclamation.etattt : ''}" />-->
+						          </div>
+						          <div class="mb-3">
+								  <label for="date_reclamationtt" class="form-label">Date Réclamation TT</label>
+								  <input type="date" class="form-control" id="date_reclamationtt" name="date_reclamationtt" required
+								         th:value="${reclamation.date_reclamationtt != null ? #dates.format(reclamation.date_reclamationtt, 'yyyy-MM-dd') : ''}" />
+								</div>
+								
+								<div class="mb-3">
+								  <label for="date_etattt" class="form-label">Date État TT</label>
+								  <input type="date" class="form-control" id="date_etattt" name="date_etattt" required
+								         th:value="${reclamation.date_etattt != null ? #dates.format(reclamation.date_etattt, 'yyyy-MM-dd') : ''}" />
+								</div>
+								
+								<div class="mb-3">
+								  <label for="date_verificationfsi" class="form-label">Date Vérification FSI</label>
+								  <input type="date" class="form-control" id="date_verificationfsi" name="date_verificationfsi"
+								         th:value="${reclamation.date_verificationfsi != null ? #dates.format(reclamation.date_verificationfsi, 'yyyy-MM-dd') : ''}" />
+								</div>
+
+						
+									          <!-- Submit Button -->
+									          <div class="modal-footer">
+									            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+									            <button type="submit" class="btn btn-primary">Crée</button>
+									          </div>
+									        </form>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+										<!--end modal for créer une intervention -->
+										</div>
+
+										<form id="myForm" class="form-sample" >
+											
+											<div class="row" >
+												
+												<div class="col-sm-6" >
+													<!--user -->
+														<div class="card-block" th:if="${user != null}">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+															  <div class=" p-1  d-flex"  th:switch="${user.photo}">
+												                    <div class="image">
+												
+												                        <img th:case="null" class="img-circle elevation-2" th:src="@{/img/user2-160x160.jpg}"
+												                             alt="Profile image" width="200px">
+												                        <img th:case="*" class="img-circle elevation-2" th:src="@{${'/photos/'+user.email+'/'+user.photo}}"
+												                             alt="Profile image" width="200px">
+												                    </div>
+												
+												                </div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom:</label>
+																	<div class="col-sm-8" th:text="${user.firstName}"></div>
+																
+																
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Prénom:</label>
+																		<div class="col-sm-8" th:text="${user.lastName}"></div>
+																	
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Email:</label>
+																	<div class="col-sm-8" th:text="${user.email}"></div>
+																	
+																</div>
+
+															<div class="row">
+																	<label class="col-sm-4 col-form-label">Forme juridique:</label>
+																	<div class="col-sm-8" th:text="${user.formeJuridique}"></div>
+																	
+																</div>
+	                                                             <div class="row">
+																	<label class="col-sm-4 col-form-label">Identification fiscale:</label>
+																	<div class="col-sm-8" th:text="${user.identificationFiscale}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Class user :</label>
+																	<div class="col-sm-8" th:text="${user.classUser}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">plafon  :</label>
+																	<div class="col-sm-8" th:text="${user.plafonRevendeur}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">coordonnees Bancaires  :</label>
+																	<div class="col-sm-8" th:text="${user.coordonneesBancaires}"></div>
+																	
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">typeuser  :</label>
+																	<div class="col-sm-8" th:text="${user.typeUser}"></div>
+																	
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Role  :</label>
+																	<div class="col-sm-8" th:text="${user.role.roleName}"></div>
+																	
+																</div>
+																		<div class="row">
+																	<label class="col-sm-4 col-form-label">Activite Principale  :</label>
+																	<div class="col-sm-8" th:text="${user.ActivitePrincipale}"></div>
+																	
+																</div>
+																
+																<div class="row"  th:if="${user.gouvernorat != null}">
+																	<label class="col-sm-4 col-form-label">Gouvernorat:</label>
+																	<div class="col-sm-8"
+																		th:text="${user.gouvernorat.gouvernoratName}"></div>																	
+																</div>																
+																<div class="row" th:if="${user.ville != null}">
+																	<label class="col-sm-4 col-form-label">Ville:</label>
+																	<div class="col-sm-8"
+																		th:text="${user.ville.villeName}"></div>																	
+																</div>
+																
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Adresse:</label>
+																	<div class="col-sm-8" th:text="${user.adresse}"></div>																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Code
+																		postale:</label>
+																	<div class="col-sm-8" th:text="${postalCode}"></div>																	
+																</div>																																
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">stock
+																		:</label>
+																	
+																	<div th:switch="${user.withStock}"> 
+																	  <p th:case="'true'">Avec Stock</p>
+																	  <p th:case="'false'">Sans Stock</p>																	
+																	</div>
+																</div>																
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		:</label>
+																	<div class="col-sm-8" th:text="${user.telephone}"></div>
+																
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom commercial
+																		:</label>
+																	<div class="col-sm-8" th:text="${user.nomCommercial}"></div>
+																
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">interlocuteur
+																		:</label>
+																	<div class="col-sm-8" th:text="${user.interlocuteur}"></div>																
+																</div>				
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Regime fiscal:</label>
+																				<div class="col-sm-8" th:text="${user.RegimeFiscal}">																				
+																				</div>																				
+																</div>
+															</div>
+														</div>
+													</div>
+													<!-- abonnement -->
+													<div class="card-block" th:if="${abonnement != null}">
+														<div class="card-block-header">
+															<h4>Informations principales</h4>
+															<div class="card-block-body">
+															<input type="hidden" name="demandeid" th:field="${abonnement.clientid}" />
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom:</label>
+																	<div class="col-sm-8" th:text="${abonnement.firstName}">
+																	</div>
+																	<input type="hidden" name="firstName"
+																		th:field="${abonnement.firstName}" />
+																</div>
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Prénom:</label>
+																	<div class="col-sm-8" th:text="${abonnement.lastName}">
+																	</div>
+																	<input type="hidden" name="lastName"
+																		th:field="${abonnement.lastName}" />
+
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Email:</label>
+																	<div class="col-sm-8" th:text="${abonnement.email}">
+																	</div>
+																	<input type="hidden" name="email"
+																		th:field="${abonnement.email}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">CIN:</label>
+																	<div class="col-sm-8" th:text="${abonnement.cin}"></div>
+																	<input type="hidden" name="cin"
+																		th:field="${abonnement.cin}" />
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Gouvernorat:</label>
+																	<div class="col-sm-8"
+																		th:text="${abonnement.gouvernorat.gouvernoratName}">
+																	</div>
+																	<input type="hidden" name="gouvernoratName"
+																		th:field="${abonnement.gouvernorat.gouvernoratId}" />
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Ville:</label>
+																	<div class="col-sm-8"
+																		th:text="${abonnement.ville.villeName}"></div>
+																	<input type="hidden" name="villeName"
+																		th:field="${abonnement.ville.villeId}" />
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Adresse:</label>
+																	<div class="col-sm-8" th:text="${abonnement.adresse}">
+																	</div>
+																	<input type="hidden" name="adresse"
+																		th:field="${abonnement.adresse}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Code
+																		postale:</label>
+																	<div class="col-sm-8"
+																		th:text="${abonnement.codePostale?.code}"></div>
+
+
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		mobile:</label>
+																	<div class="col-sm-8" th:text="${abonnement.telMobile}">
+																	</div>
+																	<input type="hidden" name="telMobile"
+																		th:field="${abonnement.telMobile}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		mobile2:</label>
+																	<div class="col-sm-8"
+																		th:text="${abonnement.telMobile2}"></div>
+																	<input type="hidden" name="telMobile2"
+																		th:field="${abonnement.telMobile2}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Téléphone
+																		fixe:</label>
+																	<div class="col-sm-8" th:text="${abonnement.telFixe}">
+																	</div>
+																	<input type="hidden" name="telFixe"
+																		th:field="${abonnement.telFixe}" />
+																</div>
+
+																<div class="row">
+																	<label
+																		class="col-sm-4 col-form-label">Profession:</label>
+																	<div class="col-sm-8"
+																		th:text="${abonnement.profession?.name}"></div>
+																	<input type="hidden" name="profession"
+																		th:field="${abonnement.profession.professionId}" />
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Fax:</label>
+																	<div class="col-sm-8" th:text="${abonnement.fax}"></div>
+																	<input type="hidden" name="fax"
+																		th:field="${abonnement.fax}" />
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Situation
+																		Familiale:</label>
+																	<div class="col-sm-8"
+																		th:text="${abonnement.situationFamiliale}"></div>
+																</div>
+
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Date de
+																		naissance:</label>
+																	<div class="col-sm-8"
+																		th:text="${#dates.format(abonnement.dateNaissance, 'dd-MM-yyyy')}">
+																	</div>
+																</div>
+																<div class="row"
+																	sec:authorize="hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+																	<label class="col-sm-4 col-form-label">Chef de
+																		famille:</label>
+																	<div class="col-sm-8"
+																		th:if="${abonnement.houseHolder != null}"
+																		th:text="${abonnement.houseHolder ? 'Oui' : 'Non'}">
+																	</div>
+																</div>
+																<div class="row"
+																	sec:authorize="hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+																	<label class="col-sm-4 col-form-label">A une carte
+																		bancaire:</label>
+																	<div class="col-sm-8"
+																		th:if="${abonnement.hasBankCard != null}"
+																		th:text="${abonnement.hasBankCard ? 'Oui' : 'Non'}">
+																	</div>
+																</div>
+																<div class="row"
+																	sec:authorize="hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+																	<label class="col-sm-4 col-form-label">Recu
+																		SMS:</label>
+																	<div class="col-sm-8"
+																		th:if="${abonnement.isSmsClientSend != null}"
+																		th:text="${abonnement.isSmsClientSend ? 'Oui' : 'Non'}">
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												
+												</div>
+												<div class="col-sm-6">
+													<div class="card-block">
+														<h4>Informations Réclamation</h4>
+														<div class="card-block-body">
+															<div>
+																
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Référence</label>
+																	<p class=""	th:text="${reclamation.ref_reclamation}" />
+																</div>
+																<div class="row" >
+																<label class="col-sm-4 col-form-label">Catégorie:</label>
+																<div class="col-sm-8"
+																	th:text="${reclamation.category}"></div>
+
+															</div>
+																<div class="row">
+																<label class="col-sm-4 col-form-label">Type de Service:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${reclamation.serviceType.categorytype}"></div>
+
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Statut:</label>
+																<div class="col-sm-8"
+																	th:text="${reclamation.status.designation}"></div>
+																
+															</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Description:</label>
+
+																	<p class="col-sm-8"
+																		th:text="${reclamation.description}"></p>
+																</div>
+
+															</div>
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Motif:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${reclamation.motif?.nomMotif}"></div>
+
+															</div>
+															<div class="row" th:if="${reclamation.autre} != null and ${reclamation.autre} != ''">
+																<label class="col-sm-4 col-form-label">Autre:</label>
+																<div class="col-sm-8" name="produit"
+																	th:text="${reclamation.autre}"></div>
+
+															</div>
+															
+														
+															<div class="row">
+																<label class="col-sm-4 col-form-label">Créé Par</label>
+
+																<div class="col-sm-8"
+																	th:text="${reclamation.createdby.lastName + ' ' + reclamation.createdby.firstName}"></div>
+															</div>
+																<div class="row">
+																<label class="col-sm-4 col-form-label">Modifié Par</label>
+
+																<div class="col-sm-8"
+																	th:text="${reclamation.editedby.lastName + ' ' + reclamation.editedby.firstName}"></div>
+															</div>
+																<div class="row">
+																<label class="col-sm-4 col-form-label">Date Création</label>
+
+																<div class="col-sm-8"
+																	th:text="${#dates.format(reclamation.createdDate, 'dd/MM/yyyy HH:mm')}"></div>
+															</div>
+																<div class="row">
+																<label class="col-sm-4 col-form-label">Date Modification</label>
+
+																<div class="col-sm-8"
+																	th:text="${#dates.format(reclamation.modifiedDate, 'dd/MM/yyyy HH:mm')}"></div>
+															</div >
+															<div th:if="${reclamation.serviceType.categorytype} == 'Technique' and ${reclamation.category} == 'Client'">
+																<div class="row" th:if="${reclamation.referencett} != null and ${reclamation.referencett} != ''">
+																<label class="col-sm-4 col-form-label">Référence TT:</label>
+																<div class="col-sm-8"
+																	th:text="${reclamation.referencett}">
+																</div>
+
+															</div>
+															
+															<div class="row" th:if="${reclamation.etattt} != null and ${reclamation.etattt} != ''">
+																<label class="col-sm-4 col-form-label">Etat TT:</label>
+																<div class="col-sm-8"
+																	th:text="${reclamation.etattt}">
+																</div>
+
+															</div>
+															<div class="row" th:if="${reclamation.date_reclamationtt != null and reclamation.date_reclamationtt != 0}">
+															  <label class="col-sm-4 col-form-label">Date Réclamation TT:</label>
+															  <div class="col-sm-8" th:text="${#dates.format(reclamation.date_reclamationtt, 'dd/MM/yyyy HH:mm')}"></div>
+															</div>
+															
+															<div class="row" th:if="${reclamation.date_etattt != null and reclamation.date_etattt != 0}">
+															  <label class="col-sm-4 col-form-label">Date État TT:</label>
+															  <div class="col-sm-8" th:text="${#dates.format(reclamation.date_etattt, 'dd/MM/yyyy HH:mm')}"></div>
+															</div>
+															
+															<div class="row" th:if="${reclamation.date_verificationfsi != null and reclamation.date_verificationfsi != 0}">
+															  <label class="col-sm-4 col-form-label">Date Vérification FSI:</label>
+															  <div class="col-sm-8" th:text="${#dates.format(reclamation.date_verificationfsi, 'dd/MM/yyyy HH:mm')}"></div>
+															</div>
+															</div>
+														
+														</div>
+													</div>
+												<!-- documents block -->
+												<div class="card-block">
+												  <h4>Les documents</h4>
+												  <div class="card-block-body">
+												    <div class="row">
+												      <div class="col-sm-12">
+												        <ul style="list-style-type: none; padding-left: 0;">
+												          <li th:each="justificatif : ${reclamation.justificatifs}" style="margin-bottom: 15px;">
+												            <!-- Images -->
+												            <img th:if="${justificatif != null and (justificatif.toLowerCase().endsWith('.jpg') or justificatif.toLowerCase().endsWith('.jpeg') or justificatif.toLowerCase().endsWith('.png'))}"
+														     th:src="@{${'/reclamation/'+justificatif}}"
+														     style="height: 150px; width: 150px; cursor: pointer; margin-right: 10px;"
+														     th:attr="data-src=@{'/reclamation/' + ${justificatif}}" 
+														     class="clickable-image"/>
+												
+												            <!-- PDFs -->
+												            <a th:if="${justificatif != null and justificatif.toLowerCase().endsWith('.pdf')}"
+												               th:href="@{${'/reclamation/'+justificatif}}"
+												               target="_blank"
+												               style="display: inline-block; margin-right: 10px; font-weight: bold; color: #007bff;">
+												               <i class="fa fa-file-pdf"></i> <span th:text="${justificatif}"></span>
+												            </a>
+												          </li>
+												        </ul>
+												      </div>
+												    </div>
+												  </div>
+												</div>
+												
+												<!-- Modal for images -->
+												<div class="modal fade" id="imgModalPopup" tabindex="-1" role="dialog" aria-hidden="true">
+												  <div class="modal-dialog modal-dialog-centered">
+												    <div class="modal-content">
+												      <div class="modal-body p-0">
+												        <img id="imgModalContent" src="" style="width:100%">
+												      </div>
+												      <div class="modal-footer">
+												        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Fermer</button>
+												      </div>
+												    </div>
+												  </div>
+												</div>
+												
+												<script th:inline="javascript">
+												  $(document).ready(function() {
+												    $('.clickable-image').click(function() {
+												      var imgSrc = $(this).attr('data-src');
+												      $('#imgModalContent').attr('src', imgSrc);
+												      $('#imgModalPopup').modal('show');
+												    });
+												  });
+												</script>
+
+												
+												
+												
+												</div>
+											</div>
+										</form>
+										<fieldset class="border p-2">
+											<legend class="float-none w-auto p-2">Ajouter Commentaire </legend>
+											<form class="form-upload m-1 row" action="#"
+												th:action="@{/reclamations/addComment}" method="POST"
+												id="form-SendCommentair">
+												<div class="d-flex justify-content-around align-items-center col-md-10">
+													<div>
+
+														<input type="hidden" name="reclamationid"
+															th:field="${reclamation.reclamationid}" />
+														<p id="errormessage"> </p>
+														<textarea rows="" cols="" id="styledextArea" name="cometaire"
+															class="comentaire" onfocus="setbgTextArea('#e5fff3');"
+															onblur="setbgTextArea('white')"
+															placeholder="Écrivez votre commentaire ici.   "
+															required></textarea>
+													</div>
+													<button class="btn comentButton">Ajouter</button>
+												</div>
+											</form>
+										</fieldset>
+									</div>
+
+									<div class="tab-pane fade" id="historique-tabs-action" role="tabpanel"
+										aria-labelledby="historique-tabs-action-tab">
+										<div th:insert="fragments/reclamationHistory :: historique(${reclamationHistory})">
+										</div>
+
+
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			<input type="hidden" name="message" id="message" th:value="${message} ?  ${message} : ''" />
+			          <input type="hidden" name="canSeeMycomplaints" th:value="${canSeeMycomplaints}" id="canSeeMycomplaints"/>
+
+		</section>
+
+
+		<!-- Pour afficher l'image dans une popup bootstrap -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="myModalLabel">Image</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<img id="imgModal" src="" style="width:100%">
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+	var canSeeMycomplaints = document.getElementById("canSeeMycomplaints").value;
+
+	var messagenotif = document.getElementById("message").value;
+if (messagenotif !== "" && messagenotif == "comentaireAjouter") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Un commentaire a été ajouté",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+// --- Intervention ajoutée ---
+if (messagenotif !== "" && messagenotif == "interventionAjouter") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une intervention a été ajoutée",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+// --- Référence TT ajoutée avec succès ---
+if (messagenotif !== "" && messagenotif == "referencettAjouter") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Les paramètres TT a été ajoutée avec succès.",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+// --- Référence TT modifié avec succès ---
+if (messagenotif !== "" && messagenotif == "referencettModifier") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Les paramètres TT a été modifié avec succès.",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+// --- Erreur de paramètres manquants ---
+if (messagenotif !== "" && messagenotif == "paramaterManquante") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une erreur est survenue !",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+// --- Référence TT déjà existante (nouvelle insertion) ---
+if (messagenotif !== "" && messagenotif == "referencettExistDeja") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Cette référence TT existe déjà dans le système !",
+        class: "bg-warning",
+        autohide: true,
+        delay: 10000,
+    });
+}
+
+// --- Référence TT modifiée vers une existante ---
+if (messagenotif !== "" && messagenotif == "referenceModifierExiste") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Impossible de modifier : la nouvelle référence TT existe déjà !",
+        class: "bg-warning",
+        autohide: true,
+        delay: 10000,
+    });
+}
+		// Au clic de l'image , Pour afficher l'image dans une popup bootstrap
+	$("#prev").click(function () {
+		// Récupération de l'URL de l'image
+		var imgSrc = $(this).attr('src');
+		// Affichage de la popup
+		$('#imgModal').attr('src', imgSrc);
+		$('#myModal').modal('show');
+	});
+
+	$("#prev2").click(function () {
+		// Récupération de l'URL de l'image
+		var imgSrc = $(this).attr('src');
+		// Affichage de la popup
+		$('#imgModal').attr('src', imgSrc);
+		$('#myModal').modal('show');
+	});
+
+</script>

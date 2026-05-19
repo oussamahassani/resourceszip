@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Visites</title>
+     <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Liste des visites</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <div class="row">
+            <div class="col-12">
+          
+              <div class="card shadow mb-4">
+              <div class="d-flex">
+                <div class="blocFilter">
+                   <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+                </div>
+                  <div class="blocFilter">
+                                          <button
+                    id="downloadenmasse"
+                    class="d-inline-block btn btn-sm btn-info shadow-sm mb-3"
+                    sec:authorize="hasAnyAuthority('VISIT_EXTRAIR_LIST')"
+                  >
+                    Extraire la liste des visites
+                  </button>       
+                  </div>
+                        <form
+                    id="myForm"
+                    class="form-sample"
+                    method="get"
+                    action=""
+                    style="display: none"
+                  >
+					<input type="hidden" id="ExportRechercheReference"  name="ExportRechercheReference"><br>
+					<input type="hidden" id="ExportRechercheTypeVisit" name="ExportRechercheTypeVisit"><br>
+					<input type="hidden" id="ExportRechercheStatus" name="ExportRechercheStatus"><br>
+					 <input type="hidden" id="ExportRechercheCreepar" name="ExportRechercheCreepar"><br>
+					 <input type="hidden" id="ExportRechercheRevendeur" name="ExportRechercheRevendeur"><br>
+					  <input type="hidden" id="ExportRecherchedatedebut" name="ExportRecherchedatedebut"><br>
+					<input type="hidden" id="ExportRecherchedatefin" name="ExportRecherchedatefin"><br>
+      
+                  </form>   
+                  </div>
+                    <form id="showMe3" method="get" >
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="statutListfiltre"
+                          >status</label
+                        >
+                        <select
+                          id="status"
+                          name="status"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                      <option value = ''>Statut</option>
+                      <option value="Ouverte">Ouverte</option>
+                      <option value="En cours">En cours</option>
+                      <option value="Annulée">Annulée </option>
+                       <option value="Planifiée">Planifiée</option>
+                      <option value="Terminée">Terminée</option>
+                      
+                      </select>
+                      </div>
+					     <div class="col-sm-6 col-md-4">
+						  <label class="col-form-label" for="typeVisite">Type de visite</label>
+						  <select
+						    id="typeVisite"
+						    name="typeVisite"
+						    data-control="select2"
+						    data-placeholder="Select type de visite"
+						    class="form-control js-select2"
+						    th:onchange="|onchangeSearch(event)|"
+						  >
+						    <option value="">Type de visite</option>
+						    <option
+						      th:each="type : ${typevisites}"
+						      th:value="${type.nomType}" 
+						      th:text="${type.nomType}" 
+						    ></option>
+						  </select>
+						</div>
+
+                                                 
+                      <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="reference_visite">référence visite</label>
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="reference_visite"
+                          placeholder="reference_visite"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                     
+                       <div class="col-sm-6 col-md-3"   sec:authorize="hasAnyAuthority('READ_VISIT_LIST','READ_VISIT_LIST_OWNER')" >
+                        <label class="col-form-label" for="revendeurs"
+                          >Revendeurs</label
+                        >
+                        <select
+                          id="revendeur"
+                          name="revendeur"
+                          data-control="select2"
+                           data-placeholder="Select revendeur"
+                          class="form-control js-select2"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                          <option value="">Revendeurs</option>
+                          <option
+                            th:if="${user.interlocuteur != null}"
+                            th:each="user : ${revendeurs}"
+                            th:value="${user.userid}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName} + ' ' +${user.interlocuteur}"
+                          ></option>
+                          <option
+                            th:if="${user.interlocuteur == null}"
+                            th:each="user : ${revendeurs}"
+                            th:value="${user.userid}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"
+                          ></option>
+                        </select>
+                      </div>
+                                            <div class="col-sm-6 col-md-3"   sec:authorize="hasAnyAuthority('READ_VISIT_LIST')" >
+                        <label class="col-form-label" for="professions"
+                          >Créer  par</label
+                        >
+                        <select
+                          id="Creepar"
+                          name="Creepar"
+                          data-control="select2"
+                          class="form-control js-select2"
+                          data-placeholder="Select Created Utilisateur"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                          <option value="">Crée par</option>
+                          <option
+                            th:if="${user.interlocuteur != null}"
+                            th:each="user : ${chefsecteurs}"
+                            th:value="${user.userid}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName} + ' ' +${user.interlocuteur}"
+                          ></option>
+                          <option
+                            th:if="${user.interlocuteur == null}"
+                            th:each="user : ${AffectedTo}"
+                            th:value="${user.userid}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"
+                          ></option>
+                        </select>
+                      </div>
+                      </div>
+                      <div class="row w-100 ml-2">
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date de création: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datedebut" id="datedebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datefin" id="datefin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                                                                                      
+                    </div>
+                   
+                          <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                      </form>
+                             </div>
+                             </div>
+                             </div>
+             
+					       <div class="row">
+					        <div class="col-12 grid-margin">
+					            <div >
+					                <div class="card-body">
+					                    <div >
+					
+					                              <div id="model">
+					
+					                              </div>
+					
+					                    </div>
+					                </div>
+					
+					            </div>
+					        </div>
+					    </div>
+					        </div>
+        
+                    <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                  <div>
+                    <div class="blocy">
+                      <table
+                        id="tutorialTable"
+                        class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+                      >
+                        <!-- Header Table -->
+                        <thead class="table dataTable no-footer">
+                          <tr>
+				            <th>Référence</th>
+				            <th>Type Visite</th>
+				            <th>Revendeur</th>
+				            <th>Durée Visite</th>
+				            <th>Date de création</th>
+				            <th>Status</th>
+				            <th sec:authorize="hasAnyAuthority('READ_VISIT_LIST')">Crée Par</th>
+				            <th>Actions</th>
+				        </tr>
+					    </thead>
+					    <tbody>
+				
+					    </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+       </section>
+
+</section>
+</body>
+</html>
+<script th:inline="javascript">
+	  var READ_VISIT_LIST = /*[[${READ_VISIT_LIST}]]*/ "default";
+  var oTable;
+  let Reference = "";
+  let typeVisite = "";
+  let Revendeur = "";
+  let Status = "";
+  let Tel = "";
+  let datedebut = "";
+  let datefin = "";
+  let Creepar = "";
+  let reference_visite="";
+
+  function showmodel(rows) {
+    var data = oTable.row($(rows).parents("tr")).data();
+    let htmlfooter = "";
+
+    var messagenotif = document.getElementById("message").value;
+    if (messagenotif !== "" && messagenotif === "clientupdated") {
+      $(document).Toasts('create', {
+        title: "La modification a été effectuée avec succès",
+        body: "",
+        class: 'bg-success',
+        autohide: true,
+        delay: 10000
+      });
+    }
+  }
+
+  $("#togglebutton").click(function () {
+    $("#showMe3").toggle();
+  });
+
+  function onchangeSearch(event) {
+    let name = event.target.name;
+    switch (name) {
+      case "reference_visite":
+        reference_visite = event.target.value;
+        break;
+      case "typeVisite":
+        typeVisite = event.target.value;
+        break;
+      case "revendeur":
+        Revendeur = event.target.value;
+        break;
+      case "status":
+        Status = event.target.value;
+        break;
+      case "Tel":
+        Tel = event.target.value;
+        break;
+      case "datedebut":
+        datedebut = event.target.value;
+        break;
+      case "datefin":
+        datefin = event.target.value;
+        break;
+      case "Creepar":
+        Creepar = event.target.value;
+        break;
+    }
+  }
+
+  function onclicksherh(event) {
+    event.preventDefault();
+    $("#tutorialTable").DataTable().column(0).search(
+      JSON.stringify({
+        reference_visite: reference_visite,
+        typeVisite: typeVisite,
+        Revendeur: Revendeur,
+        Status: Status,
+        datedebut: datedebut,
+        datefin: datefin,
+        Creepar: Creepar
+      })
+    ).draw();
+  }
+
+ oTable = $("#tutorialTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    order: [3, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: true,
+    fixedHeader: true,
+    ajax: "/visite/getallvisites",
+    lengthMenu: [
+      [10, 20, 50 , 100 , 200,500],
+      [10, 20, 50 , 100 , 200,500],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+
+    },
+    
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+			if (row.reference_visite)
+          return row.reference_visite;
+          else return "";
+        },
+      },
+        {
+        data: null,
+        render: function (data, type, row) {
+			if (row.typeVisite)
+          return row.typeVisite.nomType;
+          else return "";
+        },
+      },
+       {
+        data: null,
+        render: function (data, type, row) {
+			if (row.revendeur)
+          return row.revendeur;
+          else return "";
+        },
+      },
+    
+      {
+        data: null,
+        render: function (data, type, row) {
+          let hours = row.dureeVisiteHeures || 0;
+          let minutes = row.dureeVisiteMinutes || 0;
+          return hours === 0 && minutes === 0 ? "" :
+                 hours !== 0 && minutes === 0 ? `${hours} H` :
+                 hours === 0 && minutes !== 0 ? `${minutes} m` :
+                 `${hours} H: ${minutes} m`;
+        },
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return new Date(row.createdDate).toLocaleDateString("en-GB");
+        },
+      },
+  
+      {
+        data: null,
+        render: function (data, type, row) {
+			if (row.status){return row.status;}
+          
+          else return "";
+        },
+      },
+ 
+      /*{
+        data: null,
+        render: function (data, type, row) {
+          return row.createdBy ? `${row.createdBy.firstName} ${row.createdBy.lastName}` : null;
+        },
+      },*/
+      ...(READ_VISIT_LIST ? [{
+      data: null,
+      render: function (data, type, row) {
+        return row.createdBy ? `${row.createdBy.firstName} ${row.createdBy.lastName}` : null;
+      },
+    }] : []),
+      
+      {
+        data: null,
+        render: function (data, type, row) {
+      let viewclient =     ` <a  href='/visite/viewvisite/`+row.id+`''>
+                        <button type="button" class="d-none d-sm-inline-block btn  btn-primary btn-flat shadow-sm">
+                        Détails  <i class="fa fa-eye" aria-hidden="true"></i></button> 
+                    </a>` ;
+                    return viewclient;
+        }
+      }
+    ],
+    initComplete: function (json) {
+    }
+  });
+  
+  
+  
+$("#downloadenmasse").click(function (e) {
+    e.preventDefault();
+console.log("entered download en masse");
+    document.getElementById("ExportRechercheReference").value = reference_visite;
+    document.getElementById("ExportRechercheTypeVisit").value = typeVisite;
+    document.getElementById("ExportRechercheStatus").value = Status;
+    document.getElementById("ExportRechercheCreepar").value = Creepar;
+    document.getElementById("ExportRechercheRevendeur").value = Revendeur;
+    document.getElementById("ExportRecherchedatedebut").value = datedebut;
+    document.getElementById("ExportRecherchedatefin").value = datefin;
+      var url = "/visite/extractenmasse";
+      $("#myForm").attr("action", url);
+      $("#myForm").submit();
+
+
+  });
+  $(document).ready(function() {
+    $('.js-select2').select2({ allowClear: true });
+  });
+</script>

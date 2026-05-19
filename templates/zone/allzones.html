@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Gestion des Zones</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Liste des Zones</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="createzone.html" th:href="@{/zone/createzone}"
+                                       class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                        <i class="fas fa-plus fa-sm text-white-50"></i> Ajouter une Zone
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <form th:action="@{/zone/allzones/1}" method="get" class="form-inline float-right">
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control form-control-sm" 
+                                                   placeholder="Rechercher par nom ou code..." th:value="${searchTerm}"/>
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <span th:text="${success}"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <span th:text="${error}"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+									
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Nom de la Zone</th>
+                                            <th>Description</th>
+                                            <th>Gouvernorats</th>
+                                            <th>Utilisateurs</th>
+                                            <th>Statut</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="zone: ${zones}">
+                                            <td th:text="${zone.code}"></td>
+                                            <td th:text="${zone.nom}"></td>
+                                            <td th:text="${zone.description}"></td>
+                                            <td>
+                                                <span class="badge badge-info" 
+                                                      th:text="${zone.gouvernorats.size() + ' gouvernorat(s)'}"></span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-success" 
+                                                      th:text="${zone.utilisateurs.size() + ' utilisateur(s)'}"></span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${zone.active}" class="badge badge-success">Actif</span>
+                                                <span th:unless="${zone.active}" class="badge badge-danger">Inactif</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a th:href="@{|/zone/viewzone/${zone.zoneId}|}" class="btn btn-sm btn-info">
+                                                        <i class="fas fa-eye"></i> Voir
+                                                    </a>
+                                                    <a th:href="@{|/zone/editzone/${zone.zoneId}|}" class="btn btn-sm btn-warning">
+                                                        <i class="fas fa-edit"></i> Modifier
+                                                    </a>
+                                                    <a href="#" class="btn btn-sm btn-danger"
+													   th:attr="data-id=${zone.zoneId}"
+													   onclick="showDeleteModal(this)">
+													   <i class="fas fa-trash"></i> Supprimer
+													</a>
+											    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${zones.isEmpty()}">
+                                            <td colspan="7" class="text-center">Aucune zone trouvée</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <ul class="pagination">
+                                <th:block th:each="pageNumber : ${body}">
+                                    <li th:if="${pageNumberStat.first}" class="page-item">
+                                        <a class="page-link" th:href="@{'/zone/allzones/'+${previous}}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active" th:if="${pageNumber} == ${thisnumber}">
+                                        <a class="page-link" th:text="${pageNumber}" href="#"></a>
+                                    </li>
+                                    <li class="page-item disabled" th:if="${pageNumber} == -1">
+                                        <a class="page-link" href="#">...</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:if="${pageNumber} != -1 and ${pageNumber} != ${thisnumber}">
+                                        <a class="page-link" th:text="${pageNumber}"
+                                           th:href="@{'/zone/allzones/'+ ${pageNumber}}"></a>
+                                    </li>
+                                    <li th:if="${pageNumberStat.last}" class="page-item" aria-label="Next">
+                                        <a class="page-link" th:href="@{'/zone/allzones/'+ ${next}}">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </th:block>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="modal fade" id="deleteZoneModal" tabindex="-1" role="dialog" aria-labelledby="deleteZoneModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteZoneModalLabel">Confirmation de suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Voulez-vous vraiment supprimer cette zone ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Oui</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let zoneIdToDelete = null;
+
+function showDeleteModal(btn) {
+    zoneIdToDelete = btn.getAttribute('data-id');
+    $('#deleteZoneModal').modal('show');
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if(zoneIdToDelete) {
+        window.location.href = '/zone/deletezone/' + zoneIdToDelete;
+    }
+});
+</script>
+        </div>
+       
+    </section>
+</section>
+
+</body>
+</html>

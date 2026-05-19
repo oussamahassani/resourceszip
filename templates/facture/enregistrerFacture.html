@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+    <title>Facture</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Ajouter ou Modifier Facture</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+
+                        <div class="card-body">
+                            <div class="col-md-10">
+                                <form th:action="@{/createFacture}" th:object="${facture}" method="post">
+                                    <div class="row">
+
+                                        <div class="form-group col-md-8">
+                                            <label for="name" th:field="*{factureId}" class="col-form-label">Id Facture
+                                                : </label>
+                                            <label for="name" th:text="*{factureId}" class="col-form-label"> </label>
+                                        </div>
+
+                                        <div class="form-group col-md-8">
+                                            <label for="name" class="col-form-label">Reference Facture</label>
+                                            <input type="text" th:field="*{ref_facture}" class="form-control"
+                                                   id="Reference" placeholder="Reference facture" required="required" />
+                                        </div>
+
+
+                                        <div th:if="not ${facture.factureId}" class="form-group col-md-8">
+                                            <label for="name" class="col-form-label">Reference abonnement</label>
+
+                                            <select class="form-control" required="required" name="selectabon" >
+
+                                                <option th:each="a:${abonnement}"
+                                                        th:value="${a.demandeid}"
+                                                        th:utext="${a.reference}"></option>
+                                            </select>
+
+                                        </div>
+                                 
+                                    <div th:if="${facture.factureId}" class="form-group col-md-8">
+                                            <label for="name" class="col-form-label">Reference abonnement</label>
+
+                                            <select class="form-control" required="required" name="selectabon" >
+
+                                                <option
+                                                        th:value="${facture.commande.demandeAbonnement.demandeid}"
+                                                        th:utext="${facture.commande.demandeAbonnement.reference}"></option>
+                                            </select>
+
+                                        </div>  
+<!-- 
+                                        <div class="form-group col-md-8">
+                                            <label for="name" class="col-form-label">Taux TVA</label>
+                                            <input type="text" th:field="*{tauxTva}" class="form-control"
+                                                   id="tauxTva" placeholder="Taux TVA" />
+                                        </div> -->
+
+
+                                        <!-- <div th:if="${facture.etat_facture == false}"  class="form-group col-md-8">
+                                            <label for="name" class="col-form-label">Payée</label>
+
+                                            <select class="form-control" required="required" name="paye">
+                                                <option value="">--</option>
+                                                <option
+                                                        th:value="true"
+                                                        th:utext="Oui"></option>
+                                                <option
+                                                        th:value="false"
+                                                        th:utext="Non"></option>
+                                            </select>
+
+                                        </div> -->
+
+
+                                        <div class="col-md-6">
+                                            <input type="submit" class="btn btn-primary" value=" Submit ">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a th:href="@{/facture}" class="btn btn-danger">
+                                                <span class="text">Annuler</span>
+                                            </a>
+                                        </div>
+
+                                        <input type="hidden" id="id" th:field="*{factureId}">
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+    </section>
+
+
+</section>
+</body>
+
+</html>

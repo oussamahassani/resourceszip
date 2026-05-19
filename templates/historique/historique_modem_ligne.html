@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Historique XLS</title>
+
+    <!--    <link th:href="@{/vendors/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">-->
+
+    <style type="text/css">
+        :required {
+            border: 2px dotted orange;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+
+     
+  <div class="container mt-3">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">                           
+                            <h1 class="m-0"><a th:href="@{/historyXls/modemhistorique}"><button class="btn btn-primary mr-3">Retour</button></a>Résultats de l'importation des modems</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+		<div class="card">
+		  <div class="card-header">
+		    Informations Historique
+		  </div>
+		  <ul class="list-group list-group-flush">
+		   <li class="list-group-item">
+				<strong>Crée par :</strong> <span th:text="${modem.user.codeUser+' / '+ modem.user.firstName+' '+modem.user.lastName}"></span>
+		    </li>
+		    <li class="list-group-item">
+				<strong>Date de création :</strong> <span th:text="${#dates.format(modem.createdDate, 'dd/MM/yyyy')}"></span>
+		    </li>
+		    <li class="list-group-item">
+		      <strong>Success :</strong> <span th:text="${modem.successRow}"></span>
+		    </li>
+		    <li class="list-group-item">
+		      <strong>Error :</strong> <span th:text="${modem.errorRow}"></span>
+		    </li>
+		     <li class="list-group-item">
+		      <strong>Total :</strong> <span th:text="${modem.totalRow}"></span>
+		    </li>
+		  </ul>
+		</div>
+
+    <h1>Liste des lignes d'importation de modems depuis un fichier Excel</h1>
+    
+
+    <!-- Créer un tableau Bootstrap -->
+    <table class="table">
+
+      <!-- Entête du tableau -->
+      <thead>
+        <tr>
+          <th>Numéro de série</th>
+          <th>Description</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+
+      <!-- Corps du tableau -->
+      <tbody>
+        <!-- Utiliser la syntaxe Thymeleaf pour parcourir la liste d'objets -->
+        <tr th:each="ligne : ${ligneModem}">
+
+          <!-- Afficher chaque attribut de l'objet dans une cellule de tableau -->
+          <td th:text="${ligne.numSerie}"></td>
+          <td th:text="${ligne.description}"></td>
+		  <td th:text="${ligne.status}" th:classappend="${ligne.status == 'Erreur' ? 'bg-danger' : (ligne.status == 'erreur Excel' ? 'bg-primary' : 'bg-success')}"></td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>         
+
+</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+
+</script>

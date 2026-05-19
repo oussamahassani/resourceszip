@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Historique Client</title>
+
+    <!--    <link th:href="@{/vendors/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">-->
+
+    <style type="text/css">
+        :required {
+            border: 2px dotted orange;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+       <!-- Page Heading -->
+
+       <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Historique des Clients</h1>
+
+    </div>
+                <form id="showMe3" method="get">
+                    <div class="row">
+
+
+
+
+                      <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="Nom">Nom</label>
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="Nom"
+                          placeholder="Nom"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="Prenom"
+                          >Prénom</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="Prenom"
+                          placeholder="Prénom"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                      <div class="col-sm-6 col-md-3">
+                        <label class="col-form-label" for="CIN">CIN ou passport</label>
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="CIN"
+                          placeholder="CIN ou Passport"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+
+
+
+
+
+
+                    </div>
+                    <div class="row">
+           
+              
+                      <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+             
+
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+
+
+
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Description</th>
+                                        <th>Date Génération</th>
+                                       
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="ob:${ClientHistory}">
+                                        <td th:text=${ob.clienHistoriquId}></td>
+                                        <td th:text=${ob.Description}></td>
+                                        <td th:text="${#dates.format(ob.createddate, 'dd-MM-yyyy')}"></td>
+                                        
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+</section>
+
+
+
+</body>
+
+</html>
+<script th:inline="javascript">
+  var oTable;
+  /*
+  oTable = $("#dataTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ordering: false,
+      order: [],
+      responsive: {
+        details: {
+          type: "column",
+        },
+      },
+      searching: true,
+  
+      fixedHeader: true,
+      // scrollY:500,
+      ajax: "/historiqueClientData",
+      lengthMenu: [
+        [10, 20, 50],
+        [10, 20, 50],
+      ],
+  
+      language: {
+        lengthMenu: "Affichage _MENU_ par page",
+        zeroRecords: "Rien trouvé - désolé",
+        emptyTable: "aucune donnée disponible",
+        info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+        infoEmpty: "Aucun enregistrement disponible",
+        paginate: {
+          first: "Première",
+          last: "Dernière",
+          next: ">>",
+          previous: "<<",
+        },
+        search: "Chercher:",
+      },
+      initComplete: function (json) {
+        //Make your callback here.
+        
+      //  document.getElementById("tutorialTable_filter").style.display = "none";
+      },
+  
+      columnDefs: [
+        // {
+        //   className: "dtr-control",
+        //   orderable: false,
+        //   targets: 0,
+        // },
+        // { orderable: false, targets: 10 },
+      ],
+  
+      columns: [
+      
+        { data: null,
+        render : function(data,type,row){
+          if(row.clienHistoriquId)
+         return `<i>`+row.clienHistoriquId+`</i>`
+        }
+        
+        },
+        {
+          data: null,
+          render: function (data, type, row) {
+            if (row.Description) return row.Description;
+            else return "";
+          },
+        },
+  
+        {
+            data: null,
+            render: function (data, type, row) {
+               if(row.createddate)
+               return row.createddate
+               else  return ""
+  
+               
+              
+            },
+          },
+  
+        
+      ],
+    });
+    */
+  </script>
+  

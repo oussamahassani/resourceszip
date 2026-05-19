@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+    <title>Resultat Recherche Facture</title>
+</head>
+<body>
+<section layout:fragment="content">
+ <div class="card m-2">
+ <div class="card-header">
+		 <div class="container">
+		  <div class="row">
+		    <div class="col-12">
+		      <h1 class="text-center mt-1">Liste des abonnements</h1>
+		      <a th:href="@{recherchefichedemande}"><button class="btn btn-primary float-left">Retour</button></a>
+		    </div>
+		  </div>
+		</div>
+ </div>
+ <div class="card-body text-center">
+	 <table class="table table-hover">
+	  <thead>
+	    <tr>
+	      <th scope="col">Réference</th>
+	      <th scope="col">Réference TT</th>
+ 		  <th scope="col">Identifiant</th>
+	      <th scope="col">Nom et Prénom</th>
+	      <th scope="col">Gouvernorat et ville</th>	      
+	      <th scope="col">Téléphone</th>
+	      <th scope="col">StautTT</th>
+	      <th scope="col">Statut  nety</th>	      
+	      <th scope="col">Action</th>
+	      	    
+	    </tr>
+	  </thead>
+	  <tbody>
+	     <tr th:each="dmd : ${abonnement}">
+              <td th:text="${dmd.referenceChifco}"></td>
+              <td th:text="${dmd.referenceTT}"></td> 
+              <td th:text="${dmd.cin}"></td>                                                 
+              <td th:text="${dmd.firstName}+' '+${dmd.lastName}"></td>
+              <td th:text="${dmd.gouvernorat.gouvernoratName}+'-'+${dmd.ville.villeName}"></td>                                                  
+              <td th:text="${dmd.telMobile}"></td> 
+              <td th:text="${dmd.etatTT}"></td>                  
+              <td th:text="${dmd.statut.designation}"></td>                                                 
+			  <td>
+			  	<a th:href="@{getdemandeabonnementtoimprimer/{demandeId}(demandeId=${dmd.demandeId})}" target="_blank">
+			  		<button type="button" class="btn btn-primary">Afficher</button>
+			  	</a>
+			  </td>                                
+         </tr>
+	  </tbody>
+	</table>
+ </div>
+</div>
+</body>
+</section>
+</html>

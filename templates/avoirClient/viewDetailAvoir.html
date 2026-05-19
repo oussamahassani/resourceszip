@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Detail Avoir Client</title>
+    <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+</head>
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<!-- Content Header (Page header) -->
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<h1 class="m-0">Fiche d’information Avoir Client</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+
+				<div class="row">
+					<div class="col-12 grid-margin"></div>
+					<div class="col-12">
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab"
+									role="tablist">
+									<li class="nav-item"><a class="nav-link active"
+										id="custom-tabs-info-tab" data-toggle="pill"
+										href="#custom-tabs-info" role="tab"
+										aria-controls="custom-tabs-info" aria-selected="true">Information</a>
+									</li>
+
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+
+									<div class="tab-pane fade active show" id="custom-tabs-info"
+										role="tabpanel" aria-labelledby="custom-tabs-info-tab">
+										<form
+										th:if="${ client.remainsToBePaid != true}"
+										class="form-upload col-md-4" action="#"
+										th:action="@{/AvoirClient/downloadAvoirClient}"
+										method="POST">
+										
+									 <input type="hidden" name="avoirId"
+											th:value="${client.avoirId}" /> 
+										<div>
+											<button type="submit" class="btn btn-info"
+												style="margin-right: 20px;">Imprimer Avoir</button>
+										</div>
+									</form>
+										
+										<form id="myForm" class="form-sample" 
+											th:object="${client}">
+											
+											<div class="row">
+												<div class="col-sm-4">
+													<div class="card-block">
+														<div class="card-block-header">
+																	Information avoir
+															</div>
+													
+															<div class="card-block-body">
+																<div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Type avoir</label>
+                                    <div class="col-sm-9">
+                                        <span   th:if="${client.isJestCo}" th:text="'Geste comercial'"> </span>
+                                       <span   th:if="${client.isJestCo == false}" th:text="'avoir'"> </span>
+                                        
+                                    </div>
+                                </div>
+															<div class="row">
+																	<label class="col-sm-4 col-form-label">Référence d'avoir : </label>
+																<div class="col-sm-8" th:text="${client.refAvoirClient}"></div>
+																	
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Référence Facture : </label>
+																<div class="col-sm-8" th:text="${client.facture}"></div>
+																	
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Référence Reclamation: </label>
+																<div class="col-sm-8" th:text="${client.refReclamation}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Total Montant HT : </label>
+																	<div class="col-sm-8" th:text="${#numbers.formatDecimal(client.montantHt, 1, 'COMMA', 3, 'POINT')}"></div>
+
+																</div>
+															
+																
+																		<div class="row">
+																	<label class="col-sm-4 col-form-label">Total Montant TVA : </label>
+																	<div class="col-sm-8" th:text="${#numbers.formatDecimal(client.montantTva, 1, 'COMMA', 3, 'POINT')}"></div>
+																
+																</div>
+																
+																<div class="row">
+																<label class="col-sm-4 col-form-label">Montant TTC:</label>
+																<div class="col-sm-8" th:text="${#numbers.formatDecimal(client.montantAvoir, 1, 'COMMA', 3, 'POINT')}"></div>
+																	
+																</div>
+																
+																<div class="row" th:if="${user.typeUser != 'REVENDEUR'}" >																	
+																	<label class="col-sm-4 col-form-label">Commentaire Avoir:</label>
+																	<div class="col-sm-8"
+																		th:text="${client.motifAvoir}"></div>
+																
+																</div>
+																
+																		<div class="row" >																	
+																	<label class="col-sm-4 col-form-label">Motif Avoir:</label>
+																	<div class="col-sm-8"
+																		th:text="${client.commentaireAvoir}"></div>
+																
+																</div>
+																		<div class="row" >																	
+																	<label class="col-sm-4 col-form-label">Date debut coupure:</label>
+																	<div class="col-sm-8"
+																		th:text="${client.dateDebutCoupure}"></div>
+																
+																</div>
+																	<div class="row" >																	
+																	<label class="col-sm-4 col-form-label">Date fin coupure:</label>
+																	<div class="col-sm-8"
+																		th:text="${client.dateFinCoupure}"></div>
+																
+																</div>
+																
+																	<div class="row" >																	
+																	<label class="col-sm-4 col-form-label"> Demande validée par :</label>
+																	<div class="col-sm-8"
+																		th:text="${client.validePar}"></div>
+																
+																</div>
+																	<div class="row" >																	
+																	<label class="col-sm-4 col-form-label">Date mise en service:</label>
+																	<div class="col-sm-8"
+																		th:text="${client.dateMiseService}"></div>
+																
+																</div>
+																
+																	<div class="row" th:if=${client.isPublish==null}>																	
+																	<label class="col-sm-4 col-form-label">Raison de l’annulation :</label>
+																	<div class="col-sm-8"
+																		th:text="${client.raisonAannulation}"></div>
+																
+																</div>
+																	<div class="row">																	
+																	<label class="col-sm-4 col-form-label">Ajouter frais de raccordement dans la prochaine facture  :</label>
+																	<div class="col-sm-8"
+																		>
+																		
+																		 <span th:if="${client.hasRaccordment}" class='badge badge-success'>Oui</span>
+                                                                         <span th:unless="${client.hasRaccordment}" class='badge badge-danger'>Non </span>
+																		
+																		</div>
+																
+																</div>
+															</div>
+													</div>
+													<div class="card-block">
+															<div class="card-block-header">
+																	Information abonnement
+															</div>
+															<div class="card-block-body">
+															<div class="row">
+																	<label class="col-sm-4 col-form-label">Réference client :</label>
+																	<div class="col-sm-8">
+																		<span th:text="${client.abonnement.referenceClient}"></span>
+																	</div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Nom et prénom :</label>
+																	<div class="col-sm-8">
+																		<span th:text="${client.abonnement.firstName + ' ' + client.abonnement.lastName}"></span>
+																	</div>
+																	
+																</div>
+                                                                  <div class="row">
+																	<label class="col-sm-4 col-form-label">Num Fixe :</label>
+																	<div class="col-sm-8">
+																		<span th:text="${client.abonnement.telFixe}"></span>
+																	</div>
+																	
+																</div>
+																 <div class="row">
+																	<label class="col-sm-4 col-form-label">Cin :</label>
+																	<div class="col-sm-8">
+																		<span th:text="${client.abonnement.cin}"></span>
+																	</div>
+																	
+																</div>													
+															</div>
+													</div>
+												</div>
+													<!--<div class="col-sm-4">
+													<div class="card-block">
+														<div class="card-block-header">
+																	Information donneé avoir
+															</div>
+													
+															<div class="card-block-body">
+															  
+															<div th:each="entry : ${client.avoiClientEntry}">
+															<div class="row">
+																	<label class="col-sm-4 col-form-label">Libellé : </label>
+																<div class="col-sm-8" th:text="${entry.libele}"></div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Montant HT : </label>
+																	<div class="col-sm-8" th:text="${#numbers.formatDecimal(entry.montantHt, 1, 'COMMA', 3, 'POINT')}"></div>
+
+																</div>
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Tva % : </label>
+																	<div class="col-sm-8" th:text="${entry.baseTva}"></div>
+																	
+																</div>
+																
+																		<div class="row">
+																	<label class="col-sm-4 col-form-label">Montant TVA : </label>
+																	<div class="col-sm-8" th:text="${#numbers.formatDecimal(entry.montantTva, 1, 'COMMA', 3, 'POINT')}"></div>
+																
+																</div>
+																
+															
+																	<hr/>
+															</div>
+															</div>
+													</div>
+												</div>-->
+												<div class="col-sm-4">
+													<div class="card-block">
+															<div class="card-block-header">
+																	Information de paiement
+															</div>
+															<div class="card-block-body">
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Crée par :</label>
+																	<div class="col-sm-8">
+																		<span th:text="${client.creePar?.firstName  } "></span>
+																		<span th:text="${client.creePar?.lastName}"></span>
+																	</div>
+																	
+																</div>
+																
+																	<div class="row">
+																	<label class="col-sm-4 col-form-label">Validation  par :</label>
+																	<div class="col-sm-8">
+																		<span th:text="${client.publierPar?.firstName  } "></span>
+																		<span th:text="${client.publierPar?.lastName}"></span>
+																	</div>
+																	
+																</div>
+                                                                  <div class="row">
+																	<label class="col-sm-4 col-form-label">Statut :</label>
+																	<div class="col-sm-8">
+																		<span th:if="${client.isClientPayed}" class="badge badge-success">Payé</span>
+																		<span th:unless="${client.isClientPayed}" class="badge badge-danger">Non payé</span>																	
+																	</div>
+																	
+																</div>
+																 <div class="row">
+																	<label class="col-sm-4 col-form-label">Utilisé par :</label>
+																	<div class="col-sm-8">
+																		<span th:if="${client.usedBy != null}" class="badge badge-success" th:text="${client.usedBy.firstName + ' ' + client.usedBy.lastName}"></span>
+																		<span th:unless="${client.usedBy != null}" class="badge badge-danger">Non utilisé</span>
+
+																	</div>
+																	
+																</div>
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Visibilité Avoir pour revendeur:</label>
+																	<div class="col-sm-8">
+																		<span th:if="${client.usedBy != null}">
+																		    <span th:if="${client.canRevendeurViewed}" class="badge badge-success">Autorisé</span>
+																		    <span th:unless="${client.canRevendeurViewed}" class="badge badge-danger">Non autorisé</span>
+																		</span>
+																		<span th:unless="${client.usedBy != null}">---------</span>
+																		
+																	</div>
+																	
+																</div>
+																
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Utilisé dans bordereau :</label>
+							
+																		<div class="col-sm-8">
+																		    <span th:if="${client.has_bordereau}" class="badge badge-success" th:text="${referenceBrd}"></span>
+																		    <span th:if="${!client.has_bordereau}" class="badge badge-danger">Non utilisé</span>
+																		
+																	</div>
+																	
+																</div>	
+																<div class="row">
+																	<label class="col-sm-4 col-form-label">Date de paiement:</label>
+							
+																		<div class="col-sm-8">
+																			<span th:if="${client.dateDePaiement}" class="badge badge-success" th:text="${#dates.format(client.dateDePaiement, 'dd/MM/yyyy')}"></span>
+																		    <span th:if="${client.dateDePaiement} == null" class="badge badge-danger">Non Payé</span>
+																		
+																	</div>
+																	
+																</div>													
+															</div>
+													</div>
+												</div>
+											</div>
+
+
+										</form>
+
+									</div>
+									
+							</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+	
+			</div>
+			
+		</section>
+
+
+
+	</section>
+</body>
+</html>
+
+<script th:inline="javascript">
+
+	 
+</script>

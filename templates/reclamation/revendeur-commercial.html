@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Liste des réclamations</title>
+     <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+     <style>
+#tutorialTable_filter{
+display:none
+}
+</style>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Liste des réclamations commerciales des revendeurs</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <div class="row">
+            <div class="col-12">
+          
+              <div class="card shadow mb-4">
+              <div class="d-flex">
+                <div class="blocFilter">
+                   <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+                </div>
+                  
+                        
+                  </div>
+                    <form id="showMe3" method="get" >
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="statutListfiltre"
+                          >Statut</label
+                        >
+                        <select
+                          id="statutChifcoListfiltre"
+                          name="Status"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                   <option value = ''>Statut</option>
+                      <option
+        th:each="st : ${status}"
+        th:value="${st.nomStatut}"        
+        th:text="${st.nomStatut}" >
+    </option>
+                      </select>
+                      </div>
+          
+                      <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="ref_reclamation"
+                          >Référence réclamation</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="ref_reclamation"
+                          placeholder="ref_reclamation"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                       <div class="col-sm-6 col-md-4" sec:authorize="hasAnyAuthority('READ-RECLAMATION-ALL')">
+                        <label class="col-form-label" for="codeuser"
+                          >Code User(Rev)</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="codeUser"
+                          placeholder="Code user"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                
+                      </div>
+                
+                      <div class="row w-100 ml-2">
+                         <div class="col-sm-6 col-md-3" sec:authorize="hasAnyAuthority('READ_CLASSIFICATION')">
+                      <label class="col-form-label" for="statutListfiltre">Motif
+                      </label> <select id="motifrelclamtion" name="motifrelclamtion"
+                        class="form-control js-select2 js-states custom-select" data-placeholder="Select Motif"
+                        th:onchange="|onchangeSearch(event)|" data-control="select2" >
+                        <option value=''>Motif</option>
+                        <option th:each="motifRec : ${motifRec}" th:value="${motifRec.motifId}"
+                          th:text="${motifRec.nomMotif}"></option>
+
+                      </select>
+                    </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date de création: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datedebut" id="datedebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datefin" id="datefin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                         <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-6 col-form-label"> Date de modification: du</label>
+                                             <div class="col-sm-6">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="dateDebutModification" id="dateDebutModification"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div> 
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="dateFinModification" id="dateFinModification"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>     
+              
+                    </div>
+                   
+                          <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                      </form>
+                             </div>
+                             </div>
+                             </div>
+
+        </div>
+        
+                  <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                  <div>
+                    <div class="blocy">
+                      <table
+                        id="tutorialTable"
+                        class="table table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+                      >
+                        <!-- Header Table -->
+                        <thead class="table dataTable no-footer">
+                          <tr>
+                          <th>Référence</th>
+                           <th>Motif</th>
+                                <th scope="col">Déscription </th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Service Type</th>
+                                <th scope="col">Crée pour</th>
+                            <th scope="col"> Créer par</th>
+                            <th scope="col">Date de création</th>
+                        
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="hasediterole" th:value="${hasediterole}" id="hasediterole"/>
+          <input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+    </section>
+
+</section>
+</body>
+
+
+</html>
+<script  th:inline="javascript">
+var oTable;
+var hasediterole = document.getElementById("hasediterole").value;
+let  Reference = "";
+let Status = "";
+let datedebut = "";
+let datefin = "";
+let dateDebutModification = "";
+let dateFinModification ="";
+let AffecterTo = "";
+let Creepar = "" ;
+let motifRec="";
+let codeUser="";
+var messagenotif = document.getElementById("message").value ;
+    if (messagenotif !== "" && messagenotif == "clientupdated") {
+     	$(document).Toasts('create', {
+  		  title: "La modification a été effectuée avec succès",
+  		  body: "",
+  		  class: 'bg-success',
+  		  autohide:true,
+  		  delay: 10000
+  		})
+    }
+$("#togglebutton").click(function () {
+
+    $("#showMe3").toggle();
+  });
+  
+function onchangeSearch(event) {
+    let name = event.target.name;
+    switch (name) {
+      case "ref_reclamation": {
+    	  Reference = event.target.value;
+        break;
+      }
+       case "codeUser": {
+    	  codeUser = event.target.value;
+        break;
+      }
+
+      case "Status": {
+    	  Status = event.target.value;
+        break;
+        
+      }
+ 
+      case "datefin": {
+    	  datefin = event.target.value;
+          break;
+        }
+        case "datedebut": {
+        	datedebut = event.target.value;
+        break;
+      }
+        case "dateDebutModification": {
+        	dateDebutModification = event.target.value;
+        break;
+      }
+        case "dateFinModification": {
+        	dateFinModification = event.target.value;
+        break;
+      }
+        case "AffecterTo" : {
+        	AffecterTo = event.target.value ; 
+        	break;
+        }
+        case "Creepar" : {
+        	Creepar = event.target.value ;
+        	break ; 
+        }
+
+        case "listeClientFilter" : {
+        	listeClientFilter= event.target.value
+        
+    	break ; 
+        }
+        case "motifrelclamtion" : {
+        	motifRec = event.target.value
+        }
+        
+    }}
+    
+function onclicksherh(event) {
+    //event.preventdefault()
+    
+    event.preventDefault();
+    //$('#tutorialTable').DataTable().ajax.reload();
+    $("#tutorialTable")
+      .DataTable()
+      .column(0)
+      .search(
+        JSON.stringify({
+        	reference:Reference ,       
+        	Status : Status,		
+			 datefin:datefin,
+	          datedebut:datedebut,
+	          dateDebutModification:dateDebutModification,
+	          dateFinModification:dateFinModification,
+	          AffecterTo:AffecterTo , 
+	          Creepar : Creepar,codeUser:codeUser,
+	          motifRec
+
+        })
+      )
+      .draw();
+  } 
+oTable = $("#tutorialTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    order: [8, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: true,
+    fixedHeader: true,
+    ajax: "/reclamations/getAllclientreclamationData?category=Revendeur&type=Commercial",
+    lengthMenu: [
+      [10, 20, 50 , 100 , 200,500],
+      [10, 20, 50 , 100 , 200,500],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+      //Make your callback here.
+      //updatecheklist();
+     // document.getElementById("tutorialTable_filter").style.display = "none";
+    },
+
+       columnDefs: [
+      {
+        className: "dtr-control",
+        orderable: false,
+        targets: 0,
+      },
+       { "width": "10%", "targets":0 },
+          { "width": "8%", "targets":3 },
+      {
+        className: "dtr-control",
+        orderable: false,
+        targets: 8,
+      },
+       { "width": "10%", "targets":6 },
+       { "width": "10%", "targets":7 },
+       { "width": "13%", "targets":8}
+    ],
+
+    columns: [
+
+     
+      {
+        data: null,
+        render: function (data, type, row) {
+          return  row.ref_reclamation;
+         
+        },
+      },
+      {
+          data: null,
+          render: function (data, type, row) {
+        	  if(row.motif && row.motif.nomMotif)
+            return  row.motif?.nomMotif;
+        	  else
+        		  return ""
+           
+          },
+    },
+      {
+        data: "description",
+
+      },
+           {
+    data: null,
+    render: function (data, type, row) {
+        if (row.status != null) {
+            return "<div class='tablebadge' style='background-color:" + row.status.couleur + "; color: #fff; padding: 5px; border-radius: 5px; display: inline-block;'>" 
+                   + row.status.designation + "</div>";
+        } else {
+            return null;
+        }
+    }
+},
+
+      {
+        data: null,
+        render: function (data, type, row) {
+        	if(row.serviceType == null)
+        		return "" ;       
+        else  return row.serviceType?.categorytype ;
+       	
+        },
+      },   
+     
+      {data : null ,
+          render : function(data , type , row){
+         	 if(row.user)
+         	return row.user.firstName+" "+row.user.lastName;
+         	else
+         		return ""
+          }
+         },    
+          { data: null ,
+        	  render: function (data, type, row) {
+        		 
+              	if(row.createdby != null )
+              		return row.createdby.firstName + "  "  + row.createdby.lastName  ;
+              else
+              		 return   null
+              
+              }},
+              {
+                  data: null,
+                  render: function (data, type, row) {
+                    return new Date(row.createdDate).toLocaleDateString("en-GB");
+                  },
+                },
+       
+          {
+        	  data : null , 
+        	  render : function (data , type , row){
+              let viewclient =     ` <a  href='/reclamations/getReclamation/`+row.reclamationid+`''>
+                        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary btn-flat shadow-sm">
+                        Détails  <i class="fa fa-eye" aria-hidden="true"></i></button> 
+                    </a>` 
+               let editclient =  `<a  href='/reclamations/editreclamation/`+row.reclamationid+`''>
+                        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+                            Modifier  <i class="fa fa-edit"></i></button>
+                    </a>`
+              if(hasediterole == "true"){
+
+            
+                    return `<span >`+editclient+`</span><span >`+viewclient+ `</span>`
+                                                               
+        	  }           
+            else {
+      
+              return `<a   href='/reclamations/getReclamation/`+row.reclamationid+`''>
+                        <button type="button" class="d-none d-sm-inline-block btn  btn-primary btn-flat shadow-sm">
+                        Détails  <i class="fa fa-eye" aria-hidden="true"></i></button> 
+                    </a>
+                    <div >`
+            }
+          }
+        },
+    ],
+  });
+</script>
+<script>
+	var messagenotif = document.getElementById("message").value;
+if (messagenotif !== "" && messagenotif == "Une réclamation a été ajouté avec succées") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une réclamation a été ajouté avec succées",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "Reclamationmodif") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une réclamation a été modifié avec succées",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+    $(document).ready(function() {
+      $('.js-select2').select2({ allowClear: true});
+    });
+  
+  </script>

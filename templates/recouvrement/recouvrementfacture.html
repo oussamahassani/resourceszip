@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Balance âgée client</title>
+
+</head>
+
+
+<body id="page-top">
+<section layout:fragment="content">
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0"> Balance âgée client</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+
+                                   <button
+                    id="downloadenmasse"
+                    class="d-inline-block btn btn-sm btn-info shadow-sm mb-3"
+                  >
+                    Extraire balance
+                  </button>
+              
+                                     <form
+                    id="myForm"
+                    class="form-sample"
+                    method="post"
+                    action=""
+                    style="display: none"
+                  >
+                    <!--        <div th:if = "${_csrf.parameterName">
+                                       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                       </div>-->
+                  </form>
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+
+
+
+                <div class="card-body">
+
+
+                </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                  <div>
+                    <div class="blocy mr-1 ml-1">
+                      <table
+                        id="tutorialTable"
+                        class="table table-bordered display supertable table-striped dataTable dtr-inline text-center"
+                      >
+                        <!-- Header Table -->
+                        <thead class="table dataTable ">
+                          <tr>
+                         
+                            <th>Clients</th>
+                            <th>Cin</th>
+                            <th>0 - 30 Jours  </th>
+                            <th>31 - 60 Jours </th>
+                            <th>61 - 90 Jours</th>
+                            <th>91 - 120 Jours </th>
+                            <th>Plus que 120 Jours  </th>
+                            <th>Total </th>
+                          </tr>
+                        </thead>
+                        <tfoot >
+                          <tr>
+                            <td colspan="2" class="font-weight-bold" style="background-color:#efe6ff;">Totaux</td>
+                            <td style="background-color:#efe6ff;" class="font-weight-bold" th:text="${#numbers.formatDecimal(sumRecouvrementParDate.getTotalDate30(),3,3,'POINT')}"></td>
+                            <td style="background-color:#efe6ff;" class="font-weight-bold" th:text="${#numbers.formatDecimal(sumRecouvrementParDate.getTotalDate60(),3,3,'POINT')}"></td>
+                            <td style="background-color:#efe6ff;" class="font-weight-bold" th:text="${#numbers.formatDecimal(sumRecouvrementParDate.getTotalDate90(),3,3,'POINT')}"></td>
+                            <td style="background-color:#efe6ff;" class="font-weight-bold" th:text="${#numbers.formatDecimal(sumRecouvrementParDate.getTotalDate120(),3,3,'POINT')}"></td>
+                            <td style="background-color:#efe6ff;" class="font-weight-bold" th:text="${#numbers.formatDecimal(sumRecouvrementParDate.getTotalDatePlus120(),3,3,'POINT')}"></td>
+                            <td style="background-color:#efe6ff;" class="font-weight-bold" th:text="${#numbers.formatDecimal(facturedata.montantTotal,3,3,'POINT')}"></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                   <!-- <h5 ><span>Nombre de facture totale : </span> <span th:text=${facturedata.nombreFacture} ></span></h5>
+                    <h5 > <span>Nombre de facture totale : </span>  <span th:text=${facturedata.montantTotal} ></span></h5>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+ 
+            </div>
+
+        </div>
+        <input type="hidden" th:value=${facturedata.montantTotal} id="montantTotal"></span>
+    </section>
+
+</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+var oTable;
+$(document).ready(function() {
+  jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
+    return this.flatten().reduce( function ( a, b ) {
+        if ( typeof a === 'string' ) {
+            a = a.replace(/[^\d.-]/g, '') * 1;
+        }
+        if ( typeof b === 'string' ) {
+            b = b.replace(/[^\d.-]/g, '') * 1;
+        }
+        return a + b;
+    }, 0 );
+} );
+oTable = $("#tutorialTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    
+    order: [1, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: false,
+
+    fixedHeader: true,
+    // scrollY:500,
+    ajax: "/getrecouvrementlist",
+    lengthMenu: [
+        [10, 20, 50 , 100 , 200,500],
+        [10, 20, 50 , 100 , 200,500],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+      //Make your callback here.
+      
+    //  document.getElementById("tutorialTable_filter").style.display = "none";
+    },
+
+    columnDefs: [
+      // {
+      //   className: "dtr-control",
+      //   orderable: false,
+      //   targets: 0,
+      // },
+      // { orderable: false, targets: 10 },
+    ],
+
+    columns: [
+    
+      { data: null,
+      render : function(data,type,row){
+        if(row.lastname)
+       return  row.lastname +" "+row.firstname
+      }
+      
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+          if (row.cin) return row.cin;
+          else return "";
+        },
+      },
+      {
+        data: null,
+        render: function (data, type, row) {
+          if (row.depasseDate30)
+            return  row.depasseDate30.toFixed(3)
+          else return "";
+        },
+      },
+      {data: null,
+        render: function (data, type, row) {
+          if (row.depasseDate60)
+            return  row.depasseDate60.toFixed(3)
+          else return "";
+        },
+      },
+      {data: null,
+        render: function (data, type, row) {
+          if (row.depasseDate90)
+            return  row.depasseDate90.toFixed(3)
+          else return "";
+        },
+      },
+      {data: null,
+        render: function (data, type, row) {
+          if (row.depasseDate120)
+            return  row.depasseDate120.toFixed(3)
+          else return "";
+        },
+      },
+      {data: null,
+        render: function (data, type, row) {
+          if (row.plus120)
+            return  row.plus120.toFixed(3)
+          else return "";
+        },
+      },
+
+      { data:null ,
+        render: function (data, type, row) {
+        
+            return  (row.plus120 +  row.depasseDate120 + row.depasseDate90+ row.depasseDate60 + row.depasseDate30).toFixed(3)
+         // else return "";
+        }
+      }
+       // "" +"depasseDate120" + "depasseDate90"+"depasseDate60"+"depasseDate30"  },
+      
+    ],
+
+    footerCallback: function ( row, data, start, end, display ) {
+      var datatab = oTable.ajax.json();     
+    var api = this.api(), data;
+    var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+
+  
+
+				
+          },
+  });
+
+	// DataTable initialisation
+$("#downloadenmasse").click(function (e) {
+    e.preventDefault();
+
+    
+      var url = "/recouvrement/extractenmasse";
+      $("#myForm").attr("action", url);
+      $("#myForm").submit();
+
+
+  });
+});
+ // oTable.column( 3 ).data().sum();
+</script>

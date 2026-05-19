@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Ajouter un Type de Paiement</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">Ajouter un Yype de paiement</div>
+                        <div class="card-body">
+                            <form class="form-sample" action="#" th:action="@{/typepaiement/addtypepaiement}" method="POST">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Reference</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="referencetypepaiement"
+                                                       placeholder="Reference" th:required="required"/>
+                                            </div>
+                                            <div th:if="${existedCode != null}" class="alert alert-danger notification"
+                                                 role="alert">
+                                                <p>Reference existe deja</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Nom</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="nomTypePaiement" placeholder="Nom"
+                                                       th:required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Nombre de mois</label>
+                                            <div class="col-sm-9">
+                                                <input type="number" max="9999" min="1" class="form-control"
+                                                       name="nombreMoisTypePaiement" placeholder="Nombredemois"
+                                                       th:required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer" style="margin-top: 20px; text-align: center;">
+                                    <button type="submit" class="btn btn-success" style="margin-right: 20px;">
+                                        Sauvegarder
+                                    </button>
+                                    <button type="reset" class="btn btn-danger" style="margin-left: 20px;">
+                                        Réinitialiser
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+</body>
+</html>
+

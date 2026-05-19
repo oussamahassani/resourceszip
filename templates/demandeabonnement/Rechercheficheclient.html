@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Recherche abonnement</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<h1 class="m-0">Recherche abonnement</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+				<div class="row">
+					<div class="col-12 grid-margin">
+						<div class="card card-default">
+
+							<div class="card-body">
+								<form class="form-sample" id="form-sample" action="#"
+									th:action="@{/demandeabonnement/rechercheabonnementresultat}"
+									enctype="multipart/form-data" method="POST" >
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-12 col-form-label">Référence TT</label>
+												<div class="col-sm-12">
+													<input type="text" class="form-control" id="reftt" name="reftt"
+														placeholder="Référence TT"  />
+												</div>
+												
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-12 col-form-label">Référence Nety</label>
+												<div class="col-sm-12">
+													<input type="text" class="form-control" id="refchifco"
+														name="refchifco" placeholder="Référence Nety"/>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-12 col-form-label">Numéro CIN</label>
+												<div class="col-sm-12">
+													<input type="text" pattern="[0-9a-zA-Z]{13}" class="form-control"
+														 id="numcin" name="numcin" placeholder="Numéro CIN"
+														 />
+												</div>
+											
+											</div>
+										</div>
+										
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-12 col-form-label">Numéro Fixe </label>
+												<div class="col-sm-12">
+													<input type="text" pattern="[0-9]{8}" class="form-control"
+														 id="numfixe" name="numfixe" placeholder="Numéro fixe"
+														 />
+												</div>
+											
+											</div>
+										</div>
+									</div>
+	
+	                				<button type="submit" class="btn btn-primary">Rechercher</button>
+
+								</form>
+								<input type="hidden" name="message" id="message" th:value="${message} ?  ${message} : ''" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</section>
+</body>
+</html>
+
+<script th:inline="javascript">
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+
+
+			$(document).ready(function() {
+
+
+$.validator.setDefaults( {
+	submitHandler: function (form) {
+	
+		 form.submit()
+	}
+} );
+
+$( document ).ready( function () {
+	$( "#form-sample" ).validate( {
+		rules: {
+
+			//reftt:{
+				
+			//	minlength: 2,
+			//	maxlength:70
+			//},
+			refchifco:{
+				
+				minlength: 2,
+				maxlength:22
+			},
+			numcin:{
+				//digits: true,
+				minlength: 7,
+				maxlength:13
+			},
+			numfixe:{
+				digits: true,
+				minlength: 8,
+				maxlength:8
+			},
+	
+		},
+		messages: {
+
+			//reftt: "Veuillez entrer une référence Télécom valide entre 2 et 15",
+			refchifco:"Veuillez entrer une référence Nety valide",
+			numcin:"Veuillez entrer un numéro identifiant valide ",
+			numfixe:"Veuillez entrer un numéro de téléphone fixe  valide "
+
+		},
+		errorElement: "em",
+		errorPlacement: function ( error, element ) {
+			// Add the `invalid-feedback` class to the error element
+			error.addClass( "invalid-feedback" );
+
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.next( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+		},
+		highlight: function ( element, errorClass, validClass ) {
+			$( element ).addClass( "is-invalid" ).removeClass( "is-valid" );
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$( element ).addClass( "is-valid" ).removeClass( "is-invalid" );
+		}
+	} );
+
+} );
+
+});
+	
+		    var messagenotif = document.getElementById("message").value ;
+		    if(urlParams.has('allisempty') &&  urlParams.get('allisempty')=="true" && messagenotif!== ''){
+		    	$(document).Toasts('create', {
+		    		  title: 'Erreur',
+		    		  body: 'Merci de remplir au moins un champ pour lancer une recherche',
+		    		  class: 'bg-danger',
+		    		  delay: 750
+		    		})
+
+		    }
+		    if(urlParams.has('usernotfound') &&  urlParams.get('usernotfound')=="true" && messagenotif!== ''){
+		    	$(document).Toasts('create', {
+		    		  title: "Erreur",
+		    		  body: 'Impossible de trouver une demande qui corresponde aux informations fournies.',
+		    		  class: 'bg-danger',
+		    		  delay: 750
+		    		})
+		    }
+		    
+		    			
+</script>
+

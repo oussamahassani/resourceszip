@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+<link rel="stylesheet" href="/css/customvariablestyle.css">
+    <title>Mes demandes groupées</title>
+</head>
+
+<body>
+<section layout:fragment="content">
+
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">                           
+                            <h1 class="m-0">
+                            	Mes demandes groupées
+                            </h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+<section class="card m-2 p-2">
+             <div class="mr-2 ml-2">
+             
+            
+             <div class="mb-4">
+	             <div class="py-3 row">
+		           <a data-toggle="modal" id="togglebutton" 
+		                       class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm mr-2"><i
+		                            class="fas fa-filter fa-sm text-white-50"></i> Filtre</a>
+		           
+		           <a th:href="@{/demandeCommission/all_my_demande_commission_page}" 
+		                       class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm ml-2">
+		                       <i class="fas fa-arrow-left"></i> Retour à mes demandes</a>
+		          </div>
+		          
+		          <form id="showMe3" method="get">
+                    <div class="row">                      
+						<div class="col-md-3">
+	                        <label class="col-form-label" for="statut">Statut</label>
+							<select class="form-control" id="statut" name="statut" th:onchange="onchangeSearch(event);">
+	                        	<option value="">Tous les statuts</option>
+	                        	<option value="AWAINTING_INVOICING">En attente de facturation</option>
+	                        	<option value="IN_PROGRESS">En cours</option>
+	                        	<option value="PAID">Payé</option>
+	                        	<option value="REJECTED">Rejeté</option>
+	                        </select>
+	                    </div>
+	                    <div class="col-md-3">
+	                      <label class="col-form-label"
+	                          >Référence
+	                        </label>
+							<div class="input-group">
+						      <input type="text" class="form-control" id="reference" name="reference" placeholder="Référence" th:onchange="|onchangeSearch(event)|"/>
+						    </div>
+                      </div>                                                 
+                    </div>
+					<div class="text-center">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm mt-3"
+                          th:onclick="onclicksherh(event)"
+                          id="buttonRecherche"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                  </form>
+	          </div> 
+		   			<table class="table table table-hover" id="myGroupedDemandeCommissionTable">
+		                            <thead>
+			                            <tr>
+			                            	<th>Date de création</th>
+			                                <th>Référence</th>
+			                                <th>Nombre de demandes</th>
+			                                <th>Total HT</th>
+			                                <th>TVA</th>
+			                                <th>Montant TVA</th>
+			                                <th>Total TTC</th>
+			                                <th>Statut</th>
+			                                <th>Détails</th>
+			                            </tr>
+		                            
+		                            </thead>
+		                    </table>
+                   </div>
+</section>
+</section>
+</body>
+</html>
+<script th:inline="javascript">
+
+var oTable1;
+
+$(document)
+.ready(
+		function() {
+			   oTable1 = $('#myGroupedDemandeCommissionTable').DataTable({
+				   "language": {
+						"lengthMenu": "Affichage _MENU_ enregistrements par page",
+			            "zeroRecords": "Rien trouvé - désolé",
+			             "info": "Afficher _START_ -  _END_ de _TOTAL_ demandes groupées ",
+			            "infoEmpty": "Aucun enregistrement disponible",
+			            paginate: {
+                            first: "<i class='fa fa-fast-backward'></i>",
+			                last: "<i class='fa  fa-fast-forward '></i>",
+			                next: "<i class='fa fa-solid fa-chevron-right'></i>",
+			                previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+			              },
+			        },
+			      processing: true,
+			      serverSide: true,
+			      ordering: true,
+			      searching : true,
+			      "processing": true,
+			      "serverSide": true,
+			        "ajax": "/demandeCommission/myGroupedDemandeCommission",
+			      lengthMenu: [
+			          [10, 20, 50 , 100 , 200,500],
+			          [10, 20, 50 , 100 , 200,500],
+			        ],
+			      columnDefs: [{
+			    	    orderable: false,
+			    	    targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+			      
+			    	  }],
+			      columns: [
+			    	  {
+			              data: null,
+			              render: function (data, type, row) {			             		
+			            	// Convertissez la date en un objet Date JavaScript
+			                  var dateObj = new Date(row.createdDate);
+
+			                  // Obtenez le jour, le mois et l'année
+			                  var day = dateObj.getDate();
+			                  var month = dateObj.getMonth() + 1;
+			                  var year = dateObj.getFullYear();
+
+			                  // Formatez la date au format "DD/MM/YYYY"
+			                  var formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year;
+
+			                  return formattedDate;
+			              }
+			           },
+			          {
+			              data: null,
+			              render: function (data, type, row) {			             		
+			             		 return row.refGroup;
+			              }
+			           },
+				    {
+			    		    data: null,
+			    		    render: function (data, type, row) {
+			    		        return row.demandeCommissions ? row.demandeCommissions.length : 0;
+			    		    }
+			    	},
+			    	{
+			              data: null,
+			              render: function (data, type, row) {
+			            	  var totalHt = 0;
+			            	  if (row.demandeCommissions) {
+			            		  for (var i = 0; i < row.demandeCommissions.length; i++) {
+			            			  totalHt += row.demandeCommissions[i].commission ? row.demandeCommissions[i].commission.totalHt : 0;
+			            		  }
+			            	  }
+			             		 return totalHt.toFixed(3) + " TND";
+			              }
+			           },
+			           {
+				              data: null,
+				              render: function (data, type, row) {
+				            	  var tva = 0;
+				            	  if (row.demandeCommissions && row.demandeCommissions.length > 0) {
+				            		  var first = row.demandeCommissions[0].commission;
+				            		  tva = first ? first.tva : 0;
+				            	  }
+				             		 return tva + "%";
+				              }
+				        },
+			           {
+				              data: null,
+				              render: function (data, type, row) {
+				            	  var totalTva = 0;
+				            	  if (row.demandeCommissions) {
+				            		  for (var i = 0; i < row.demandeCommissions.length; i++) {
+				            			  var comm = row.demandeCommissions[i].commission;
+				            			  totalTva += comm ? comm.montantTva : 0;
+				            		  }
+				            	  }
+				             		 return totalTva.toFixed(3) + " TND";
+				              }
+				        },
+			           {
+				              data: null,
+				              render: function (data, type, row) {
+				            	  var totalTtc = 0;
+				            	  if (row.demandeCommissions) {
+				            		  for (var i = 0; i < row.demandeCommissions.length; i++) {
+				            			  var comm = row.demandeCommissions[i].commission;
+				            			  totalTtc += comm ? comm.totalTtc : 0;
+				            		  }
+				            	  }
+				             		 return totalTtc.toFixed(3) + " TND";
+				              }
+				        },
+				        {
+				              data: null,
+				              render: function (data, type, row) {
+				            	  if(row.statut == "PAID"){
+				            		  return "<span class='badge badge-success'>Payé</span>";
+				            	  }else if(row.statut == "AWAINTING_INVOICING"){
+				            		  return "<span class='badge badge-warning'>En attente de facturation</span>";
+				            	  }else if(row.statut == "REJECTED"){
+				            		  return "<span class='badge badge-danger'>Rejeté</span>";
+				            	  }
+				            	  else if(row.statut == "IN_PROGRESS"){
+				            		  return "<span class='badge badge-danger'>	 en cours</span>";
+
+				            	  }
+				            	  return "<span class='badge badge-secondary'>" + row.statut + "</span>";
+				              }
+				        },
+				        {
+				              data: null,
+				              render: function (data, type, row) {
+				            	  return '<a class="btn btn-sm btn-info" href="/demandeCommission/details_grouped_demande_commission_page/' + row.id + '">' +
+				            	         '<i class="fas fa-eye"></i> Détails</a>';
+				              }
+				        }
+			      ]
+			    });
+			    
+			    // Filter functionality
+			    window.onchangeSearch = function(event) {
+			        oTable1.draw();
+			    };
+			    
+			    window.onclicksherh = function(event) {
+			        event.preventDefault();
+			        oTable1.draw();
+			    };
+			    
+			    // Custom filter for server-side
+			    oTable1.on('preXhr.dt', function(e, settings, data) {
+			        var filterData = {};
+			        
+			        var statut = $('#statut').val();
+			        if (statut) {
+			            filterData.statut = statut;
+			        }
+			        
+			        var reference = $('#reference').val();
+			        if (reference) {
+			            filterData.reference = reference;
+			        }
+			        
+			        data.filterrecherche = JSON.stringify(filterData);
+			    });
+		});
+
+//filtre
+$("#togglebutton").click(function () {
+
+    $("#showMe3").toggle();
+});
+</script>

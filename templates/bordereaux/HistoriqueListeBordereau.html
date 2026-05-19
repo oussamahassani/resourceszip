@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<meta charset="UTF-8">
+<title>Crm Chifco</title>
+
+<style>
+  #tutorialTable_filter{
+  display:none
+  }
+
+
+</style>
+</head>
+<body>
+<section layout:fragment="content">
+     <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <h1 class="m-0">Liste des Bordereaux</h1>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+          </div>
+                   <div class="card shadow mb-4">
+              <div class="d-flex">
+                <div class="blocFilter">
+                   <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+                </div>
+
+
+                  </div>
+                    <form id="showMe3" method="get" >
+
+                    <div class="row">
+                      
+          <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="NumeroBordereau">Numero de bordereau</label>
+                       <input
+                          id="textsearch"
+                          type="text"
+                          name="NumeroBordereau"
+                          placeholder="NumeroBordereau"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+                       <!--  <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="Status"
+                          >Status</label
+                        >
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="Status"
+                          placeholder="Status"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>-->
+                      <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="CIN">code User</label>
+                        <input
+                          id="textsearch"
+                          type="text"
+                          name="userCode"
+                          placeholder="userCode"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        />
+                      </div>
+    
+                       <div class="col-sm-6 col-md-3"   sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_AREA','READ_SUBSCRIPTION_REQUEST_ALL')" >
+                        <label class="col-form-label" for="professions"
+                          >Affecter to</label
+                        >
+                        <select
+                          id="AffecterTo"
+                          name="AffecterTo"
+                          data-control="select2"
+                           data-placeholder="Select affected Utilisateur"
+                          class="form-control js-select2"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                          <option value="">Affecter To</option>
+                          <option
+                            th:if="${user.interlocuteur != null}"
+                            th:each="user : ${AffectedTo}"
+                            th:value="${user.userid}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName} + ' ' +${user.interlocuteur}"
+                          ></option>
+                          <option
+                            th:if="${user.interlocuteur == null}"
+                            th:each="user : ${AffectedTo}"
+                            th:value="${user.userid}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"
+                          ></option>
+                        </select>
+                      </div>
+
+                      </div>
+                      <div class="row w-100 ml-2">
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date de création: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="dateDebut" id="dateDebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="dateFin" id="dateFin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+  
+                    
+                    </div>
+                                 <div class="row w-100 ml-2">
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date validation du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datevalideDebut" id="datevalideDebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datevalideFin" id="datevalideFin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+  
+                    
+                    </div>
+                          <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                      </form>
+                             </div>
+                             
+                    <div class="row">
+            <div class="col-12">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                  <div>
+                    <div class="blocy">
+                      <table
+                        id="tutorialTable"
+                        class="table  table-bordered display supertable table-striped dataTable no-footer dtr-inline"
+                      >
+                        <!-- Header Table -->
+                        <thead class="table dataTable no-footer">
+                          <tr>
+                            <th>Date de Création</th>
+                            <th>Numero de bordereau</th>
+                            <th>Nombre facture</th>
+                          
+                            <th>Montant</th>
+                            <th>Status</th>
+                            <th>Commentaire</th>
+                            <th>Créer par</th>
+                            <th>Confirmer/annulé par</th>
+                             <th>Type de  payement</th>
+                          <th data-priority="2">Action</th> 
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          	     <input
+            type="hidden"
+            name="message"
+            id="message"
+            th:value="message ?  message : ''"
+          />
+            </section>
+          
+</body>
+</html>
+<script th:inline="javascript">
+let NumeroBordereau = ""
+let Status = ""
+let userCode = ""
+let AffecterTo = ""
+let dateDebut = ""
+let dateFin = ""
+let datevalideFin=""
+let datevalideDebut=""
+function onchangeSearch(event) {
+    let name = event.target.name;
+    switch (name) {
+      case "NumeroBordereau": {
+    	  NumeroBordereau = event.target.value;
+        break;
+      }
+      case "Status": {
+    	  Status = event.target.value;
+        break;
+      }
+      case "userCode": {
+    	  userCode = event.target.value;
+
+        break;
+      }
+      case "AffecterTo": {
+    	  AffecterTo = event.target.value;
+        break;
+      }
+      case "dateDebut": {
+    	  dateDebut = event.target.value;
+        break;
+      }
+      case "dateFin": {
+    	  dateFin = event.target.value;
+        break;
+      }
+      case "datevalideFin": {
+    	  datevalideFin = event.target.value;
+        break;
+      }
+      case "datevalideDebut": {
+    	  datevalideDebut = event.target.value;
+        break;
+      } 
+        
+    }}
+    
+function onclicksherh(event) {
+    //event.preventdefault()
+    
+    event.preventDefault();
+    //$('#tutorialTable').DataTable().ajax.reload();
+    $("#tutorialTable")
+      .DataTable()
+      .search(
+        JSON.stringify({
+        	NumeroBordereau ,
+        	Status,
+        	userCode,
+        	AffecterTo,
+        	dateDebut,
+        	dateFin,
+        	datevalideDebut,
+        	datevalideFin
+			
+
+        })
+      )
+      .draw();
+  } 
+var messagenotif = document.getElementById("message").value;
+if(messagenotif !== "" && messagenotif == "anulationpathBordereaux"){
+	   $(document).Toasts("create", {
+	        title: "Justificatif bordereaux",
+	        body: "Impossible  ",
+	        class: "bg-danger",
+	        autohide: true,
+	        delay: 10000,
+	      });
+ }
+if(messagenotif !== "" && messagenotif == "bordorauxaccepted"){
+	   $(document).Toasts("create", {
+	        title: "Justificatif bordereaux",
+	        body: "ok ",
+	        class: "bg-success",
+	        autohide: true,
+	        delay: 10000,
+	      });
+}
+	   
+var oTable;
+var  array = [] ;
+var payment =  "<form id='myForm' class='form-sample'  method='post' action=''>"
+	payment += "<input id='factureliste' name='factureliste' type='hidden' value='"+array+"'> </form>" ;
+$('#formsendbr').append(payment)
+
+$("#togglebutton").click(function () {
+	
+    $("#showMe3").toggle();
+  });
+  
+$("#select_all").on("click", function (e) { 
+	   if (this.checked) {
+		  
+		   array= [] ; 
+	        $('input[name="chekelement"]').each(function () {
+	        	   this.checked = true ; 
+	        	array.push(this.id);
+	        })
+	        $("#createbordauraux").prop('disabled', false) ; 
+	        document.getElementById("factureliste").value = array;
+	      
+	   }
+	        else {
+	        	array = []
+	        	
+	        	$('input[name="chekelement"]:checked').each(function () {     	   this.checked = false ; })
+	        	  $("#createbordauraux").prop('disabled', true) ;
+	        }
+	
+	
+})
+function toggleCheckboxajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+   
+    if(column.checked){
+  	  array.push(column.id)
+    }
+    else{
+  	  const fillterdarray = array.filter(el => el !== column.id) ; 
+  	  array = fillterdarray ;  
+    } 
+   if(array.length > 0 )
+	  {
+	  
+	  $("#createbordauraux").prop('disabled', false) ; 
+	  document.getElementById("factureliste").value = array;
+	
+	  }
+  else
+	  {
+	  $("#createbordauraux").prop('disabled', true) ;
+	
+	 
+	  }
+  }
+$("#createbordauraux").click(function (e) {
+    e.preventDefault();
+
+    if (array.length !== 0) {
+      var url = "/bordaurau/bordaurauCreation";
+      $("#myForm").attr("action", url);
+      $("#myForm").submit();
+    } else {
+      alert("Veuillez selectionner les factures");
+      //  window.location.reload();
+    }
+  });
+
+oTable = $("#tutorialTable").DataTable({
+    processing: true,
+    serverSide: true,
+    ordering: true,
+    order: [0, "desc"],
+    responsive: {
+      details: {
+        type: "column",
+      },
+    },
+    searching: true,
+    fixedHeader: true,
+    ajax: "/bordereau/HistoriqueListeBordereau",
+    lengthMenu: [
+      [20, 50, 150],
+      [20, 50, 150],
+    ],
+
+    language: {
+      lengthMenu: "Affichage _MENU_ par page",
+      zeroRecords: "Rien trouvé - désolé",
+      emptyTable: "aucune donnée disponible",
+      info: "Afficher _START_ -  _END_ de _TOTAL_ entrées ",
+      infoEmpty: "Aucun enregistrement disponible",
+      paginate: {
+        first: "<i class='fa fa-fast-backward'></i>",
+				  last: "<i class='fa  fa-fast-forward '></i>",
+				  next: "<i class='fa fa-solid fa-chevron-right'></i>",
+				  previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+      },
+      search: "Chercher:",
+    },
+    initComplete: function (json) {
+     
+    },
+
+    columnDefs: [
+        {
+            className: "dtr-control",
+            orderable: false,
+            targets: 8,
+          },
+    ],
+
+    columns: [
+ 
+
+      {
+        data: null,
+        render: function (data, type, row) {
+
+        var options = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric'
+};
+
+        	if(row.created_date)
+          return new Date(row.created_date).toLocaleString('en-GB',options) ;
+        	return "";
+         
+        },
+      },
+      {
+          data: null,
+          render: function (data, type, row) {
+          	if(row.reference_bordereau)
+            return row.reference_bordereau ;
+          	return "";
+           
+          },
+        },
+      {
+          data: null,
+          render: function (data, type, row) {
+          	if(row.numfacure)
+            return row.numfacure  ;
+          	return "";
+           
+          },
+        },
+      {
+    	   data: null,
+           render: function (data, type, row) {
+           	if(row.montant)
+             return row.montant.toFixed(3) ;
+           	return "";
+            
+           },
+         },
+
+      { data: null,
+          render: function (data, type, row)   {
+         
+              if (row.status == "versement confirmé") {
+                return  "<div class='badge' style='background-color: #04c86d'>" +
+                row.status +
+                "</div>" 
+            }
+            else return row.status
+          }
+      //  data: "status", className: "table-cell-status" 
+
+      },
+    
+
+      {
+        data: "commentaire",
+
+      },
+      {    data: null,
+          render: function (data, type, row)   {
+          	if(row.first_name)
+                return row.first_name + "  " + row.last_name  ;
+              	return "";
+               
+              },
+    	
+
+        }, 
+        {
+    	   data: null,
+           render: function (data, type, row) {
+           	if(row.confirmedByfirstName)
+             return row.confirmedByfirstName +" "+ row.confirmedByLastName ;
+           	return "";
+            
+           },
+         },
+         {
+      	   data: null,
+             render: function (data, type, row) {
+             	if(row.typeDePayement)
+             		{
+             	
+               return row.typeDePayement ;
+             		}
+             	else
+             	return "";
+              
+             },
+           },
+
+          
+           {
+        	  data : null , 
+        	  render : function (data , type , row){
+        		  let enabel = "";
+              
+
+                      let button =  `<a  href='/bordereau/detailsbordereaux/`+row.bordereau_id+`'>
+                      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">`;
+                      
+        	    	if(row.status == "En attente de justificatif"){
+        	    		button +=  `Uplode justificatif     </button>
+        	                </a><div >`
+        	    	}
+        	    	else {
+        	    		button +=  `Detail bordereau </button>
+        	                </a><div >`
+        	    	}
+
+                    return  button +
+                       
+                    enabel + 
+                    `</div>` ; 
+             
+        	  }
+          },
+    	  
+
+
+
+
+
+    ],
+  //  "rowCallback": function( row, data, index ) {
+    //    if (data.status == "versement confirmé") {
+      //    $('td:eq(4)',row).css('background-color', '#04c86d');
+        //  $('td:eq(4)',row).css('color', '#fff');
+          
+    //    }
+       
+      
+    //  } 
+  });
+
+</script>

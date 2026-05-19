@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+    <div th:fragment="facturelist(factures)">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="factureDataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Reference </th>
+                        <th>Nom Client</th>
+                        <th>Montant à payer (TND)</th>
+                        <!-- <th>Taux TVA</th> -->
+                        <th>Date d'echéance</th>
+                        <th>Payée</th>
+                        <th>Date de paiement</th>
+
+                        <th>Recu</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr th:each="ob:${factures}">
+                        <div th:if="${ob != null &&  ob.getClass().simpleName == 'Facture'}">
+
+                            <td th:if="${ob.factureId}" th:value="${ob.factureId}" name="ref"><a
+                                    th:href="@{/facture/{ref}(ref=${ob.factureId})}"><i
+                                        th:text=${ob.ref_facture}></i></a></td>
+
+                            <td th:text="${ob.abonnement.firstName+' '+ob.abonnement.lastName}"></td>
+                            <td>
+                                <span th:text="${#numbers.formatDecimal(ob.montant_payer, 1, 'COMMA', 3, 'POINT')}"
+                                    class='badge badge-primary'>
+                                </span>
+                            </td>
+
+                            <!-- <td th:text=${ob.tauxTva}></td> -->
+
+                            <td th:text="${#dates.format(ob.date_echeance, 'dd-MM-yyyy')}"></td>
+                            <td>
+                                <span th:if="${ob.etat_facture}" class='badge badge-success'>Payé</span>
+                                <span th:unless="${ob.etat_facture}" class='badge badge-danger'>Non payé</span>
+
+                                <!-- <td>
+                                     <a th:href="@{/editFacture/{id}(id=${ob.factureId})}"  title="editer  facture"><i
+                                            class="fa fa-edit"></i></a>
+                                     <a th:if="${ob.etat_facture == false}"  th:href="@{/paymentFacture/{id}(id=${ob.factureId})}"  title="payer facture"><i class="fa fa-money-bill"></i></a>
+                                </td>-->
+                            <td>
+                                <span th:text="${#dates.format(ob.dateDePayement, 'dd-MM-yyyy')}"></span>
+                            </td>
+                            <td>
+                                <form th:if="${ob.etat_facture}" th:action="@{/payement/imprimer_recu_payment_A4}"
+                                    method="POST">
+                                    <button type="submit" class="btn btn-outline-primary">Reçu</button>
+                                    <input id='factureliste' name='factureliste' type='hidden'
+                                        th:value='${ob.factureId}'>
+                                    <input type="hidden" value="facture" name="type">
+
+                                </form>
+                                <span th:unless="${ob.etat_facture}" class='badge badge-warning'>Non disponible</span>
+                            </td>
+                        </div>
+                        <div th:if="${ob != null &&  ob.getClass().simpleName == 'AvoirClient'}">
+                            <td th:if="${ob.avoirId}" th:value="${ob.avoirId}" name="ref"><a
+                                    th:href="@{/AvoirClient/viewDetail/{ref}(ref=${ob.avoirId})}"><i
+                                        th:text=${ob.refAvoirClient}></i></a></td>
+                            <td th:text="${ob.abonnement.firstName+' '+ob.abonnement.lastName}"></td>
+                            <td> <span th:text="${#numbers.formatDecimal(ob.montantAvoir, 1, 'COMMA', 3, 'POINT')}"
+                                    class='badge badge-secondary'>
+                                </span>
+                            </td>
+                            <td>---------</td>
+                            <td>
+                                <span th:if="${ob.isClientPayed}" class='badge badge-success'>Payé</span>
+                                <span th:unless="${ob.isClientPayed}" class='badge badge-danger'>Non payé</span>
+                            </td>
+                            <td>
+                                <span th:text="${#dates.format(ob.dateDePaiement, 'dd-MM-yyyy')}"></span>
+                            </td>
+                            <td>
+                                <form th:if="${ob.isClientPayed}" th:action="@{/payement/imprimer_recu_payment_A4}"
+                                    method="POST">
+                                    <button type="submit" class="btn btn-outline-primary">Reçu</button>
+                                    <input id='factureliste' name='factureliste' type='hidden' th:value='${ob.avoirId}'>
+                                    <input type="hidden" value="avoir" name="type">
+                                </form>
+                                <span th:unless="${ob.isClientPayed}" class='badge badge-warning'>Non disponible</span>
+
+                            </td>
+                        </div>
+
+                    </tr>
+                </tbody>
+            </table>
+
+ 
+
+        </div>
+
+        <footer>
+            <p>&copy;Chifco 2022</p>
+        </footer>
+        <script>
+            $(document).ready(function () {
+                $('#factureDataTable').DataTable({
+                    "language": {
+                        "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                        "sInfo": "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
+                        "sInfoEmpty": "Affichage de l'élément 0 à 0 sur 0 éléments",
+                        "sInfoFiltered": "(filtré de _MAX_ éléments au total)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ",",
+                        "sLengthMenu": "Afficher _MENU_ éléments",
+                        "sLoadingRecords": "Chargement...",
+                        "sProcessing": "Traitement...",
+                        "sSearch": "Rechercher :",
+                        "sZeroRecords": "Aucun élément correspondant trouvé",
+                        "oPaginate": {
+                            "sFirst": "Premier",
+                            "sPrevious": "<",
+                            "sNext": ">",
+                            "sLast": "Dernier"
+                        },
+
+                    }
+                });
+            });
+        </script>
+    </div>
+
+</body>
+
+</html>

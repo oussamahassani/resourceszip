@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="Payedencaisment(Payedencaisment)">
+<div >
+  <div class="card shadow mb-4">
+    <div class="card-body">
+    <input type="hidden" th:value="${Payedencaisment}" id="Payedencaisment" />
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tutorialTablePayedencaisment" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>Num° Facture </th>
+                                <th>Nom Client</th>
+                                <th>Montant </th>
+                                 <th>Commission revendeur</th> 
+                                <th>Type de paiement  </th>
+                                <th>Payé le jr  </th>
+
+
+                            </tr>
+                            </thead>
+    
+                        </table>
+                    </div>
+                    </div>
+                    </div>
+
+    </div>
+    <script th:inline="javascript">
+        var oTable;
+  
+       var iduser = document.getElementById('Payedencaisment').value;
+      
+	   oTable =   $('#tutorialTablePayedencaisment').DataTable({
+		   "language": {
+				"lengthMenu": "Affichage _MENU_ enregistrements par page",
+	            "zeroRecords": "Rien trouvé - désolé",
+	            "info": "Afficher _START_ -  _END_ de _TOTAL_ Modems ",
+	            "infoEmpty": "Aucun enregistrement disponible",
+	            paginate: {
+	                first: "<i class='fa fa-fast-backward'></i>",
+	                last: "<i class='fa  fa-fast-forward '></i>",
+	                next: "<i class='fa fa-solid fa-chevron-right'></i>",
+	                previous: "<i class='fa fa-solid fa-chevron-left'></i>",
+	              },
+	        },
+         pagingType: 'full_numbers',
+	      processing: true,
+	      serverSide: true,
+	      ordering: true,
+	      order: [0, "desc"],
+	      searching : false,
+	      "processing": true, // activer le mode processing
+	      "serverSide": true, // activer le mode server-side
+	      ajax: "/payement/viewDetailsRecapFactureversee/"+iduser,
+	      lengthMenu: [
+	          [10, 20, 50 , 100 , 200,500],
+	          [10, 20, 50 , 100 , 200,500],
+	        ],
+	    
+            columns: [
+            
+            	
+            	 
+             
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.facture != null  && row.facture.ref_facture) return `<a href='/facture/`+row.facture.factureId+`'><i>
+                                        `+row.facture.ref_facture+`</i></a>`
+                 else if(row.avoirClient != null && row.avoirClient.avoirId ){
+                                            return `<a href='/AvoirClient/viewDetail/`+row.avoirClient.avoirId+`'><i>
+                                                   `+row.avoirClient.refAvoirClient+`</i></a>`
+                                             }                  
+                  else return "";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.facture != null  && row.facture.abonnement) return row.facture.abonnement.firstName;
+                  else if (row.avoirClient != null && row.avoirClient.abonnement != null) return row.avoirClient.abonnement.firstName;
+                  else return "";
+                },
+              },
+           
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.facture != null  && row.facture.montant_payer) return row.facture.montant_payer.toFixed(3);
+                  else if (row.avoirClient != null && row.avoirClient.montantAvoir) return row.avoirClient.montantAvoir.toFixed(3);
+                  else return "";
+                },
+              },
+           
+             
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.commissionRevendeur)
+                    return  row.commissionRevendeur.toFixed(3)
+                  else return "";
+                },
+              },
+
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.typeDePayment)
+                    return  row.typeDePayment 
+                  else return "";
+                },
+              },
+
+                {
+                  data: null,
+                  render: function (data, type, row) {
+                   var options = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric'
+};
+                     if(row.date!= null)
+                     return new Date(row.date).toLocaleString('en-GB', options)
+                     else  return ""
+        
+                     
+                    
+                  },
+                },
+              
+            ],
+          });
+        </script>
+</body>
+</html>

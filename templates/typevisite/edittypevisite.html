@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Statut</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Modifier un type de visite</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">Modifier un type de visite</div>
+                        <div class="card-body">
+                            <form class="form-sample" action="#" th:action="@{|/parameters/editTypeVisite/${typevisite.typevisiteid}|}"
+                                  method="POST" th:object="${statut}">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Nom du type de visite</label>
+                                        <div class="col-sm-9">
+                                            <p  class="form-control"  aria-disabled="true"
+                                                   th:text="${typevisite.nomType}"
+                                                  >
+                                        </div>
+                                        <div th:if="${existedCode != null}" class="alert alert-danger notification"
+                                             role="alert">
+                                            <p>type existe deja</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Designation du type visite</label>
+                                        <div class="col-sm-9">
+                                                <textarea class="form-control" rows="4"  name="designation"
+                                                          th:field="${typevisite.designation}" th:required="required">
+                                                </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                                <div class="card-footer" style="margin-top: 20px; text-align: center;">
+                                    <button type="submit" class="btn btn-success" style="margin-right: 20px;">Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger" style="margin-left: 20px;"
+                                            onclick="history.go(-1);">Annuler
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+</html>

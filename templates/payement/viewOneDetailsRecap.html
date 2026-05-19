@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<meta charset="UTF-8">
+<title>Crm Nety</title>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script type="text/javascript"   th:src="@{/js/jquery.dataTables.min.js}"></script>
+</head>
+<body>
+	<section layout:fragment="content">
+			<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab"
+									role="tablist">
+									<li class="nav-item"><a class="nav-link active"
+										id="custom-tabs-info-tab" data-toggle="pill"
+										href="#custom-tabs-info" role="tab"
+										aria-controls="custom-tabs-info" aria-selected="true">Information</a>
+									</li>
+									<li class="nav-item"><a class="nav-link"
+										id="custom-tabs-Payement-tab" data-toggle="pill"
+										href="#custom-tabs-Payement" role="tab"
+										aria-controls="custom-tabs-Payement" aria-selected="false">Factures Payées & Versées</a>
+									</li>
+										<li class="nav-item"><a class="nav-link"
+										id="custom-tabs-nonversee-tab" data-toggle="pill"
+										href="#custom-tabs-nonversee" role="tab"
+										aria-controls="custom-tabs-nonversee" aria-selected="false">Factures Payées Non Versées</a>
+									</li>
+											<li class="nav-item"><a class="nav-link"
+										id="custom-tabs-bordereau-tab" data-toggle="pill"
+										href="#custom-tabs-bordereau" role="tab"
+										aria-controls="custom-tabs-bordereau" aria-selected="false">Bordereaux </a>
+									</li>
+			                     <li class="nav-item"><a class="nav-link"
+										id="custom-tabs-Client-tab" data-toggle="pill"
+										href="#custom-tabs-Client" role="tab"
+										aria-controls="custom-tabs-Client" aria-selected="false">Abonnement</a>
+									</li>
+									<li class="nav-item"><a class="nav-link"
+										id="custom-tabs-Commission-tab" data-toggle="pill"
+										href="#custom-tabs-Commission" role="tab"
+										aria-controls="custom-tabs-Commission" aria-selected="false">Commission</a>
+									</li>
+								</ul>
+							</div>
+							
+							<div class="tab-content card-body">
+  <div class="tab-pane active" id="custom-tabs-info" role="tabpanel" aria-labelledby="home-tab">  <div  th:insert="fragments/Informationrevendeur :: Information(${Information} , ${infromationcreateur})"></div></div>
+  <div class="tab-pane" id="custom-tabs-Payement" role="tabpanel" aria-labelledby="profile-tab">  <div  th:insert="fragments/PayementVerseeRev :: Payedencaisment(${userid})"></div></div>
+  <div class="tab-pane" id="custom-tabs-nonversee" role="tabpanel" aria-labelledby="messages-tab">  <div  th:insert="fragments/PayementNonVerseeRev :: NotPayedencaisment(${userid})"></div></div>
+  <div class="tab-pane" id="custom-tabs-bordereau" role="tabpanel" aria-labelledby="settings-tab"><div  th:insert="fragments/BordereauRev :: bordereaulist(${userid})"></div> </div>
+  <div class="tab-pane" id="custom-tabs-Client" role="tabpanel" aria-labelledby="settings-tab">  <div  th:insert="fragments/listeAbonnements :: abnlist(${userid})"></div></div>
+  <div class="tab-pane" id="custom-tabs-Commission" role="tabpanel" aria-labelledby="settings-tab"> <div  th:insert="fragments/commission"></div></div>
+    
+</div>
+	
+	
+	</section>
+
+</body>
+</html>

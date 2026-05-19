@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <meta sec:authorize="isFullyAuthenticated()" th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}" />
+  <meta sec:authorize="isFullyAuthenticated()" th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}" />
+  <meta sec:authorize="isFullyAuthenticated()" th:if="${_csrf}" name="_csrf_parameter"
+    th:content="${_csrf.parameterName}" />
+  <title>CRM</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" th:href="@{/vendor/fontawesome-free/css/all.min.css}" />
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{/css/adminlte.min.css}" />
+  <link th:rel="stylesheet" th:href="@{/vendor/jquery-steps/jquery.steps.css} " />
+  <link rel="stylesheet" th:href="@{/css/theme.css}" />
+  <!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"  />-->
+  <!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" /> -->
+
+  <link rel="stylesheet" th:href="@{/css/loader.css}" />
+  <link rel="shortcut icon" th:href="@{/img/favicon.png}" />
+  <!-- jQuery -->
+  <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+
+  <!--  <script
+src='https://cdn.jsdelivr.net/npm/disable-devtool'
+disable-devtool-auto
+md5="1de1d66b7918530fd194d914ea8d66e1"
+></script>-->
+
+  <style th:inline="text">
+    .animate-charcter {
+      text-transform: uppercase;
+      background-image: linear-gradient(-225deg,
+          rgb(128, 0, 255) 0%,
+          #44107a 29%,
+          rgb(128, 0, 255) 67%,
+          #fff800 100%);
+      background-size: auto auto;
+      background-clip: border-box;
+      background-size: 200% auto;
+      color: #fff;
+      background-clip: text;
+      text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textclip 3s linear infinite;
+      display: inline-block;
+      font-size: 12px;
+
+    }
+
+    @keyframes textclip {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+
+
+    .recap {
+      background: url(/images/samples/recap.png);
+      background-repeat: repeat;
+      background-size: auto;
+      background-repeat: 100% 100%;
+      background-size: contain;
+
+      width: 198px;
+      height: 97px;
+      padding: 10px 10px 10px 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-repeat: no-repeat;
+      flex-direction: column;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .recap h2 {
+      font-size: 14px;
+    }
+  </style>
+  <script>
+
+    $(function () {
+      bsCustomFileInput.init();
+    });
+    document.onkeydown = function (e) {
+      if (event.keyCode == 123) {
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+        return false;
+      }
+      //   if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+      //  return false;
+      //  }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+        return false;
+      }
+      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+        return false;
+      }
+    }
+
+    $.get("/payement/calculeencaissement", function (data) {
+
+      if (document.getElementById("plafon")) {
+        document.getElementById("plafon").innerHTML = Number.parseFloat(data.plafon) + " DT"
+        document.getElementById("total").innerHTML = Number.parseFloat(data.total).toFixed(3) + " DT"
+      }
+
+      document.getElementById("idserver").innerHTML = data.serverNameCRM
+
+
+    });
+
+    //     $().ready(function () {
+    //     	   	var token = $("meta[name='_csrf']").attr("content");
+    //          var header = $("meta[name='_csrf_header']").attr("content");
+    //              $(document).ajaxSend(function (e, xhr, options) {
+    //             xhr.setRequestHeader(header, token);
+    //     });
+    //    })
+    //$(function () {
+    //	var token = $("meta[name='_csrf']").attr("content");
+    //  var header = $("meta[name='_csrf_header']").attr("content");
+    // $(document).ajaxSend(function (e, xhr, options) {
+    // 	xhr.setRequestHeader(header, token);    })
+    // });
+  </script>
+</head>
+<!--  -->
+
+<body class="hold-transition sidebar-mini" oncontextmenu="return false">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i> <span
+              id="idserver"></span></a>
+        </li>
+
+      </ul>
+  <li sec:authorize="hasAnyAuthority('VIEW_MONTANT_ENCAISSE')"  class="navbar-nav ml-4">
+                  <a href="/demandeabonnement/adddemandeabonnementwithsteps" class="text-center ">La précommande de l’offre 05G est maintenant disponible chez Nety. </a>
+      
+      </li>
+
+      <!-- Right navbar links -->
+      <ul class="navbar-nav ml-auto">
+    
+        <li sec:authorize="hasAnyAuthority('VIEW_MONTANT_ENCAISSE')" class="mr-3 mt-3">
+          <h6 class="animate-charcter">
+            Montant non versé : <span id="total"></span> &emsp;/&emsp; Plafond autorisé : <span id="plafon"></span>
+          </h6>
+
+        </li>
+        <div class="nav-item">
+         <!--   <li sec:authorize="hasAnyAuthority('VIEW_MONTANT_ENCAISSE')" class="nav-item">
+            <a href="/commission/listeCommision" class="nav-link text-danger"
+              style="text-decoration: underline dotted red;"> Nouveau plan de commission depuis le 01 Avril !
+            </a>
+
+          </li>-->
+          <li>
+            <!-- <a href="/demandeabonnement/adddemandeabonnementwithsteps" class="nav-link text-info"
+            style="text-decoration: underline dotted red;">Nouvelle Offre PayLater Novembre 2024
+          </a> -->
+
+          </li>
+        </div>
+        <li class="nav-item">
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </a>
+
+        </li>
+
+
+
+
+        <li>
+          <div class="nav-item dropdown " sec:authorize="hasAnyAuthority('UPDATE_PROFILE_REVENDEUR')">
+            <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <div class="user-panel p-1 d-flex" sec:authorize="isAuthenticated()" th:switch="${userphoto}">
+                <div class="image">
+                  <img th:case="null" class="img-circle elevation-2" th:src="@{/img/user2-160x160.jpg}"
+                    alt="Profile image" />
+                  <img th:case="*" class="img-circle elevation-2" th:src="@{${'/photos/'+useremail+'/'+userphoto}}"
+                    alt="Profile image" />
+                </div>
+              </div>
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+              <a class="nav-link" role="button" href="/RevendeurUser/users/mon-profile"><i class="fas fa-user"></i>
+                Modifier le profil</a>
+
+            </div>
+          </div>
+          <a id="logoutLink" class="nav-link" role="button">
+            <i class="fas fa-sign-out-alt"></i> Déconnexion
+          </a>
+          <!--  <a class="nav-link"   role="button" href="/logout">
+              <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+ -->
+
+        </li>
+      </ul>
+    </nav>
+    <!-- /.navbar -->
+
+
+
+
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-light-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="/" class="brand-link">
+        <img th:src="@{/img/logo chifco.png}" alt="CHIFCO" class="brand-image" style="opacity: 0.8" />
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- SidebarSearch Form 
+            <div class="form-inline">
+                <div class="input-group" data-widget="sidebar-search">
+                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-sidebar">
+                            <i class="fas fa-search fa-fw"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>-->
+
+        <!-- Sidebar Menu -->
+
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                         with font-awesome or any other icon font library -->
+            <li class="nav-item" sec:authorize="hasAnyAuthority('VIEW_DASHBORD_ADMIN')">
+              <a th:href="@{/admin/dashboard}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Tableau de Bord</p>
+              </a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('VIEW_DASHBORD_OTHER')">
+              <a th:href="@{/alluser/dashboard}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Tableau de Bord</p>
+              </a>
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_USER_LIST','READ_RETAIL_LIST','READ_USER_SYSTEM','READ_RETAIL_LIST__AREA','ADD_USER')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Gestion des utilisateurs</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_USER_SYSTEM')">
+                  <a th:href="@{/admin/usersSystem/getusers}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p> Liste des utilisateurs système </p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ADD_USER')">
+                  <a th:href="@{/admin/users/add-user}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Ajouter un utilisateur </p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_USER_LIST')">
+                  <a th:href="@{/admin/users/allusers/1}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des utilisateurs </p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_RETAIL_LIST','READ_RETAIL_LIST__AREA')">
+                  <a th:href="@{/RevendeurUser/revendeurliste/1}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des revendeurs</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('READ_CONFIG_NOTIFICATION')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Config notification</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/NotificationConfig/getListConfigNotif}" class="nav-link">
+                    <p>Config notification</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('WRITE_ROLE')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chart-pie"></i>
+                <p>Rôles et privilèges </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('WRITE_ROLE')">
+                  <a th:href="@{/role/allroles/1}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Rôles</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/role/allprivileges/1}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Privilèges</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_CATEGORY','READ_PRODUCT','ANTIVIRUS_KEY_MANAGEMENT')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-wifi"></i>
+                <p>Services et Produits </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_CATEGORY')">
+                  <a th:href="@{/pi/allcategoriesproduitsinternet/1}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Catégories produits internet </p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_PRODUCT')">
+                  <a th:href="@{/pi/allproduits/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Produits internet</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_PRODUCT')">
+                  <a th:href="@{/pack/allPack}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Packs</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_PRODUCT')">
+                  <a th:href="@{/offre/allOffres}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Offres</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ANTIVIRUS_KEY_MANAGEMENT')">
+                  <a th:href="@{/antiVirus/antivirus_keys_page}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des clés </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_RETAIL_SUMMARY_LIST_ALL','READ_RETAIL_SUMMARY_LIST_AREA')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-user-secret"></i>
+                <p>Gestion des revendeurs </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('READ_RETAIL_SUMMARY_LIST_ALL','READ_RETAIL_SUMMARY_LIST_AREA')">
+                  <a th:href="@{/payement/viewlisterecaperevendeur}" class="nav-link">
+                    <!--  <i class="far fa-circle nav-icon"></i> -->
+                    <p>Récapitulatif des revendeurs </p>
+                  </a>
+                </li>
+              </ul>
+
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_REQUEST_MIGRATION','READ_REQUEST_CHDEBIT','READ_REQUEST_TRANSFERT')">
+
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-folder-open"></i>
+                <p>Opérations Client </p>
+
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_REQUEST_MIGRATION')">
+                  <a th:href="@{/operationAbonnement/alldemandesmigration}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Demande de Migration</p>
+
+                  </a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_REQUEST_TRANSFERT')">
+                  <a th:href="@{/operationAbonnement/alldemandestransfert}" class="nav-link">
+
+                    <p>Demande de Transfert</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_REQUEST_CHDEBIT')">
+                  <a th:href="@{/operationAbonnement/alldemandeschangementdebit}" class="nav-link">
+
+                    <p>Demande de Changement de Débit</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('ADD_SUBSCRIPTION_REQUEST','SEARCH_SUBSCRIPTION_REQUEST_RETAIL','SEARCH_SUBSCRIPTION_REQUEST_ALL','READ_SUBSCRIPTION_REQUEST_ALL','READ_SUBSCRIPTION_REQUEST_RETAIL','READ_SUBSCRIPTION_REQUEST_AREA')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-globe"></i>
+                <p>Gestion des abonnements</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('SEARCH_SUBSCRIPTION_REQUEST_ALL','SEARCH_SUBSCRIPTION_REQUEST_RETAIL')">
+                  <a th:href="@{/demandeabonnement/recherchefichedemande}" class="nav-link">
+                    <!-- <i class="fas fa-search nav-icon"></i> -->
+                    <p>Recherche d'abonnement</p>
+                  </a>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('ADD_SUBSCRIPTION_REQUEST','ADD_SUBSCRIPTION_REQUEST_ALL')">
+                  <a th:href="@{/demandeabonnement/adddemandeabonnementwithsteps}" class="nav-link">
+                    <!-- <i class="fa fa-plus nav-icon"></i> -->
+                    <p>Nouvel abonnement</p>
+                  </a>
+                </li>
+
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_ALL','READ_SUBSCRIPTION_REQUEST_RETAIL','READ_SUBSCRIPTION_REQUEST_AREA')">
+                  <a th:href="@{/demandeabonnement/alldemandesabonnement/1/20}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Liste des abonnements</p>
+                  </a>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_ALL','READ_SUBSCRIPTION_REQUEST_RETAIL','READ_SUBSCRIPTION_REQUEST_AREA')">
+                  <a th:href="@{/demandeabonnement/alldemandesnonsigneer}" class="nav-link">
+                    <!-- <i class="fas fa-signal  nav-icon"></i> -->
+                    <p>Liste des abonnements non signés</p>
+                  </a>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_ALL','READ_SUBSCRIPTION_REQUEST_RETAIL','READ_SUBSCRIPTION_REQUEST_AREA')">
+                  <a th:href="@{/demandeabonnement/alldemandesencours}" class="nav-link">
+                    <!--  <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Liste des abonnements en cours</p>
+                  </a>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_ALL','READ_SUBSCRIPTION_REQUEST_RETAIL','READ_SUBSCRIPTION_REQUEST_AREA')">
+                  <a th:href="@{/demandeabonnement/alldemandestraiter}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Liste des abonnements traités</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_REQUEST_RETAIL')">
+                  <a th:href="@{/demandeabonnement/alldemandestransferees}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Suivi des demandes transférées</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('READ_COMMANDE')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-truck"></i>
+                <p>Commandes</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/commande/allcommandes/1/20}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des commandes</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('READ_PARINAGE')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-retweet"></i>
+                <p>Parrainage</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/parinage/allparinage}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des Parrainages</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+             <li class="nav-item"
+              sec:authorize="hasAnyAuthority('CREATE_INVOICE_AVOIR' , 'READ_BLUR_INVOICE_AVOIR')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                 <p>Gestion des avoirs</p>
+                </a>
+                  <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_INVOICE_AVOIR')">
+                  <a th:href="@{/AvoirClient/AllAvoirClient}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des factures d'avoir</p>
+                  </a>
+                </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('READ_INVOICE_AVOIR','READ_BLUR_INVOICE_AVOIR')">
+                  <a th:href="@{/AvoirClient/AllAvoirClientNotPublic}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des avoirs en cours</p>
+                  </a>
+                </li>
+                  <li class="nav-item" sec:authorize="hasAnyAuthority('READ_INVOICE_AVOIR','READ_BLUR_INVOICE_AVOIR')">
+                  <a th:href="@{/AvoirClient/AllAvoirRefused}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p> Liste des avoirs annulés</p>
+                  </a>
+                </li>
+                </ul>
+                </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('INVOICE_PAYMENT' ,'EXPORT_TT_FACTURE', 'READ_LISTFACTUREPAYEE','READ_PAYED_INVOICE_ALL','READ_INVOICE_PROFORMAT','READ_INVOICE_ALL') ">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                <p>Gestion de la facturation</p>
+              </a>
+
+              <ul class="nav nav-treeview">
+
+
+                <li class="nav-item" sec:authorize="hasAnyAuthority('INVOICE_PAYMENT')">
+                  <a th:href="@{/facture/recherchefactures}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Paiement des factures</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_PAYED_INVOICE_ALL')">
+                  <a th:href="@{/payement/viewlistepayement}" class="nav-link">
+
+                    <p>Liste des factures encaissées</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/facture}" class="nav-link" sec:authorize="hasAnyAuthority('READ_INVOICE_ALL')">
+
+                    <p>Liste des factures</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a th:href="@{/facturePoformat}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('READ_INVOICE_PROFORMAT')">
+
+                    <p>Liste des Factures Proformat</p>
+                  </a>
+                </li>
+                
+                <li class="nav-item" sec:authorize="hasAnyAuthority('EXPORT_TT_FACTURE')">
+                  <a th:href="@{/facturationTT/homeView}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Factures Tunisie Telecom</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+             <li class="nav-item"
+			    sec:authorize="hasAnyAuthority('EXPORT_RAPPORT_STATS','EXPORT_RAPPORT_CLIENT_RELAUNCH')">
+			    <a href="#" class="nav-link">
+			            <i class="nav-icon fas fa-table"></i>
+			        <p>Analyses & Rapports</p>
+			    </a>
+			    <ul class="nav nav-treeview">
+			        <li class="nav-item" sec:authorize="hasAnyAuthority('EXPORT_RAPPORT_STATS')">
+			            <a th:href="@{/rapport/statistique}" class="nav-link">
+			                <p>Statistique annuel / mensuel</p>
+			            </a>
+			        </li>
+			        <li class="nav-item" sec:authorize="hasAnyAuthority('EXPORT_RAPPORT_CLIENT_RELAUNCH')">
+			            <a th:href="@{/rapport/clientFactureImpEchue}" class="nav-link">
+			                <p>Clients à relancer</p>
+			            </a>
+			        </li>
+			    </ul>
+			</li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_SLIP_HISTORY','READ_SLIP_LIST_RETAIL','READ_SLIP_LIST','CREATE_SLIP','READ_SLIP_HISTORY_AREA')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-clipboard-check"></i>
+                <p>Gestion des bordereaux </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('READ_SLIP_LIST_RETAIL','READ_SLIP_LIST', 'READ_SLIP_HISTORY_AREA')">
+                  <a th:href="@{/bordereau/viewlisteBordereau}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p> Liste des bordereaux </p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('CREATE_SLIP')">
+                  <a th:href="@{/payement/viewlistepayement}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Créer un bordereau</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_SLIP_HISTORY','READ_SLIP_HISTORY_AREA')">
+                  <a th:href="@{/bordereau/viewHistoriqueListeBordereau}" class="nav-link">
+                    <!-- <i class="fas fa-signal nav-icon"></i> -->
+                    <p>Historique des bordereaux</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('COMMISSION_ADMIN','COMMISSION_OWNER','COMMISSION_OWNER_FREELANCER','COMMISSION_FINNANCIER_AREA','COMMISSION_FINNANCIER_ALL','COMMISSION_AREA','COMMISSION_OFFER_MANAGEMENT')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-dollar-sign"></i>
+                <p>Gestion des commissions</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/commission/suivi_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OWNER','COMMISSION_FINNANCIER_ALL','COMMISSION_FINNANCIER_AREA')">
+                    <p>Calcul de commission de base</p>
+                  </a>
+                </li>
+                    <li class="nav-item">
+                  <a th:href="@{/commission/suivifreelance}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OWNER_FREELANCER','COMMISSION_FINNANCIER_ALL')">
+                    <p>Calcul de commission freelance</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/commissionpromotionnel/suivi_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OWNER','COMMISSION_FINNANCIER_ALL','COMMISSION_FINNANCIER_AREA')">
+                    <p>Calcul de commission promotionnelle</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/commissionpromotionnel/offrecommissions}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OFFER_MANAGEMENT')">
+                    <p>Commission promotionnelle</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/commission/mes_commission_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OWNER','COMMISSION_OWNER_FREELANCER')">
+                    <p>Liste des commissions validées</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/commission/all_commission_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_ADMIN','COMMISSION_AREA')">
+                    <p>Liste des commissions</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/demandeCommission/all_demande_commission_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_ADMIN')">
+                    <p>Demande de paiement de commission</p>
+                  </a>
+                </li>
+                  <li class="nav-item">
+                  <a th:href="@{/demandeCommission/all_grouped_demande_commission_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_ADMIN')">
+                    <p>Demande de paiement de commission groupes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/demandeCommission/all_my_demande_commission_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OWNER','COMMISSION_OWNER_FREELANCER')">
+                    <p>Demandes de paiement en cours</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/demandeCommission/all_my_grouped_demande_commission_page}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OWNER','COMMISSION_OWNER_FREELANCER')">
+                    <p>Commissions groupées validées</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/commission/offrecommissions}" class="nav-link"
+                    sec:authorize="hasAnyAuthority('COMMISSION_OFFER_MANAGEMENT')">
+                    <p>Offres de commissions</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_SUBSCRIPTION_LIST','READ_SUBSCRIPTION_LIST_OWNER','READ_SUBSCRIPTION_LIST_AREA')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Gestion des clients </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/client/allclients/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des clients </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/client/allclientactive/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des clients actifs</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/client/allclientsEnRecouvrement/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des clients en recouvrement </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/client/allclientsResilier/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des clients résiliés </p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a th:href="@{/client/allClientNonConnecterView/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des non connecté</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/client/allClientsNonConnecterMiseEnService/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des non connecté mise en service</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('VIEW_CLIENT_TECHNICAL_COMPLAINTS',
+              'VIEW_CLIENT_COMMERCIAL_COMPLAINTS','VIEW_CLIENT_RESELLER_COMPLAINTS','VIEW_CLIENT_SECTORHEAD_COMPLAINTS',
+              'READ-RECLAMATION-ALL','READ-RECLAMATION-AREA','READ-RECLAMATION-OWNER','LIST_MY_COMPLAINT')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-file-archive"></i>
+                <p>Gestion des réclamations </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('CREATE_RECLAMATION')">
+                  <a th:href="@{/reclamations/addreclamation}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Ajouter une réclamation </p>
+                  </a>
+                </li>
+                <li class="nav-item "
+                  sec:authorize="hasAnyAuthority('VIEW_CLIENT_COMMERCIAL_COMPLAINTS','VIEW_CLIENT_TECHNICAL_COMPLAINTS')">
+                  <a href="#" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des réclamations clients</p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item ml-2" sec:authorize="hasAnyAuthority('VIEW_CLIENT_TECHNICAL_COMPLAINTS')">
+                      <a th:href="@{/reclamations/allclientreclamationTech/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations techniques </p>
+                      </a>
+                    </li>
+                    <li class="nav-item ml-2" sec:authorize="hasAnyAuthority('VIEW_CLIENT_COMMERCIAL_COMPLAINTS')">
+                      <a th:href="@{/reclamations/allclientreclamationTechniqueFSI/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations techniques FSI </p>
+                      </a>
+                    </li>
+                    <li class="nav-item ml-2" sec:authorize="hasAnyAuthority('VIEW_CLIENT_COMMERCIAL_COMPLAINTS')">
+                      <a th:href="@{/reclamations/allclientreclamationCommercial/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations commercials </p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('VIEW_CLIENT_RESELLER_COMPLAINTS')">
+                  <a href="#" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des reclamations revendeurs </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item ml-2">
+                      <a th:href="@{/reclamations/allRevTechReclamations/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations techniques </p>
+                      </a>
+                    </li>
+                    <li class="nav-item ml-2">
+                      <a th:href="@{/reclamations/allRevComReclamations/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations commecials </p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('VIEW_CLIENT_SECTORHEAD_COMPLAINTS')">
+                  <a href="#" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des réclamations distributeurs</p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item ml-2">
+                      <a th:href="@{/reclamations/allDistTechReclamations/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations techniques </p>
+                      </a>
+                    </li>
+                    <li class="nav-item ml-2">
+                      <a th:href="@{/reclamations/allDistComReclamations/1}" class="nav-link">
+                        <!-- <i class="far fa-circle nav-icon"></i> -->
+                        <p>Réclamations commecials </p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('LIST_MY_COMPLAINT')">
+                  <a th:href="@{/reclamations/mesReclamations/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Mes réclamations </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('READ_VISIT_LIST','READ_VISIT_LIST_OWNER')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-glasses"></i>
+                <p>Gestion des visites </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/visite/allvisites/1}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des visites </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_MODEM' ,'READ_MODEM_POS','ASK_MODEM','VOIR_LISTE_DEMANDE_MODEM','AFFECTER_MODEM','VOIR_LISTE_DEMANDE_MODEM_OWNER',
+                       'READ_MODEM_LIST_AREA','READ_MODEM_OWNER','LIST_QUANTITE_MODEM_REVENDEUR','LIST_QUANTITE_MODEM_DISTRIBUTEUR','LIST_QUANTITE_MODEM_ADMIN','LIST_QUANTITE_MODEM_POS','VOIR_LISTE_DEMANDE_MODEM_AREA')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-server"></i>
+                <p>Modems</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li sec:authorize="hasAnyAuthority('ASK_MODEM')" class="nav-item">
+                  <a th:href="@{/demandeModem}" class="nav-link">
+
+                    <p>Demande des modems</p>
+                  </a>
+                </li>
+                <li sec:authorize="hasAnyAuthority('READ_MODEM')" class="nav-item">
+                  <a th:href="@{/modemsadmin}" class="nav-link">
+
+                    <p>Liste des modems </p>
+                  </a>
+                </li>
+                <li sec:authorize="hasAnyAuthority('READ_MODEM_POS','READ_MODEM_LIST_AREA','READ_MODEM_OWNER')"
+                  class="nav-item">
+                  <a th:href="@{/modems}" class="nav-link">
+
+                    <p>Mes modems</p>
+                  </a>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('VOIR_LISTE_DEMANDE_MODEM','VOIR_LISTE_DEMANDE_MODEM_AREA','VOIR_LISTE_DEMANDE_MODEM_OWNER')">
+                  <a th:href="@{/listeModemDemande}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Liste des demandes de modems</p>
+                  </a>
+                </li>
+                <li class="nav-item"
+                  sec:authorize="hasAnyAuthority('LIST_MODEM_AFFECTED_ADMIN','LIST_MODEM_AFFECTED_OTHER')">
+                  <a th:href="@{/fiches}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Consulter la liste des affectations</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_MODEM')">
+                  <a th:href="@{/recapDist}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>État du stock par distributeur</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_MODEM','READ_MODEM_LIST_AREA')">
+                  <a th:href="@{/recapRev}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>État du stock par revendeur</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('READ_AGED_BALANCE')">
+              <a href="#" class="nav-link">
+
+                <i class="nav-icon fa fa-university"></i>
+                <p>Recouvrement</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/getrecouvrement}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p> Balance âgée</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"
+              sec:authorize="hasAnyAuthority('READ_HISTORY_INVOICE','READ_HISTORY_IMPORT_SUSBSCRIPTION_REQUEST','READ_MODEM_IMPORT_HISTORY','IMPORT_TECH_CLIENT_COMPLAINT')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-history"></i>
+                <p>Historique</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_HISTORY_INVOICE')">
+                  <a th:href="@{/historique}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Consulter Historique facture</p>
+                  </a>
+                </li>
+                <!--  <li class="nav-item" sec:authorize="hasAnyAuthority('READ_HISTORIQUE_ABONNEMENT')">
+                    <a th:href="@{/historiqueAbonnement}" class="nav-link">
+                      <p>Historique abonnement</p>
+                    </a>
+                  </li>
+              
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_HISTORIQUE_CLIENT')">
+                    <a th:href="@{/historiqueClient}" class="nav-link">
+               
+                      <p>Historique client</p>
+                    </a>
+                  </li> -->
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_HISTORY_IMPORT_SUSBSCRIPTION_REQUEST')">
+                  <a th:href="@{/historyXls/viewhistoriqueXls}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Historique Import Xls</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_MODEM_IMPORT_HISTORY')">
+                  <a th:href="@{/historyXls/modemhistorique}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Historique Modem</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('IMPORT_TECH_CLIENT_COMPLAINT')">
+                  <a th:href="@{/historyXls/viewhistoriqueXlsReclamation}" class="nav-link">
+                    <!-- <i class="far fa-circle nav-icon"></i> -->
+                    <p>Historique Réclamation Import Xls</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_STATUS','UPDATE_CITY')">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-wrench"></i>
+                <p>Paramétrer</p>
+              </a>
+              <ul class="nav nav-treeview">
+                <!--
+                  <li class="nav-item"  sec:authorize="hasAnyAuthority('READ_TYPEPAIEMENT')">
+                    <a
+                      th:href="@{/typepaiement/alltypepaiements/1}"
+                      class="nav-link"
+                    >
+                    
+                      <p>Type de Paiement</p>
+                    </a>
+                  </li>-->
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_STATUS')">
+                  <a th:href="@{/statut/allstatus/1/20}" class="nav-link">
+
+                    <p>Liste des status</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_STATUS')">
+                  <a th:href="@{/accessModem/getallAccess/1/20}" class="nav-link">
+
+                    <p>Liste des access Modem</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_CITY')">
+                  <a th:href="@{/ville/allgouvernorats/1}" class="nav-link">
+
+                    <p>Gouvernorats</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_CITY')">
+                  <a th:href="@{/ville/allvilles/1}" class="nav-link">
+
+                    <p>Villes</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_CITY')">
+			      <a th:href="@{/zone/allzones/1}" class="nav-link">
+			       
+			        <p>Zones</p>
+			      </a>
+			    </li>
+
+                <li class="nav-item" sec:authorize="hasAnyAuthority('READ_PROFESSION')">
+                  <a th:href="@{/profession/allprofessions/1}" class="nav-link">
+
+                    <p>Professions</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_STATUS')">
+                  <a th:href="@{/parameters/allstatus/1/20}" class="nav-link">
+
+                    <p>status réclamation</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_MOTIF')">
+                  <a th:href="@{/parameters/allmotifs/1/20}" class="nav-link">
+
+                    <p>Liste des motifs</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_SERVICETYPE')">
+                  <a th:href="@{/parameters/allservicetypes/1/20}" class="nav-link">
+
+                    <p>Liste des types services</p>
+                  </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_STATUS')">
+                  <a th:href="@{/parameters/Alltypevisite/1/20}" class="nav-link">
+
+                    <p>Types visites</p>
+                  </a>
+                </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('UPDATE_STATUS')">
+                  <a th:href="@{/parameters/allengagements/1/20}" class="nav-link">
+
+                    <p>Liste de Types d'engagements</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <div class="main-panel">
+      <div class="content-wrapper" layout:fragment="content">
+        Content is Here!
+      </div>
+      <!-- partial -->
+    </div>
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+      <strong>Copyright &copy;
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        CRM CHIFCO.
+      </strong>
+      All rights reserved.
+    </footer>
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+
+
+  </script>
+  <!-- Bootstrap -->
+  <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <!-- AdminLTE -->
+  <script th:src="@{/js/adminlte.js}"></script>
+  <script th:src="@{/vendor/bs-custom-file-input/bs-custom-file-input.min.js}"></script>
+  <!-- OPTIONAL SCRIPTS -->
+  <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+  <!-- AdminLTE for demo purposes . -->
+  <script th:src="@{/js/demo.js}"></script>
+  <script type="text/javascript" th:src="@{/js/jquery.dataTables.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/dataTables.buttons.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/dataTables.responsive.min.js}"></script>
+  <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+
+  <!--<script<script th:src="@{/js/validatorbootsrap.js}"></script>-->
+  <script type="text/javascript" th:src="@{/js/jquery.validate.min.js}"></script>
+  <!--&lt;!&ndash; AdminLTE dashboard demo (This is only for demo purposes) &ndash;&gt;.
+    -->
+  <!--<script th:src="@{/js/pages/dashboard3.js}"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+  <script th:src="@{/vendor/jquery-steps/jquery.steps.min.js}"></script>
+  <script th:src="@{/vendor/jquery-validate/jquery.validate.min.js}"></script>
+  <script th:src="@{/vendor/toastr/toastr.min.js}"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/devtools-detector/2.0.14/devtools-detector.js"></script>
+
+  <script th:inline="javascript">
+    // Function to extract the current URL
+    function getCurrentURL() {
+      return window.location.pathname;
+    }
+
+    // Get the logout link element by its ID
+    const logoutLink = document.getElementById('logoutLink');
+
+    // Add a click event listener to dynamically generate the logout link with the redirect parameter
+    logoutLink.addEventListener('click', function () {
+      const currentURL = getCurrentURL();
+      const logoutURL = `/logout?redirect=${encodeURIComponent(currentURL)}`;
+      // Set the href attribute of the link
+      logoutLink.href = logoutURL;
+    });
+  </script>
+</body>
+
+</html>

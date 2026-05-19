@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+<title>Home</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<section class="content">
+			<div class="container-fluid">
+				<div class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-6">
+								<h1 class="m-0">Demande D'abonnement</h1>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.container-fluid -->
+				</div>
+				<div class="row">
+					<div class="col-12 grid-margin">
+						<div class="card card-default">
+							<div class="card-header">
+								<h3 class="card-title">Demande d'abonnement</h3>
+							</div>
+							<div class="card-body">
+								<form class="form-sample" id="form-sample" action="#"
+									th:action="@{/demandeabonnement/add-demandeabonnement}"
+									enctype="multipart/form-data" method="POST" >
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Catégorie</label>
+												<div class="col-sm-9">
+													<select id="categories" name="categories"
+														class="form-control" th:required="true">
+														<option value="">Selectionner une catégorie</option>
+														<option th:each="categorie : ${categories}"
+															th:value="${categorie.categorieProduitInternetId}"
+															th:text="${categorie.categorieProduitInternetNom}"></option>
+													</select>
+												</div>
+											
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Produit</label>
+												<div class="col-sm-9">
+													<select id="produit" name="produit" class="form-control"
+														th:required="true">
+														<option value="">Selectionner une catégorie avant</option>
+													</select>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Nom</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="Nom" name="Nom"
+														placeholder="Nom" th:required="required" />
+												</div>
+												
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Prénom</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="Prenom"
+														name="Prenom" placeholder="Prénom" th:required="required" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Email</label>
+												<div class="col-sm-9">
+													<input type="email" class="form-control" id="Email"
+														name="Email" placeholder="Email" th:required="required" />
+												</div>
+												<div th:if="${existedCode != null}"
+													class="alert alert-danger notification" role="alert">
+													<p>Email existe deja</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">CIN</label>
+												<div class="col-sm-9">
+													<input type="tel" pattern="[0-9]{8}" class="form-control"
+														readonly="readonly" id="CIN" name="CIN" placeholder="CIN"
+														th:required="required" />
+												</div>
+												<div th:if="${existedCode2 != null}"
+													class="alert alert-danger notification" role="alert">
+													<p>CIN existe deja</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Ville</label>
+												<div class="col-sm-9">
+													<select id="villes" name="villes" class="form-control"
+														th:required="true">
+														<option value="">Selectionner une ville</option>
+														<option th:each="ville : ${villes}"
+															th:value="${ville.gouvernoratId}" th:text="${ville.villeName}"></option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Gouvernorat</label>
+												<div class="col-sm-9">
+													<select id="gouvernorat" name="gouvernorat"
+														class="form-control" th:required="true">
+														<option value="">Selectionner une ville avant</option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Adresse</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="adresse"
+														name="adresse" placeholder="adresse"
+														th:required="required" />
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Code postale</label>
+												<div class="col-sm-9">
+													<input type="tel" pattern="[0-9]{4}" class="form-control"
+														id="codepostale" name="codepostale"
+														placeholder="codepostale" th:required="required" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Téléphone
+													mobile</label>
+												<div class="col-sm-9">
+													<input type="tel" pattern="[0-9]{8}" class="form-control"
+														id="telMobile" name="telMobile"
+														placeholder="téléphonemobile" th:required="required" />
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Téléphone
+													fixe</label>
+												<div class="col-sm-9">
+													<input type="tel" pattern="[0-9]{8}" class="form-control"
+														id="telFixe" name="telFixe" placeholder="téléphonefixe" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Profession</label>
+												<div class="col-sm-9">
+													<select id="professions" name="professions"
+														class="form-control" th:required="true">
+														<option value="">Selectionner une profession</option>
+														<option th:each="profession : ${professions}"
+															th:value="${profession.professionId}"
+															th:text="${profession.name}"></option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label">Fax</label>
+												<div class="col-sm-9">
+													<input type="tel" pattern="[0-9]{8}" class="form-control"
+														name="fax" id="fax" placeholder="fax" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label" for="imageFile">Photo
+													CIN1</label>
+												<div class="col-sm-9">
+													<div class="custom-file">
+														<input type="file" accept="image/*"
+															class="custom-file-input" id="imageFile" name="imageFile"
+															th:required="required" /> <label
+															class="custom-file-label" for="imageFile">Choisir
+															une image</label>
+													</div>
+												</div>
+												<img src="/img/faces/choisiruneimage.png" id="prev"
+													style="height: 200px; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 20px;" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-sm-3 col-form-label" for="imageFile2">Photo
+													CIN2</label>
+												<div class="col-sm-9">
+													<div class="custom-file">
+														<input type="file" accept="image/*"
+															class="custom-file-input" id="imageFile2"
+															name="imageFile2" th:required="required" /> <label
+															class="custom-file-label" for="imageFile2">Choisir
+															une image</label>
+													</div>
+
+												</div>
+												<img src="/img/faces/choisiruneimage.png" id="prev2"
+													style="height: 200px; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 20px;" />
+											</div>
+										</div>
+									</div>
+									<div class="card-footer"
+										style="margin-top: 20px; text-align: center;">
+										<button type="submit" class="btn btn-success"
+											style="margin-right: 20px;">Sauvegarder</button>
+										<button type="reset" class="btn btn-danger"
+											style="margin-left: 20px;" onclick="resetimage()">Réinitialiser</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</section>
+</body>
+</html>
+
+<script th:inline="javascript">
+	var reader = new FileReader();
+	reader.onload = function(r_event) {
+		document.getElementById('prev').setAttribute('src',
+				r_event.target.result);
+	}
+
+	document.getElementsByName('imageFile')[0].addEventListener('change',
+			function(event) {
+				reader.readAsDataURL(this.files[0]);
+			})
+	var reader2 = new FileReader();
+	reader2.onload = function(r_event) {
+		document.getElementById('prev2').setAttribute('src',
+				r_event.target.result);
+	}
+
+	document.getElementsByName('imageFile2')[0].addEventListener('change',
+			function(event) {
+				reader2.readAsDataURL(this.files[0]);
+			})
+	function resetimage() {
+		document.getElementById('prev').setAttribute('src',
+				'/img/faces/choisiruneimage.png');
+		document.getElementById('prev2').setAttribute('src',
+				'/img/faces/choisiruneimage.png');
+	}
+	function sendAjaxRequest2() {
+		var categorieid = $("#categories").val();
+		$.get("/demandeabonnement/getproduits/" + categorieid, function(data) {
+			$("#produit").empty();
+			data.forEach(function(item, i) {
+			
+				var option = "<option value = " + item.produitId + ">"
+						+ item.produitNom + "</option>";
+				$("#produit").append(option);
+			});
+		});
+	};
+	$(document).ready(function() {
+		
+		let valcin = sessionStorage.getItem('cin');
+		$("#CIN").val(valcin)
+		$("#categories").change(function() {
+			sendAjaxRequest2();
+		});
+
+		
+
+	       
+			});
+			$(document).ready(function() {
+
+
+$.validator.setDefaults( {
+	submitHandler: function (form) {
+	
+		 form.submit()
+	}
+} );
+
+$( document ).ready( function () {
+	$( "#form-sample" ).validate( {
+		rules: {
+			categories: "required",
+			produit: "required",
+			Nom: {
+				required: true,
+				minlength: 2
+			},
+			Prenom: {
+				required: true,
+				minlength: 5
+			},
+			villes: {
+				required: true,
+			
+			},
+			Email: {
+				required: true,
+				email: true
+			},
+			gouvernorat: "required",
+			adresse:"required",
+			codepostale:{
+				required: true,
+				minlength: 4,
+				maxlength:4
+			},
+			telMobile:{
+				required: true,
+				minlength: 8,
+				maxlength:8
+			},
+			telFixe:{
+				required: true,
+				minlength: 8,
+				maxlength:8
+			}
+		},
+		messages: {
+			categories: "Veuillez entrer vos catégories",
+			produit: "Veuillez entrer votre produit",
+			Nom: {
+				required: "Merci d'entrer un nom d'utilisateur",
+				minlength: "Votre nom d'utilisateur doit être composé d'au moins 2 caractères"
+			},
+			Prenom: {
+				required: "Veuillez fournir un Prenom",
+				minlength: "Your Prenom must be at least 5 characters long"
+			},
+			Email: "S'il vous plaît, mettez une adresse email valide",
+			villes: {
+				required: "Veuillez fournir une ville",
+			
+				
+			},
+			gouvernorat: "Veuillez fournir un gouvernorat",
+			adresse:"Veuillez fournir une adresse",
+			codepostale:"Veuillez indiquer un codepostale",
+			telMobile:"Merci de fournir un telMobile",
+			telFixe:"Veuillez fournir un numero fixe"
+		},
+		errorElement: "em",
+		errorPlacement: function ( error, element ) {
+			// Add the `invalid-feedback` class to the error element
+			error.addClass( "invalid-feedback" );
+
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.next( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+		},
+		highlight: function ( element, errorClass, validClass ) {
+			$( element ).addClass( "is-invalid" ).removeClass( "is-valid" );
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$( element ).addClass( "is-valid" ).removeClass( "is-invalid" );
+		}
+	} );
+
+} );
+
+});
+	
+	function sendAjaxRequest() {
+		var villeid = $("#villes").val();
+		$.get("/client/getgouvernorats/" + villeid, function(data) {
+			$("#gouvernorat").empty();
+			data.forEach(function(item, i) {
+				
+				var option = "<option value = " + item.villeId + ">"
+						+ item.gouvernoratName + "</option>";
+				$("#gouvernorat").append(option);
+			});
+		});
+	};
+	$(document).ready(function() {
+		$("#villes").change(function() {
+			sendAjaxRequest();
+		});
+	});
+;
+
+</script>
+

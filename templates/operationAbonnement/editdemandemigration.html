@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="layout"
+>
+  <head>
+    <title>Modifier Migration</title>
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <section class="content">
+        <div class="container-fluid">
+
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-12">                
+                  <h1 class="m-0" >Modifier la demande de migration  </h1>
+                </div><!-- /.col -->
+              </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+          </div>
+          <div class="row">
+            <div class="col-12 grid-margin">
+              <div class="card">
+
+                <div class="card-body">
+                
+					<form class="form-sample" th:object="${demande}" th:action="@{/operationAbonnement/editmigration}" method="POST" enctype="multipart/form-data">
+					    <input type="hidden" th:value="${operationId}" />
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nom</label>
+                          <div class="col-sm-9">
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="firstName"
+                              th:field="${demande.firstName}"
+                              th:required="required"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Prénom</label>
+                          <div class="col-sm-9">
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="lastName"
+                              th:field="${demande.lastName}"
+                              th:required="required"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+					    
+					<div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Email</label>
+                          <div class="col-sm-9">
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="email"
+                              th:field="${demande.email}"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">CIN ou Passport</label>
+                          <div class="col-sm-9">
+                            <input
+                              type="tel"
+                              pattern="[0-9]{8}"
+                              class="form-control"
+                              name="CIN"
+                              th:field="${demande.cin}"
+                              th:required="required"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Téléphone mobile</label
+                          >
+                          <div class="col-sm-9">
+                            <input
+                              type="tel"
+                              pattern="[0-9]{8}"
+                              class="form-control"
+                              name="telMobile"
+                              th:field="${demande.telMobile}"
+                              th:required="required"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Téléphone mobile 2</label
+                          >
+                          <div class="col-sm-9">
+                            <input
+                              type="tel"
+                              pattern="[0-9]{8}"
+                              class="form-control"
+                              name="telMobile2"
+                              th:field="${demande.telMobile2}"
+                              placeholder="téléphonemobile"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Téléphone fixe</label
+                          >
+                        <div class="col-sm-3">
+                            <input
+                              type="tel"
+                              pattern="[0-9]{8}"
+                              class="form-control"
+                              name="telFixe"
+							  id="telFixe"
+							  
+                              th:field="${demande.telFixe}"
+                              readonly
+                            />
+                                
+                          </div>
+                        </div>
+                      </div>
+                    
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Profession</label
+                          >
+                          <div
+                            th:switch="${demande.profession}"
+                            class="col-sm-9"
+                          >
+                            <select
+                              th:case="null"
+                              id="professions"
+                              name="professions"
+                              class="form-control"
+                            >
+                              <option value="">
+                                Selectionner une profession
+                              </option>
+                              <option
+                                th:each="profession : ${professions}"
+                                th:value="${profession.professionId}"
+                                th:text="${profession.name}"
+                              ></option>
+                            </select>
+                            <select
+                              th:case="*"
+                              id="professions"
+                              name="professions"
+                              class="form-control"
+                            >
+                              <option value="">
+                                Selectionner une profession
+                              </option>
+                              <option
+                                th:each="profession : ${professions}"
+                                th:value="${profession.professionId}"
+                                th:text="${profession.name}"
+                                th:selected="${demande.profession.professionId == profession.professionId}"
+                              ></option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="row">
+                     <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Situation Familiale:</label
+                          >
+                          <div
+                            th:switch="${demande.profession}"
+                            class="col-sm-9"
+                          >
+                            <select
+                              th:case="null"
+                              id="situationFamiliale"
+                              name="situationFamiliale"
+                              class="form-control"
+                            >
+                              <option value="">
+                                Selectionner Situation Familiale:
+                              </option>
+                        <option value="">Sélectionner Situation Familiale:</option>
+                    <option value="Célibataire">Célibataire </option>
+                     <option value="Marié(e)">Marié(e) </option>
+                      <option value="Divorcé">Divorcé(e) </option>
+                      <option value="Veuf">Veuf(e) </option>
+                            </select>
+                            <select
+                              th:case="*"
+                              id="situationFamiliale"
+                              name="situationFamiliale"
+                              class="form-control"
+                            >
+                              <option value="">
+                                Selectionner Situation Familiale:
+                              </option>
+                               <option value="">Sélectionner Situation Familiale:</option>
+			                    <option value="Célibataire"  th:selected="${demande.situationFamiliale == 'Célibataire'}" >Célibataire </option>
+			                     <option value="Marié(e)"  th:selected="${demande.situationFamiliale== 'Marié(e)'}" >Marié(e) </option>
+			                      <option value="Divorcé"  th:selected="${demande.situationFamiliale == 'Divorcé'}" >Divorcé(e) </option>
+			                      <option value="Veuf"  th:selected="${demande.situationFamiliale == 'Veuf'}">Veuf(e) </option>
+                              
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Fax</label>
+                          <div class="col-sm-9">
+                            <input
+                              type="tel"
+                              pattern="[0-9]{8}"
+                              class="form-control"
+                              name="fax"
+                              th:field="${demande.fax}"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    
+
+
+                        </div>
+                        
+                                            <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Date de naissance</label
+                          >
+                          <div class="col-sm-9">
+                            <input
+                              type="date"
+                              
+                              class="form-control"
+                              th:value="${#dates.format(datedenaissancess, 'yyyy-MM-dd')}"
+                              
+                              placeholder="Choisissez la date de naissance"
+                              name="datedenaissancess"
+                            />
+                         
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"
+                            >Type de paiement </label
+                          >
+                          <div class="col-sm-9">
+                            <select
+                              id="typepaiements"
+                              name="typepaiements"
+                              class="form-control"
+                              th:required="true"
+                            >
+                              <option value="">
+                                Selectionner type de paiement
+                              </option>
+                              <option
+                                th:each="tp : ${typepaiements}"
+                                th:value="${tp.typePaiementId}"
+                                th:text="${tp.nomTypePaiement}"
+                                th:selected="${demande.typePaiement.typePaiementId == tp.typePaiementId}"
+                              ></option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                                        <div class="row">
+                      <div class="col-md-6">
+                        <div
+                          class="form-group row"
+                          th:switch="${demande.photoCin1}"
+                        >
+                          <label class="col-sm-3 col-form-label">Photo Recto de la CIN</label>
+                          <div class="col-sm-9">
+                            <div class="custom-file">
+                              <input type="file"
+                              accept=".jpg, .jpeg, .JPG, .JPEG, .png, .PNG, .pdf, .PDF"
+                              className="form-control"
+                              name="imageFile" id="imageFile">
+                              <label class="custom-file-label" for="imageFile">Télécharger le fichier</label>
+                            </div>
+                            <!-- Afficher CIN sous forme PDF -->
+							
+                          </div>
+							<div id="cinPhotoRecto"   th:case="*">
+							    <!-- Afficher CIN sous forme image -->
+							    <img 
+							        th:if="${demande.photoCin1.toLowerCase().endsWith('.jpg') or demande.photoCin1.toLowerCase().endsWith('.jpeg') or demande.photoCin1.toLowerCase().endsWith('.png')}"
+							        th:src="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin1}}"
+							        id="prev2" 
+							        style="height: 200px; width: 300px;cursor: pointer;" 
+							    />
+							    
+							        <a 	class="m-5"
+							        th:if="${demande.photoCin1.toLowerCase().endsWith('.pdf')}"
+							        th:href="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin1}}"
+							        target="_blank"
+							    >
+							        <span>Copie numérique du CIN au format PDF</span>
+							    </a>
+							</div>
+                          <img
+                            th:case="null"
+                            src="/img/faces/choisiruneimage.png"
+                            id="prev1"
+                           style="height: 200px;width: 300px" 
+
+                          />
+                      </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div
+                          class="form-group row"
+                          th:switch="${demande.photoCin2}"
+                        >
+                          <label class="col-sm-3 col-form-label">Photo verso de la CIN</label>
+                          <div class="col-sm-9">
+                          <div class="custom-file">
+                            <input type="file"
+                                   accept=".jpg, .jpeg, .JPG, .JPEG, .png, .PNG, .pdf, .PDF"
+                                   className="form-control"
+                                   name="imageFile2" id="imageFile2">
+                            <label class="custom-file-label" for="imageFile2">Télécharger le fichier</label>
+                          </div>
+                           <!-- Afficher CIN sous forme PDF -->
+					
+                          </div>
+
+                          <img
+                            th:case="null"
+                            src="/img/faces/choisiruneimage.png"
+                            id="prev3"
+                            style="height: 200px;width: 300px" 
+
+                          />
+                          <div id="cinPhotoVerso"   th:case="*">
+							    <!-- Afficher CIN sous forme image -->
+							    <img 
+							        th:if="${demande.photoCin2 != null and (demande.photoCin2.toLowerCase().endsWith('.jpg') or demande.photoCin2.toLowerCase().endsWith('.jpeg') or demande.photoCin2.toLowerCase().endsWith('.png'))}"
+							        th:src="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin2}}"
+							        id="prev4" 
+							        style="height: 200px; width: 300px;cursor: pointer;" 
+							    />
+							    		    <a 	class="m-5"
+							        th:if="${demande.photoCin2 != null and demande.photoCin2.toLowerCase().endsWith('.pdf')}"
+							        th:href="@{${'/demandeabonnement/'+demande.cin+'/'+demande.photoCin2}}"
+							        target="_blank"
+							    >
+							        <span>Copie numérique du CIN au format PDF</span>
+							    </a>
+							   
+							</div>
+                        </div>
+                      </div>
+                      <div class="col-md-6" sec:authorize="hasAnyAuthority('UPDATE_SUBSCRIPTION_REQUEST_ADMIN')" >
+                        <div
+                        class="form-group row"
+                      
+                      >
+                 
+                        <div class="col-sm-9">
+                        <div class="custom-file">
+                          <input type="file"
+                                 accept="pdf/*"
+                                 className="form-control"
+                                 name="pdfcontrat" id="pdfcontrat">
+                          <label class="custom-file-label" for="pdfcontrat">Télécharger le fichier</label>
+                        </div>
+                        </div>
+
+                        <label th:if="${demande.contratPdf} !=null" class="col-sm-3 col-form-label">Contrat PDF</label>
+                        <a
+                          th:if="${demande.contratPdf} !=null"
+                          th:href="@{${'/demandeabonnement/'+demande.cin+'/'+demande.contratPdf}}"
+                          target="_blank"
+                          id=""
+                          style="height: 200px;width: 300px" 
+
+                        >Contrat demande</a>
+                      </div>
+                      </div>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center; height: 200px;">
+					    <button  type="submit" class="btn btn-primary">Modifier</button>
+                		                      <button
+                        type="reset"
+                        class="btn btn-danger"
+                        style="margin-left: 20px"
+                        onclick="history.go(-1);"
+                      >
+                        Annuler
+                      </button>
+                </div>
+                </div>
+					</form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="modalTT" tabindex="-1" role="dialog" aria-labelledby="modalTTlabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalTTlabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <iframe src="https://geo.tunisietelecom.tn/mytaghtia" width="700" height="700" title="mytaghtia"></iframe>
+               
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </body>
+</html>
+											  <!-- Pour afficher l'image dans une popup bootstrap -->
+												<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+												  <div class="modal-dialog" role="document">
+												    <div class="modal-content">
+												      <div class="modal-header">
+												        <h5 class="modal-title" id="myModalLabel">Image</h5>
+												        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												          <span aria-hidden="true">&times;</span>
+												        </button>
+												      </div>
+												      <div class="modal-body">
+												        <img id="imgModal" src="" style="width:100%">
+												      </div>
+												    </div>
+												  </div>
+												</div>
+<script th:inline="javascript">
+  var cin1 = /*[[${demande.photoCin1}]]*/ "";
+  var cin2 = /*[[${demande.photoCin2}]]*/ "";
+  var demande = /*[[${demande}]]*/ "";
+   var demandeID = /*[[${operationId}]]*/ "";
+  var prev = "";
+  var prev2 = "";
+  if (cin1 != null) {
+    prev = "prev2";
+  } else {
+    prev = "prev1";
+  }
+  if (cin2 != null) {
+    prev2 = "prev4";
+  } else {
+    prev2 = "prev3";
+  }
+  var reader = new FileReader();
+  var reader2 = new FileReader();
+  reader.onload = function (r_event) {
+    document.getElementById(prev).setAttribute("src", r_event.target.result);
+  };
+
+  document
+    .getElementsByName("imageFile")[0]
+    .addEventListener("change", function (event) {
+    	if (this.files[0]) 
+    		{
+    		var fileName = event.target.value;
+            if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".png")) {
+            	if (document.getElementById("prev2")) {
+                    document.getElementById(prev).classList.remove("hidden");
+            	} else {
+            		
+            		var img = document.createElement("img");
+            		img.setAttribute("id", "prev2");
+            		img.style.height = "200px";
+            		img.style.width = "300px";
+            		img.style.cursor = "pointer";
+            		document.getElementById('cinPhotoRecto').appendChild(img)
+            			
+            	}
+            	reader.readAsDataURL(this.files[0]);
+              }else{
+                  document.getElementById(prev).removeAttribute("src");
+                  document.getElementById(prev).classList.add("hidden");
+              }
+    		}
+    	
+        else {
+          document
+            .getElementById(prev)
+            .setAttribute("src", "/img/faces/choisiruneimage.png");
+        }
+      
+    });
+
+  reader2.onload = function (r_event) {
+    document.getElementById(prev2).setAttribute("src", r_event.target.result);
+  };
+
+  document
+    .getElementsByName("imageFile2")[0]
+    .addEventListener("change", function (event) {
+      if (this.files[0]){
+    	  var fileName = event.target.value;
+          if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".png")) {
+          	if (document.getElementById("prev4")) {
+                document.getElementById(prev2).classList.remove("hidden");
+        	} else {
+        		var img = document.createElement("img");
+        		img.setAttribute("id", "prev4");
+        		img.style.height = "200px";
+        		img.style.width = "300px";
+        		img.style.cursor = "pointer";
+        		console.log(img)
+        		document.getElementById('cinPhotoVerso').appendChild(img)
+        			
+        	}
+        	reader2.readAsDataURL(this.files[0]);
+            }else{
+                document.getElementById(prev2).removeAttribute("src");
+                document.getElementById(prev2).classList.add("hidden");
+            }
+      }
+      else {
+        document
+          .getElementById(prev2)
+          .setAttribute("src", "/img/faces/choisiruneimage.png");
+      }
+    });
+    $("#villes").change(function(){
+      sendAjaxRequestCodePostal()
+    })
+  function sendAjaxRequest() {
+    var villeid = $("#gouvernorats").val();
+    $.get("/client/getgouvernorats/" + villeid, function (data) {
+      $("#villes").empty();
+      if(data.length !== 0)
+{
+    $.get("/client/codepostale/" + data[0].villeId, function (data) {
+      $("#codepostale").empty();
+
+      data.forEach(function (item, i) {
+      
+        var optiondata =
+          "<option value ='" +
+          item.postalCodeId+"'>" +
+          item.name +"-" + item.code +
+          "</option>";
+        
+        $("#codepostale").append(optiondata);
+      });
+ 
+    });
+    }
+      data.forEach(function (item, i) {
+        var option =
+          "<option value = " +
+          item.villeId +
+          ">" +
+          item.villeName +
+          "</option>";
+        $("#villes").append(option);
+      });
+    });
+  }
+  function sendAjaxRequestCodePostal() {
+    var villeid = $("#villes").val();
+    $.get("/client/codepostale/" + villeid, function (data) {
+      $("#codepostale").empty();
+   
+      data.forEach(function (item, i) {
+        
+        var option =
+          "<option value = '" +
+          item.postalCodeId+"'>" +
+          item.name +"-" + item.code +
+          "</option>";
+        $("#codepostale").append(option);
+      });
+    });
+  }
+  function sendAjaxRequest2() {
+    var categorieid = $("#offres").val();
+    $.get("/pack/getpack/" + categorieid, function (data) {
+      $("#produits").empty();
+      data.forEach(function (item, i) {
+        var option =
+          "<option value = " +
+          item.packId +
+          ">" +
+          item.title +
+          "</option>";
+        $("#produits").append(option);
+      });
+    });
+  }
+	$(document).ready(function() {
+		$("#gouvernorats").change(function() {
+			sendAjaxRequest();
+		});
+	});
+  $(document).ready(function () {
+    $("#telFixe").change(function(){
+   if($(telFixe).val().length != 8 ) {
+         $('#raccordementtranche').show();
+    }else{
+    if ($("#telFixe").hasClass("is-valid")){
+       $('#raccordementtranche').hide();
+    }
+    }
+
+
+
+  });
+
+    jQuery.validator.addMethod(
+      "regexemail",
+      function (value, element) {
+        // allow any non-whitespace characters as the host part
+        return (
+          this.optional(element) ||
+          /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})$/.test(
+            value
+          )
+        );
+      },
+      "Please enter a valid email address."
+    );
+
+    $("#offres").change(function () {
+      sendAjaxRequest2();
+    });
+
+    $("#form-sample").validate({
+      rules: {
+        categories: "required",
+        produit: "required",
+        lastName: {
+          required: true,
+          minlength: 2,
+        },
+        firstName: {
+          required: true,
+        },
+        villes: {
+          required: true,
+        },
+        email: {
+          regexemail: true,
+        },
+        gouvernorat: "required",
+        adresse: {
+            required: true,
+        	maxlength : 115
+        },
+        codepostale: {
+          required: true,
+         
+        },
+        telMobile: {
+          digits: true,
+          required: true,
+          minlength: 8,
+          maxlength: 8,
+        },
+        telFixe: {
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+          remote: {
+            type: "post",
+            cache: false,
+            data: {
+              telFixe: function () {
+                return $("#telFixe").val();
+              },
+              idDemandeAbonnement : demandeID
+            },
+            dataFilter: function (response) {
+               if (response !== "true"){
+                $('#raccordementtranche').show();
+              return false;
+              }
+              else {
+                $('#raccordementtranche').hide();
+               return true;}
+
+            },
+          },
+        },
+        datedenaissancess: {
+          
+          date: true,
+          maxlength: 10,
+        },
+        fax: {
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+        },
+        telMobile2: {
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+        },
+      },
+      messages: {
+        categories: "Veuillez entrer vos catégories",
+        produit: "Veuillez entrer votre produit",
+        lastName: {
+          required: "Ce champ est obligatoire",
+          minlength:
+            "Veuillez entrer un Nom valide",
+        },
+        firstName: {
+          required: "Ce champ est obligatoire",
+          minlength: "Veuillez entrer un Prénom valide",
+        },
+        email: "S'il vous plaît, mettez une adresse email valide",
+        villes: {
+          required: "Veuillez choisir un gouvernorat",
+        },
+        gouvernorat: "Veuillez fournir un ville",
+        adresse: {
+            required: "Veuillez fournir une adresse",
+        	maxlength : "L'adresse doit contenir au maximum 115 caractères"
+        },
+        codepostale:{
+            required: "Ce champ est obligatoire",
+          
+          },
+        telMobile:	{
+       required: "Ce champ est obligatoire",
+   	 digits: "Veuillez entrer un numéro de téléphone valide ",
+     minlength: "Veuillez entrer un numéro de téléphone valide ",
+     maxlength: "Veuillez entrer un numéro de téléphone valide ",
+      },
+        telFixe: {
+     
+          remote: "Numéro de fixe est déja utilisé",
+          minlength: "Le numéro fixe doit comporter 8 chiffres",
+          digits: "Le numéro fixe doit comporter  8 chiffres  ",
+          maxlength: "Le numéro fixe  doit comporter 8 chiffres",
+        },
+        datedenaissancess: {
+
+       	 digits: "Veuillez entrer une date de naissance  valide ",
+       	date: "Veuillez entrer une date de naissance  valide ",
+       	maxlength:"Veuillez entrer une date de naissance  valide "
+
+       },
+        fax: "Veuillez saisir un numéro de fax valide",
+        telMobile2: "Veuillez entrer un numéro de téléphone valide",
+      },
+      errorElement: "em",
+      errorPlacement: function (error, element) {
+        error.addClass("invalid-feedback");
+        if (element.prop("type") === "checkbox") {
+          error.insertAfter(element.next("label"));
+        } else {
+          error.insertAfter(element);
+        }
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass("is-invalid").removeClass("is-valid");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).addClass("is-valid").removeClass("is-invalid");
+      },
+    });
+  });
+  
+  $("#prev2").click(function() {
+	    var imgSrc = $(this).attr('src');
+	    $('#imgModal').attr('src', imgSrc);
+	    $('#myModal').modal('show');
+	  });
+  $("#prev3").click(function() {
+	    var imgSrc = $(this).attr('src');
+	    $('#imgModal').attr('src', imgSrc);
+	    $('#myModal').modal('show');
+	  });
+  $("#prev4").click(function() {
+	    var imgSrc = $(this).attr('src');
+	    $('#imgModal').attr('src', imgSrc);
+	    $('#myModal').modal('show');
+	  });
+</script>

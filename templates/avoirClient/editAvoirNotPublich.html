@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Ajouter  Avoir Client </title>
+        <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+        <link rel="stylesheet" href="https://rawgit.com/swisnl/jQuery-contextMenu/master/dist/jquery.contextMenu.css" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<section layout:fragment="content">
+<!-- Loader -->
+<div th:replace="/fragments/loader.html :: loader"></div>
+
+    <section class="content">
+        <div class="container-fluid">
+
+    <div >
+        <div class="col-12 grid-margin">
+        
+            <div class="card">
+                       <h4 class="card-title  m-3">Modifer  un Avoir</h4>            
+<div class="card-body">
+		   
+<div id="formContainer" class="row m-2">
+<div class="container-fluid">
+
+<div class="col-12 grid-margin">
+
+ 
+  
+
+        <div class="card-body">
+
+            <!-- FORMULAIRE DE LIGNE (montant avoir) -->
+       
+
+
+            <!-- FORMULAIRE PRINCIPAL -->
+            <form   id="mainForm"       th:object="${avoir}"
+               class="form-sample mt-3" th:action="@{/AvoirClient/updateAvoirNotPublic}" enctype="multipart/form-data" method="POST">
+  <section>
+                    
+
+                    <div class="col-md-10">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Montant HT</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control"
+                                        th:field="*{montantHt}"
+                                       min="0.001" step="0.001" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">% TVA</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control"
+                                             th:id="'baseTva'"
+                           th:field="*{baseTva}" min="0" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Montant TVA</label>
+                            <div class="col-sm-9">
+                                <input id="montantTva"
+                                       class="form-control"
+                                         th:field="*{montantTva}"
+                                       readonly  />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Total TTC</label>
+                            <div class="col-sm-9">
+                                <input id="claculettc"
+                                       class="form-control"
+                          
+                                       th:field="*{montantAvoir}"
+                           
+                                       readonly  />
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+    <input type="hidden" th:field="*{avoirId}" />
+
+                <div class="row">
+
+                    <!-- TYPE AVOIR -->
+                    <div class="col-md-6 pr-3">
+                        <label class="col-sm-12 col-form-label">Type avoir</label>
+                        <div class="col-sm-12">
+                            <select class="form-control" th:field="${avoir.isJestCo}"  required>
+                                <option th:selected="${avoir.isJestCo == true}" value="true">Geste commercial</option>
+                                <option th:selected="${avoir.isJestCo == false}" value="false">Avoir</option>
+                            </select>
+                        </div>
+                    </div>
+                             <div class="col-md-4 pr-3">
+	                             <div class="col-md-12">
+	                                <div class="form-group row">
+	                                    <label class="col-sm-12 col-form-label">Motif  Avoir</label>
+	                                    <div class="col-sm-12">
+	                                    <select id="commAvoir" name="commAvoir"   th:field="*{commentaireAvoir}">
+  <option value="">-- Choisir motif --</option>
+</select>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            </div>
+                                                                             <div id="coupureFields" style="display: none;">
+                                                             <div class="row">
+                                 
+	                             <div class="col-md-12">
+	                                <div class="form-group row">
+	                                    <label class="col-sm-12 col-form-label">Ref  Reclamation</label>
+	                                    <div class="col-sm-12">
+	                                        <input type="text" class="form-control" name="RefReclamation" id="RefReclamation" placeholder="Veuillez saisir le RefReclamation."   th:value="*{refReclamation}"  ></input>
+	                                    </div>
+	                                
+	                            </div>
+                            </div>
+                            </div>
+  <label>Date début coupure :</label>
+  <input type="date" id="dateDebut" name="dateDebutCoupur" class="form-control"    th:value="*{dateDebutCoupure}" />
+
+  <label>Date fin coupure :</label>
+  <input type="date" id="dateFin" name="dateFinCoupur" class="form-control"     th:value="*{dateFinCoupure}" />
+</div>    
+                    <!-- FACTURES -->
+                    <div class="col-md-11 pr-3">
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-form-label">Factures concernées</label>
+                            <div class="col-sm-12">
+
+                                <select class="form-control js-select2"
+                                        multiple
+                                        id="RefFacture"
+                                        name="RefFacture"
+                                            >
+                                    <option th:each="f:${factures}"
+                                            th:value="${f.ref_facture}"
+                                            th:selected="${avoir.facture.contains(f.ref_facture)}"
+                                            th:text="${f.ref_facture}">
+                                    </option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DATE MISE EN SERVICE -->
+                    <div id="dateMservice">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-12 col-form-label">Date mise en service</label>
+                                <div class="col-sm-12">
+                                    <input type="date" name="dateMiseServices" id="dateMiseServices" class="form-control" 
+                                           th:value="${avoir.dateMiseService != null} ? ${#dates.format(avoir.dateMiseService, 'yyyy-MM-dd')} : ''" />
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COMMENTAIRE -->
+                    <div class="col-md-4 pr-3">
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-form-label">Commentaire</label>
+                            <div class="col-sm-12">
+                                <textarea th:field="${avoir.motifAvoir}"
+                                          rows="3"
+                                          class="form-control"
+                                          required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STATUT
+                    <div class="col-md-4 border-left border-light pl-3">
+
+                        <label class="col-sm-12 mt-2 col-form-label">Statut Avoir :</label>
+
+                        <div class="form-radio">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input"
+                                       th:checked="${avoir.isClientPayed == false}"
+                                       name="IsClientPayed" value="False"> Avoir Non Payé
+                            </label>
+                        </div>
+
+                        <div class="form-radio mt-2">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input"
+                                       th:checked="${avoir.isClientPayed == true}"
+                                       name="IsClientPayed" value="True"> Avoir Payé
+                            </label>
+                        </div>
+
+                    </div> -->
+
+                    <!-- TOTALS -->
+                    <div class="col-md-3 border-left border-light pl-2">
+                        <div class="container mt-5 bg-light rounded border border-dark p-3">
+                            <h3 class="mb-2">Total Avoir</h3>
+                            <div class="totals pl-3">
+                                <div class="total-item mb-2">
+                                    <strong>Total HT : </strong>
+                                    <span id="totalMontantHT" th:text="${avoir.montantHt + ' TND'}"></span>
+                                </div>
+                                <div class="total-item mb-2">
+                                    <strong>Total TVA : </strong>
+                                    <span id="totalTVA" th:text="${avoir.montantTva + ' TND'}"></span>
+                                </div>
+                                <div class="total-item">
+                                    <strong>Total TTC : </strong>
+                                    <span id="totalMontantTTC" th:text="${avoir.montantAvoir + ' TND'}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+<div class="col-12 mt-3">
+    <button type="submit" id="submitAvoir" class="btn btn-primary">
+        Enregistrer l'Avoir
+    </button>
+</div>
+
+            </form>
+
+        </div>
+   
+
+</div>
+
+</div>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+        </div>
+        <input type="hidden" name="message" id="message"
+					th:value="${message} ?  ${message} : ''" />
+					
+										<!-- Modal Annulation -->
+
+    </section>
+</section>
+</body>
+</html>
+
+<script th:inline="javascript">
+const motifsGesteCo = [
+	  "Gêne occasionnée",
+	  "Fidélisation client",
+	  "Frais de raccordement"
+	];
+
+	const motifsPanne = [
+	  "Panne technique",
+	  "Défaillance réseau",
+	  "Interruption de service",
+	 "Débit inversé",
+	  "Débit lent",
+	 " Déconnexion courante",
+	  "Modem synchro et pas d'accès internet",
+	  "Pas de synchronisation",
+	];
+
+function recalc() {
+    const ht = parseFloat(document.getElementById("montantHt").value) || 0;
+    const tvaRate = parseFloat(document.getElementById("baseTva").value) || 0;
+
+    const tva = (ht * tvaRate) / 100;
+    const ttc = ht + tva;
+
+    document.getElementById("montantTva").value = tva.toFixed(3);
+    document.getElementById("claculettc").value = ttc.toFixed(3);
+
+    // Remplir la section Total Avoir
+    document.getElementById("totalMontantHT").innerText = ht.toFixed(3) + " TND";
+    document.getElementById("totalTVA").innerText = tva.toFixed(3) + " TND";
+    document.getElementById("totalMontantTTC").innerText = ttc.toFixed(3) + " TND";
+}
+
+/* EVENTS recalcul automatique */
+document.getElementById("montantHt").addEventListener("input", recalc);
+document.getElementById("baseTva").addEventListener("input", recalc);
+
+/* -----------------------------------------------
+    GESTION STATUT & REVENDEUR
+------------------------------------------------ */
+function toggleSelectForm() {
+    const isPayed = document.querySelector("input[name='IsClientPayed']:checked").value;
+    const selectForm = document.getElementById("selectForm");
+
+    if (isPayed === "True") {
+        selectForm.style.display = "block";
+    } else {
+        selectForm.style.display = "none";
+        document.getElementById("rev").value = "";
+    }
+}
+
+
+/* -----------------------------------------------
+    BLOC COUPURE AUTOMATIQUE
+------------------------------------------------ */
+
+
+function getMotifs(typeReclamation) {
+	  return typeReclamation == "true"
+	    ? motifsGesteCo
+	    : motifsPanne;
+	}
+
+	document.getElementById("isJestCo").addEventListener("change", function () {
+		console.log("ddd")
+	  const type = this.value;
+	  const motifs = getMotifs(type);
+	  const selectMotif = document.getElementById("commAvoir");
+	  const coupureDiv = document.getElementById("coupureFields");
+	  const dateDebut = document.getElementById("dateDebut");
+	  const dateFin = document.getElementById("dateFin");
+	  const RefReclamation = document.getElementById("RefReclamation");
+
+    const dateMservice =document.getElementById("dateMiseServices");
+
+	  if (type == "false") {
+			console.log("is not jesco")
+		    coupureDiv.style.display = "block";
+		  
+		    dateMservice.value=""
+		    dateDebut.required = true;
+		    dateFin.required = true;
+		  } else {
+		    coupureDiv.style.display = "none";
+		
+		    dateDebut.required = false;
+		    dateFin.required = false;
+		    dateDebut.value = "";
+		    dateFin.value = "";
+		    RefReclamation.value = "";
+		  }
+	  // vider
+	  selectMotif.innerHTML = "";
+
+	  // ajouter nouvelle liste
+	  motifs.forEach(m => {
+	    const opt = document.createElement("option");
+	    opt.value = m;
+	    opt.textContent = m;
+	    selectMotif.appendChild(opt);
+	  });
+	});
+
+	  
+	  
+	  $('#mainForm').on('submit', function(e) {
+		    e.preventDefault(); // empêche le submit classique
+
+		    const montant = parseFloat($('#claculettc').val()) || 0;
+		    const factures = $('#RefFacture').val();
+           const statut = $('#isJestCo').val();
+           
+           const refReclamtion  = $('#RefReclamation').val();
+		    if (!factures || factures.length === 0) {
+		        alert("Veuillez sélectionner au moins une facture.");
+		        return;
+		    }
+			  const formData = new FormData();
+			  formData.append("referenceFacture", factures);
+			  formData.append("montant", montant);
+			  formData.append("referenceReclamation", refReclamtion);
+			  formData.append("type", statut);
+		     $.ajax({
+		            type: 'POST',
+		            "processData": false,
+		            "mimeType": "multipart/form-data",
+		            "contentType": false,
+		            url: '/AvoirClient/verifMontantAndFactureExiste',
+		            data: formData,
+		            dataType: "json",
+		            success: function(response) {
+		            	console.log(response.statut)
+		               if(response.statut){
+		            	   $('#mainForm')[0].submit();
+		               }
+		               else {
+
+		            	   $('#alertContainer').html(response.erreur || '');
+
+		            	   $('#isUsedBrdError').html(response.erreur|| '');
+		          	   
+		            	   
+		            
+				     	       	$(document).Toasts('create', {
+				     	            		  title: "error",
+				     	            		  body: response.erreur,
+				     	            		  class: 'bg-danger',
+				     	            		  autohide:true,
+				     	            		  delay: 5000
+				     	            		})
+		               }
+		            },
+		            error: function(err) {
+		              console.log(err)
+		            }
+		        });
+	
+		});
+
+</script>
+
+<script>
+    $(document).ready(function() {
+      $('.js-select2').select2({    placeholder: "Sélectionnez une ou plusieurs factures",
+ allowClear: true});
+      const typeSelect = document.getElementById("isJestCo");
+		
+
+	  // déclenche l'événement pour remplir motifsGesteCo
+	  typeSelect.dispatchEvent(new Event("change"));
+    });
+  
+  </script>

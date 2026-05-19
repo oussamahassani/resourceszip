@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="layout"
+>
+  <head>
+    <title>Home</title>
+    <style>
+     /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+} 
+.custom-control-input  {
+position:static;
+width:100%;
+}
+
+
+
+
+
+.pack-selection {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.radio-group {
+  display: flex;
+  justify-content: center;
+}
+
+.labelPack {
+  align-items: center;
+  display: flex;
+  margin-right: 20px;
+}
+
+.radio-label {
+  margin-left: 5px;
+  color:#59049D;
+}
+
+.radio-label:before {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  content: "";
+  display: inline-block;
+  height: 20px;
+  margin-right: 5px;
+  position: relative;
+  width: 20px;
+}
+
+input[type="radio"]:checked + .radio-label:before {
+  background-color: #007bff;
+  border-color: #007bff;
+  content: "\2713";
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+}
+.pack {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  width : 350px;
+  height: 300px;
+ 
+}
+
+.h2Pack {
+  font-size: 1.5rem;
+  margin: 0;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+}
+
+.ulPack {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  margin-top: 20px;
+}
+
+.currency {
+  font-size: 1.2rem;
+}
+
+.amount {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.period {
+  font-size: 1.2rem;
+}
+
+</style>
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <section class="content">
+        <div class="container-fluid">
+          <div class="content-header">
+            <h1 class="m-0">Nouvel abonnement</h1>
+            <!-- /.container-fluid -->
+          </div>
+        </div>
+      </section>
+      <form
+        id="exampleadvancedform"
+        th:id="exampleadvancedform"
+        action="#"
+        th:action="@{/demandeabonnement/adddemandeabonnementwithsteps}"
+        enctype="multipart/form-data"
+        method="POST"
+      >
+        <h3>Forfait Internet</h3>
+        <fieldset>
+          <div>
+            <label>Offres
+              <span style="color: red">*</span></label>
+          </div>
+
+          <div
+            class="row containerchx"
+            style="display: flex; margin: auto; justify-content: center"
+          >
+            <div
+              th:each="cpi: ${offreService}"
+              class="btn  m-3  btn-default btnCategoriProduit"
+            >
+              <input
+                class="custom-control-input"
+                type="radio"
+                id="customRadio"
+                name="customRadio"
+                th:id="${cpi.offreId}"
+                th:value="${cpi.offreId}"
+                onclick="handleClick(this);"
+              />
+              <label
+                th:for="${cpi.offreId}"
+                class="custom-control-label text-uppercase"
+                th:text="${cpi.title}"
+              ></label>
+            </div>
+          </div>
+
+          <div class="radio-group" id="showMeintsteps">
+            <div>
+              <label>Liste des packs
+                <span style="color: red">*</span></label>
+            </div>
+
+            <div
+              id="Radioproduit"
+              class="row custom-radio "
+              style="display: flex; margin: auto; justify-content: center"
+            ></div>
+          </div>
+
+        </fieldset>
+
+        <h3>Vérification identifiant</h3>
+        <fieldset id="step2">
+
+<!--  <label class="switch">
+ <input type="checkbox" onchange="onchangecheckbox(this)">
+  <span class="slider round"></span>
+
+</label>-->
+
+          <div class="row">
+     <div class="col-5" >
+      <div class="form-group">
+<label class="col-sm-12 col-form-label" >Type de document</label>
+<select name="typedocument" id="typedocument" onchange="onchangecheckbox(this)">
+  <option value="cin" selected>Cin</option>
+  <option value="passport">Passport</option>
+  <option value="cartesejour">Carte sejour</option>
+</select>
+</div>
+</div>
+            <div class="col-5" id="divnumerocin">
+              <div class="form-group">
+                <label class="col-sm-12 col-form-label" name="cinlabel" id="cinlabel">Numéro CIN</label>
+                <div class="col-sm-12">
+                  <input
+                    type="tel"
+                    pattern="[0-9]{8}"
+                    required
+                    class="form-control required"
+                    autocomplete="off"
+                    id="cin"
+                    name="cin"
+                    placeholder="Identifiant"
+                    th:value="${cin}"
+                  />
+                </div>
+              </div>
+            </div>
+               <!--    <div class="col-5" id="divnumeropassoport">
+              <div class="form-group">
+                <label class="col-sm-12 col-form-label">Numéro Passport</label>
+                <div class="col-sm-12">
+                  <input
+                    type="text"
+                    required
+                    class="form-control required"
+                    autocomplete="off"
+                    id="passport"
+                    name="passport"
+                    placeholder="Passport"
+                    th:value="${cin}"
+                  />
+                </div>
+              </div>
+            </div>--> 
+          </div>
+        </fieldset>
+
+        <h3>Demande d'abonnement</h3>
+        <fieldset>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Nom *</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="Nom"
+                    placeholder="Nom"
+                    th:required="required"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Prénom *</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="Prenom"
+                    placeholder="Prénom"
+                    th:required="required"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Email</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="Email"
+                    placeholder="Email"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Identifiant *</label>
+                <div class="col-sm-9" id="showcin"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"> Gouvernorat*</label>
+                <div class="col-sm-9">
+                  <select
+                    id="villes"
+                    name="villes"
+                    class="form-control"
+                    th:required="true"
+                  >
+                    <option value="">Sélectionner un Gouvernorat</option>
+                    <option
+                      th:each="gov : ${gouvernorats}"
+                      th:value="${gov.gouvernoratId}"
+                      th:text="${gov.gouvernoratName}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"> Ville*</label>
+                <div class="col-sm-9">
+                  <select
+                    id="gouvernorat"
+                    name="gouvernorat"
+                    class="form-control"
+                    th:required="true"
+                  >
+                    <option value="">Sélectionner une ville</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Adresse *</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="adresse"
+                    id="adresse"
+                    placeholder="Adresse"
+                    th:required="required"
+                    />
+                   
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Code postal *</label>
+                <div class="col-sm-9">
+                  <select
+                    type="tel"
+                    pattern="[0-9]{4}"
+                    class="form-control"
+                    name="codepostale"
+                    id="codepostale"
+                    placeholder="Code postal"
+                    th:required="required"
+                  >
+                  <option value="">Sélectionner un code postal</option>
+                </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"
+                  >Téléphone mobile *</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="tel"
+                    pattern="[0-9]{8}"
+                    class="form-control"
+                    name="telMobile"
+                    placeholder="Téléphone mobile"
+                    th:required="required"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"
+                  >Téléphone mobile 2</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="tel"
+                    pattern="[0-9]{8}"
+                    class="form-control"
+                    name="telMobile2"
+                    placeholder="Téléphone mobile"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+          <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"
+                  >Position XY *</label
+                >
+                <div class="row col-sm-9">
+                <div class="col-md-10 pr-0">
+	                <input
+	                    type="text"
+	                    class="form-control"
+	                    name="positionxy"
+	                    placeholder="Position xy"
+	                    th:required="required"
+	                  />
+                </div>
+                <div class="col-md-2 pl-0">
+	                  <div class="input-group-prepend">
+	              <a href="https://gis.tunisietelecom.tn/" target="_blank">
+     <i class="fas fa-map-marker-alt"></i>
+</a> 
+	                  </div>
+                  </div>                 
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+
+
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Téléphone fixe</label>
+                <div class="col-sm-3">
+                  <input
+                    type="tel"
+                    pattern="[0-9]{8}"
+                    class="form-control"
+                    name="telFixe"
+                    id="telFixe"
+                    placeholder="Téléphone fixe"
+
+                  />
+                </div>
+                <div class="col-sm-6" id="raccordementtranche" >
+
+
+                  <div class=" row">
+                    <label class="col-sm-5 col-form-label">Payer frais de raccordement par </label>
+                    <div class="col-sm-7">
+                      <select name="raccordementtranche"  style="width: 100%;">
+                        <option selected value="1">À l'avance</option>
+                        <option value="2" id="selectraccordementtranchetwo" >Sur deux tranches</option>
+
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+
+            </div>
+
+      
+
+
+
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Profession *</label>
+                <div class="col-sm-9">
+                  <select
+                    id="professions"
+                    name="professions"
+                    class="form-control"
+                  >
+                    <option value="">Sélectionner une profession</option>
+                    <option
+                      th:each="profession : ${professions}"
+                      th:value="${profession.professionId}"
+                      th:text="${profession.name}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Fax</label>
+                <div class="col-sm-9">
+                  <input
+                    type="tel"
+                    pattern="[0-9]{8}"
+                    class="form-control"
+                    name="fax"
+                    placeholder="Fax"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"
+                  >Date de naissance *</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="date"
+                    class="form-control"
+                    placeholder="Choisissez la date de naissance"
+                    name="datedenaissance"
+                  />
+                 
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"
+                  >Type de paiement *</label
+                >
+                <div class="col-sm-9">
+                  <select
+                    id="typepaiements"
+                    name="typepaiements"
+                    class="form-control"
+                    th:required="true"
+                  >
+                    <option value="">Sélectionner Périodicité de Facturation</option>
+                    <option
+                      th:each="tp : ${typepaiements}"
+                      th:value="${tp.typePaiementId}"
+                      th:text="${tp.nomTypePaiement}"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label"
+                  >Situation Familiale: *</label
+                >
+                <div class="col-sm-9">
+                  <select
+                    id="situationFamiliale"
+                    name="situationFamiliale"
+                    class="form-control"
+                    th:required="true"
+                  >
+                    <option value="">Sélectionner Situation Familiale:</option>
+                    <option value="Célibataire">Célibataire </option>
+                     <option value="Marié(e)">Marié(e) </option>
+                      <option value="Divorcé">Divorcé(e) </option>
+                      <option value="Veuf">Veuf(e) </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+				<div class="col-md-6" sec:authorize="hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+
+				  <div class="form-group row">
+				    <label class="col-sm-3 col-form-label">Origine *</label>
+				    <div class="col-sm-9">
+				      <select id="origin" name="origin" class="form-control">
+				        <option value="CRM"
+				          th:selected="${demandeAbonnement == null or demandeAbonnement.origin == 'CRM'}"
+				        >CRM</option>
+				        <option value="Parrainage"
+				          th:selected="${demandeAbonnement != null and demandeAbonnement.origin == 'Parrainage'}"
+				        >Parrainage</option>
+				      </select>
+				    </div>
+				  </div>
+
+				</div>				
+
+				<div sec:authorize="!hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+				  <input type="hidden" name="origin" value="CRM" />
+				</div>
+
+
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Résidence </label>
+            <div class="col-sm-4">
+                <div class="form-radio">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="residence" id="membershipRadios11"
+                               style="opacity: 1 !important" value="False"> Locataire
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-radio">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="residence" id="membershipRadios21"
+                               style="opacity: 1 !important" value="True" checked> Propriétaire
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+                  <div class="form-group row"  sec:authorize="hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+            <label class="col-sm-3 col-form-label">Chef de famille  </label>
+            <div class="col-sm-4">
+                <div class="form-radio">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="houseHolder" id="houseHolder11"
+                               style="opacity: 1 !important" value="False"> Non
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-radio">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="houseHolder" id="houseHolder21"
+                               style="opacity: 1 !important" value="True" > Oui
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+                        <div class="form-group row" sec:authorize="hasAnyAuthority('EDIT_HEAD_OF_Family_DEMANDE')">
+            <label class="col-sm-3 col-form-label">A une carte bancaire </label>
+            <div class="col-sm-4">
+                <div class="form-radio">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="hasBankCard" id="hasBankCard11"
+                               style="opacity: 1 !important" value="False"> Non
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-radio">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="hasBankCard" id="hasBankCard21"
+                               style="opacity: 1 !important" value="True" > Oui
+                    </label>
+                </div>
+            </div>
+        </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="imageFile"
+                  >Recto de la CIN
+                </label>
+                <div class="col-sm-9">
+                  <div class="custom-file">
+                    <input
+                      type="file"
+                       accept=".jpg, .jpeg, .JPG, .JPEG, .png, .PNG, .pdf, .PDF"
+                      class="custom-file-input"
+                      id="imageFile"
+                      name="imageFile"
+                    />
+                    <label class="custom-file-label" for="imageFile"
+                      >Choisir une image</label
+                    >
+                  </div>
+                </div>
+                <img
+                  src="/img/faces/choisiruneimage.png"
+                  id="prev"
+                  class="bloc_imgUpload"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="imageFile2"
+                  >Verso de la CIN</label
+                >
+                <div class="col-sm-9">
+                  <div class="custom-file">
+                    <input
+                      type="file"
+                      accept=".jpg, .jpeg, .JPG, .JPEG, .png, .PNG, .pdf, .PDF"
+                      class="custom-file-input"
+                      id="imageFile2"
+                      name="imageFile2"
+                    />
+                    <label class="custom-file-label" for="imageFile2"
+                      >Choisir une image</label
+                    >
+                  </div>
+                </div>
+                <img
+                  src="/img/faces/choisiruneimage.png"
+                  id="prev2"
+                  class="bloc_imgUpload"
+                />
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <h3>Ajouter un sous produit</h3>
+        <fieldset id="step4">
+        
+         <div class="row">
+            <div class="col-md-12 text-center">
+                                 
+             <label class="col-sm-12 col-form-label" 
+                  >Si vous voulez ajouter un sous-produit, cochez-le(s) avant de cliquer sur le bouton Finir :</label>
+                  
+                  <table class="table table-bordered border-primary table-hover col-sm-6 text-center mx-auto">
+					  <tr class="bg-white">
+					      <th scope="col">Nom de produit</th>
+					      <th scope="col">Prix TTC</th>
+					      <th scope="col">Selection</th>
+					  </tr>
+					   <tr class="checkbox-cell cursor-pointer" th:each="subproduct : ${produitsAndTarifications}" >
+						  <td><span th:text="${subproduct[0].produitNom}"></span></td>
+						  <td><span th:text="${#numbers.formatDecimal(subproduct[1].prixTTc, 1, 'COMMA', 3, 'POINT')}+' TND'"></span></td>
+						  <td><input type="checkbox" name="multipleSubproduct[]" th:value="${subproduct[0].produitId}"></td>
+					</tr>
+				</table>                  
+                  
+                    
+             </div>
+             </div>           
+         </fieldset>
+      </form>
+      <div class="modal fade" id="modalTT" tabindex="-1" role="dialog" aria-labelledby="modalTTlabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTTlabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <iframe src="https://gis.tunisietelecom.tn/TaghtiaFSI/" width="700" height="700" title="mytaghtia"></iframe>
+             
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <input type hidden value="11111111" id="hidevalue" />
+    </section>
+  </body>
+</html>
+
+<script th:inline="javascript">
+  var cin = document.getElementById("cin").value;
+  var inputcin = document.getElementById("cin");
+
+ // document.getElementById("divnumeropassoport").style.display ="none";
+  function onchangecheckbox(checkbox){
+
+	if(checkbox.value =='cin'){
+	
+		document.getElementById("cin").pattern = "[0-9]{8}"; 
+		document.getElementById('cinlabel').innerText = 'Numéro CIN';
+	}
+	else if(checkbox.value =='cartesejour'){
+		  document.getElementById("cin").pattern = "[0-9a-zA-Z]{13}"; 
+		document.getElementById('cinlabel').innerText = 'Numéro carte sejour';
+	}
+	else{
+		 document.getElementById("cin").pattern = "[0-9a-zA-Z]{8}"; 
+		document.getElementById('cinlabel').innerText = 'Numéro passport';
+		
+	}
+	  //if(checkbox.checked == true){
+		//  var divnumerocin = document.getElementById("divnumerocin");
+	 //divnumerocin.style.display = "none";
+	  //var divnumeropassoport = document.getElementById("divnumeropassoport").style.display ="block";
+	  //}
+	  //else {
+		//  var divnumerocin = document.getElementById("divnumerocin").style.display = "block";
+		  //var divnumeropassoport = document.getElementById("divnumeropassoport").style.display ="none";
+	  //}
+  }
+  function resetJQuerySteps(elementTarget, noOfSteps) {
+    var noOfSteps = noOfSteps - 1;
+
+    var currentIndex = $(elementTarget).steps("getCurrentIndex");
+    // if(currentIndex >= 1){
+    //     for(var x = 0; x < currentIndex;x++){
+    //         $(elementTarget).steps("previous");
+    //     }
+    // }
+
+    setTimeout(function resetHeaderCall() {
+      var y, steps;
+      for (y = 0, steps = 2; y < noOfSteps; y++) {
+      
+        try {
+          $(
+            `${elementTarget} > .steps > ul > li:nth-child(${steps})`
+          ).removeClass("done");
+          //     $(`${elementTarget} > .steps > ul > li:nth-child(${steps})`).removeClass("current");
+          $(`${elementTarget} > .steps > ul > li:nth-child(${steps})`).addClass(
+            "disabled"
+          );
+          $(
+            `${elementTarget} > .actions > ul > li:nth-child(${steps})`
+          ).addClass("disabled");
+        } catch (err) {}
+        steps++;
+      }
+    }, 50);
+  }
+  var form = $("#exampleadvancedform").show();
+
+  var currentValue = 0;
+  function sendAjaxRequest() {
+    var villeid = $("#villes").val();
+    $.get("/client/getgouvernorats/" + villeid, function (data) {
+  
+   
+if(data.length !== 0)
+{
+    $.get("/client/codepostale/" + data[0].villeId, function (data) {
+      $("#codepostale").empty();
+  
+      data.forEach(function (item, i) {
+      
+        var optiondata =
+          "<option value = '" +
+          item.postalCodeId +
+          "'>" +
+          item.name +"-" + item.code+
+          "</option>";
+        $("#codepostale").append(optiondata);
+      });
+ 
+    });
+    }
+    $("#gouvernorat").empty();
+ 
+      data.forEach(function (item, i) {
+        
+        var option =
+          "<option value = " +
+          item.villeId +
+          ">" +
+          item.villeName +
+          "</option>";
+          $("#gouvernorat").append(option);
+      });
+  });
+  }
+
+  function sendAjaxRequestCodePostal() {
+    var villeid = $("#gouvernorat").val();
+    $.get("/client/codepostale/" + villeid, function (data) {
+      $("#codepostale").empty();
+   
+      data.forEach(function (item, i) {
+        
+        var option =
+          "<option value = '" +
+          item.postalCodeId +
+          "'>" +
+          item.name +"-" + item.code+
+          "</option>";
+        $("#codepostale").append(option);
+      });
+    });
+  }
+
+  $(document).ready(function () {
+  $("#telFixe").change(function(){
+   if($(telFixe).val().length != 8 ) {
+         $('#raccordementtranche').show();
+    }else{
+
+    if ($("#telFixe").hasClass("is-valid")){
+
+       $('#raccordementtranche').hide();
+    }
+
+    }
+
+
+
+  });
+
+  jQuery.validator.addMethod(
+		    "regexInputText",
+		    function(value, element, regexp) {
+		        var check = false;
+		        return this.optional(element) || regexp.test(value);
+		    },
+		    "Please check your input."
+		);
+  
+    jQuery.validator.addMethod(
+      "regexemail",
+      function (value, element) {
+        // allow any non-whitespace characters as the host part
+        return (
+          this.optional(element) ||
+          /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})$/.test(
+            value
+          )
+        );
+      },
+      "Please enter a valid email address."
+    );
+    jQuery.validator.addMethod(
+    "regexcin",
+    function(value, element, regexp) {
+        return this.optional(element) || regexp.test(value);
+    },
+    "Please check your input."
+);
+jQuery.validator.addMethod(
+        "validYears",
+        function(value, element) {              
+            var from = value.split(" "); // DD MM YYYY
+            // var from = value.split("/"); // DD/MM/YYYY
+
+            var day = from[0];
+            var month = from[1];
+            var year = from[2];
+            var age = 18;
+
+         
+            var currdate = new Date();
+            var setDate = new Date(value);
+
+const diffdate = new Date(currdate - setDate);
+const diffDays  =  Math.ceil(diffdate / (1000 * 60 * 60 * 24 * 365)); 
+
+            if (diffdate >0 && diffDays > 17){
+                return true;
+            }else{
+                return false;
+            }
+        },
+        "La date semble inexacte. Veuillez entrer la date de naissance correcte."
+    )
+    
+
+    var reader = new FileReader();
+    reader.onload = function (r_event) {
+      document
+        .getElementById("prev")
+        .setAttribute("src", r_event.target.result);
+    };
+
+    document
+      .getElementsByName("imageFile")[0]
+      .addEventListener("change", function (event) {        
+        var fileName = event.target.value;
+        if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".png")) {
+        	reader.readAsDataURL(this.files[0]);
+          }else{
+              document.getElementById("prev").removeAttribute("src");
+          }
+      });
+    var reader2 = new FileReader();
+    reader2.onload = function (r_event) {
+      document
+        .getElementById("prev2")
+        .setAttribute("src", r_event.target.result);
+    };
+
+    document
+      .getElementsByName("imageFile2")[0]
+      .addEventListener("change", function (event) {
+    	  var fileName = event.target.value;
+          if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".png")) {
+          	reader2.readAsDataURL(this.files[0]);
+            }else{
+                document.getElementById("prev2").removeAttribute("src");
+            }
+      });
+
+    $("#villes").change(function () {
+      sendAjaxRequest();
+    });
+
+    $("#gouvernorat").change(function(){
+      sendAjaxRequestCodePostal()
+    })
+ });
+
+  function handleClick(myRadio) {
+
+    currentValue = myRadio.id;
+    getproduitfromcategorie(myRadio.id);
+    var elem = document.getElementById(currentValue);
+    elem.onchange = function () {
+      var hiddenDiv = document.getElementById("showMeintsteps");
+      hiddenDiv.style.display = currentValue === 0 ? "none" : "block";
+    };
+  }
+
+  function getCheckedRadioButtonValue(name) {
+	    // Get all radio buttons with the specified name
+	    const radios = document.getElementsByName(name);
+	    
+	    // Iterate through the radio buttons to find the checked one
+	    for (let radio of radios) {
+	        if (radio.checked) {
+	            // Return the name and value of the checked radio button
+	            return {
+	                name: radio.name,
+	                value: radio.value
+	            };
+	        }
+	    }
+
+	    // Return null if no radio button is checked
+	    return null;
+	}
+
+  function getproduitfromcategorie(radioid) {
+    var categorieid = radioid;
+
+    $.get("/pack/getpack/" + categorieid, function (data) {
+      $("#Radioproduit").empty();
+      data.forEach(function (item) {
+    	  $.ajax({
+              type: "GET",
+              contentType: "application/json",
+              url: "/tarification/gettarification/" + item.packId,
+              dataType: "json",
+              timeout: 100000,
+              async:false,
+              success: function (tarification) {
+                
+                  var input = `<div class="color-palette-set mt-2">`;
+                  
+             input+=`
+           	    <label class="labelPack">
+   					<div class="pack">
+   					  <h2 class="h2Pack"> <input type="radio" class="custom-control-input" name='customRadioproduit' value="` +
+   				          item.packId +`
+   				          " id="` +
+   				          item.packId +
+   				          `" data-checked="` +
+   				          item.payLater +
+   				          `"
+   				        >
+   						<span class="radio-label custom-control-label">`+item.title+`</span></h2>
+   					  <ul class="ulPack">
+   						<li>`+ item.description+`</li>
+   						<li>`+item.categoriePack.categorieProduitInternetNom+`</li>
+   					  </ul>
+   					  <div class="price">
+   						<span class="amount">`+tarification.prixTTc.toFixed(3)+`</span>
+   						<span class="currency">TND</span>
+   						<span class="period">/mois</span>
+   					  </div>
+   					</div>
+   				  </label>
+   				  </div>`
+          
+           $("#Radioproduit").append(input);
+           var label = " ";
+           $("#Radioproduit").append(label);
+              },
+              error: function (e) {
+                console.log("ERROR: ", e);
+              },
+            });        	
+
+      });
+    });
+  }
+
+  form
+    .steps({
+      headerTag: "h3",
+      bodyTag: "fieldset",
+      transitionEffect: "slideLeft",
+      labels: {
+        cancel: "Annuler",
+        current: "étape actuelle:",
+        pagination: "Pagination",
+        finish: "Finir",
+        next: "Suivant",
+        previous: "Précédent",
+        loading: "Chargement ...",
+      },
+      onStepChanging: function (event, currentIndex, newIndex) {
+        // Allways allow previous action even if the current form is not valid!
+      
+        var test = true;
+        if (
+          currentIndex === 1 &&
+          newIndex === 2 &&
+          (document.getElementById("cin").value.length >= 8)
+        ) {
+          cin = document.getElementById("cin").value;
+      
+        	  document.getElementById("showcin").innerHTML = cin; 
+        	  const resultpack = getCheckedRadioButtonValue('customRadioproduit');
+        	 
+        	 const selectedRadio = document.querySelector('input[type="radio"][name="customRadioproduit"]:checked');
+        	    if (selectedRadio) {
+        	        const dataChecked = selectedRadio.getAttribute('data-checked');
+        	        if(dataChecked  == 'true'){
+        	        console.log('Data-checked value:', dataChecked);
+        	        
+        	        const selectraccordementtranche = document.getElementById('selectraccordementtranchetwo');
+        	        if (selectraccordementtranche) {
+        	        	selectraccordementtranche.style.display = 'none';
+        	        }
+        	        const selectElement = document.getElementById('typepaiements');
+        	        const options = Array.from(selectElement.options); // Convert HTMLCollection to array
+
+        	        // Condition: replace this with your actual condition
+        	        const conditionIsValid = true; // Change this condition as needed
+        	        const targetId = 318; // The ID you want to filter
+
+        	        if (conditionIsValid) {
+        	          // Clear existing options except for the default one
+        	          selectElement.options.length = 1; // Keeps only the first option
+
+        	          // Create a new option for the target ID
+        	          const option = document.createElement('option');
+        	          option.value = targetId;
+        	          option.textContent = '1 mois'; // Change to the appropriate name
+
+        	          // Append the new option to the select element
+        	          selectElement.appendChild(option);
+        	        }
+        	        }
+        	        // You can add more logic here based on the value
+        	    } else {
+        	        console.log('No radio button is selected.');
+        	    }
+
+        }
+        
+        if (currentIndex > newIndex) {
+          return true;
+        
+          
+        }
+        // Needed in some cases if the user went back (clean up)
+        if (currentIndex < newIndex) {
+          // To remove error styles
+          form.find(".body:eq(" + newIndex + ") label.error").remove();
+          form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+        }
+
+        form.validate().settings.ignore = ":disabled,:hidden";
+
+        return form.valid();
+      },
+      // onStepChanged: function (event, currentIndex, priorIndex) {
+
+      // },
+      onFinishing: function (event, currentIndex) {
+           //Applying colour for finish button
+        
+        form.validate().settings.ignore = ":disabled";
+        return form.valid();
+      },
+      onFinished: function (event, currentIndex) {
+        //enableFinishButton: false
+        form.submit();
+        form.validate().settings.onsubmit=false ;  
+        var result = $('ul[aria-label=Pagination]').children().find('a');
+                $(result).each(function () {
+                    if ($(this).text() == 'Finir') {
+                        $(this).attr('disabled', true);
+                        $(this).css('background', '#c8bfbd');
+                        $(this).css('display', 'none');
+                  
+                    }
+                });
+      },
+    })
+
+    .validate({
+      rules: {
+    	  customRadioproduit: "required",
+
+        Nom: {
+        	required: true,
+            minlength: 2,
+        	regexInputText : /[a-zA-Z]/,
+        },
+        Prenom: {
+          required: true,
+        },
+        adresse:{
+            maxlength : 115
+        },
+        customRadio: { required: true },
+        villes: {
+          required: true,
+        },
+        Email: {
+          regexemail: true, //i,
+          //email: true
+        },
+        gouvernorat: {
+            required: true,        
+          },
+        adresse: "required",
+        codepostale: {
+          required: true,        
+        },
+        adresse: {
+            required: true,
+        	maxlength : 115
+        },
+        situationFamiliale:{
+            required: true,               	
+        },
+        professions:{
+        	required: true, 	
+        },
+        
+        telMobile: {
+          required: true,
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+        },
+        datedenaissance: {
+          date: true,
+          maxlength: 10,
+          required: true,
+          validYears : true
+                
+        },
+        cin: {
+        	
+          minlength: function(element) {
+              var check =  $("#cinlabel").text() =="Numéro CIN" ;
+              var checkpassport =  $("#cinlabel").text() =="Numéro passport";
+              if(checkpassport)
+              return  7
+              else if(check)
+              return 8
+              else
+              return 7
+          },
+
+          maxlength:function(element) {
+                  var check =  $("#cinlabel").text() =="Numéro CIN" ;
+                  var checkpassport =  $("#cinlabel").text() =="Numéro passport";
+                  if( checkpassport)
+                  return  12
+                  else if (check)
+                  return 8
+                  else
+                  return 13
+          },
+
+          regexcin: function(element) {
+        	 var checkcin =  $("#cinlabel").text() =="Numéro CIN";
+           var checkpassport =  $("#cinlabel").text() =="Numéro passport";
+         
+          const regexp = new RegExp(element.pattern)
+          if(checkcin)
+          return  /^[0-9]{8}$/
+          else if(checkpassport)
+          return  /^[0-9a-zA-Z]{7,12}$/
+          else
+          return  /^[0-9a-zA-Z]{7,13}$/
+          },
+
+          required: true,
+          remote: {
+            url: "/demandeabonnement/verificationcin",
+            type: "post",
+            //       contentType: "application/json; charset=utf-8",
+            // dataType:"json",
+            cache: false,
+            data: {
+              cin: function () {
+                return $("#cin").val();
+              },
+            },
+
+            dataFilter: function (response) {
+              if (response !== "true") 
+            	  {
+            	  return false;}
+              else return true;
+            },
+          },
+        },
+        telFixe: {
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+          regexInputText: /^7/,
+          remote: {
+            url: "/demandeabonnement/verificationtelfix",
+            type: "post",
+            cache: false,
+            data: {
+                telFixe: function () {
+
+                return $("#telFixe").val();
+              },
+            },
+            dataFilter: function (response) {
+
+              if (response !== "true"){
+
+                $('#raccordementtranche').show();
+              return false;
+              }
+              else {
+
+                 $('#raccordementtranche').hide();
+
+               return true;}
+            },
+          },
+        },
+        fax: {
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+        },
+        telMobile2: {
+          digits: true,
+          minlength: 8,
+          maxlength: 8,
+        },
+        positionxy:{
+           regexInputText : /[a-zA-Z1-9]/,
+        }
+      },
+      messages: {
+    	  customRadio: "Ce champ est obligatoire",
+    	  customRadioproduit: "Veuillez entrer votre produit",
+        Nom: {
+        	 required: "Ce champ est obligatoire",
+             minlength: "Veuillez entrer un Nom valide",
+        	regexInputText : "Au moins 1 caractère majuscule ou minuscule"
+        },
+        Prenom: {
+          required: "Ce champ est obligatoire",
+        },
+        cin: {
+          remote: "Ce numéro est déjà utilisé",
+          required: "Ce champ est obligatoire",
+          regexcin:"Veuillez entrer un identifiant  valide ",
+          minlength: "L'identifiant doit comporter {0} caractère",
+          //digits: "un numéro de 8 chiffre est obligatoir",
+          maxlength: "L'identifiant  doit comporter {0} caractère",
+        },
+        Email: "Veuillez entrer une adresse email valide",
+        villes: {
+        	required: "Ce champ est obligatoire"
+        },
+        gouvernorat:{
+        	required: "Ce champ est obligatoire",
+        },
+        professions:{
+        	required:"Ce champ est obligatoire",	
+        },
+        adresse: {
+            required: "Ce champ est obligatoire",
+        	maxlength : "L'adresse doit contenir au maximum 115 caractères"
+        },
+        codepostale:{
+          required: "Ce champ est obligatoire",
+    
+        },
+        situationFamiliale : {
+            required: "Ce champ est obligatoire",       	
+        },
+        telMobile: {
+        	required: "Ce champ est obligatoire",
+        	 digits: "Veuillez entrer un numéro de téléphone valide ",
+             minlength: "Veuillez entrer un numéro de téléphone valide ",
+             maxlength: "Veuillez entrer un numéro de téléphone valide ",
+        },
+        telFixe: {
+            remote: "Numéro de fixe est déja utilisé",
+            minlength: "Le numéro fixe doit comporter 8 chiffres",
+            digits: "Le numéro fixe doit comporter  8 chiffres  ",
+            maxlength: "Le numéro fixe  doit comporter 8 chiffres",
+            regexInputText: "Le numéro de téléphone fixe doit commencer par 7"
+        },
+        datedenaissance:{
+          required: "Ce champ est obligatoire",
+        	date:  "Veuillez entrer une date de naissance  valide",
+          maxlength:  "Veuillez entrer une date de naissance  valide",
+        },
+        typepaiements: "Ce champ est obligatoire",
+        fax: "Veuillez saisir un numéro de fax valide",
+        telMobile2: "Veuillez entrer un numéro de téléphone valide ",
+        positionxy:{
+           required:"Veuillez saisir la position xyz valide ",
+           regexInputText : "Veuillez saisir la position xyz valide"
+
+        }
+      },
+      errorElement: "em",
+      errorPlacement: function (error, element) {
+        // Add the `invalid-feedback` class to the error element
+        error.addClass("invalid-feedback");
+
+        if (
+          element.prop("type") === "checkbox" ||
+          element.prop("type") === "radio"
+        ) {
+          error.insertAfter(element.parents(".containerchx"));
+          // error.insertAfter( element.next( "label" ) );
+        } else {
+          error.insertAfter(element);
+        }
+      },
+      highlight: function (element, errorClass, validClass) {
+        if (
+          $(element).attr("type") == "radio" &&
+          $(element).attr("name") == "customRadioproduit"
+        ) {
+          $('input[name^="customRadioproduit"]').each(function () {
+            //code
+
+            $('input[name^="customRadioproduit"]')
+              .addClass("is-invalid")
+              .removeClass("is-valid");
+          });
+        } else if (
+          $(element).attr("type") == "radio" &&
+          $(element).attr("name") == "customRadio"
+        ) {
+          $('input[name="customRadio"]').each(function () {
+            //code
+            $('input[name^="customRadio"]')
+              .addClass("is-invalid")
+              .removeClass("is-valid");
+          });
+        } else $(element).addClass("is-invalid").removeClass("is-valid");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        if (
+          $(element).attr("type") == "radio" &&
+          $(element).attr("name") == "customRadioproduit"
+        ) {
+          $('input[name^="customRadioproduit"]').each(function () {
+            //code
+
+            $('input[name^="customRadioproduit"]').removeClass("is-invalid");
+          });
+        } else if (
+          $(element).attr("type") == "radio" &&
+          $(element).attr("name") == "customRadio"
+        ) {
+          $('input[name^="customRadio"]').each(function () {
+          
+            //code
+            $('input[name="customRadio"]').removeClass("is-invalid");
+          });
+        } else $(element).addClass("is-valid").removeClass("is-invalid");
+      },
+      // errorPlacement: function errorPlacement(error, element) {
+      //     element.after(error);
+      // }
+    });
+
+  const checkboxCells = document.querySelectorAll('.checkbox-cell');
+  checkboxCells.forEach((cell) => {
+    cell.addEventListener('click', () => {
+      const checkbox = cell.querySelector('input[type="checkbox"]');
+      checkbox.checked = !checkbox.checked;
+    });
+  });
+ 
+
+</script>

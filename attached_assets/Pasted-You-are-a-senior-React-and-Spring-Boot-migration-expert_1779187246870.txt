@@ -1,0 +1,243 @@
+You are a senior React and Spring Boot migration expert.
+
+Your task is to fully migrate an existing Java Spring Boot + Thymeleaf project into a modern React frontend architecture while preserving the exact business logic, UI/UX, and application behavior.
+
+## Main Objectives
+
+* Convert ALL Thymeleaf HTML templates into reusable React components and pages.
+* Preserve the SAME design, layout, colors, theme, sidebar, navbar, responsiveness, animations, and user experience.
+* Keep the SAME application logic and workflows.
+* Maintain the SAME routing structure and user navigation.
+* Create a scalable and clean React architecture.
+
+---
+
+# Migration Requirements
+
+## Frontend Stack
+
+Use:
+
+* React.js
+* React Router
+* Redux Toolkit
+* Axios
+* Tailwind CSS or existing CSS structure
+* React Hooks
+* Functional Components only
+
+---
+
+# Tasks To Perform
+
+## 1. Analyze Existing Project
+
+Analyze:
+
+* Thymeleaf templates
+* Fragment files
+* Sidebar/navbar layouts
+* Forms
+* Tables
+* Modals
+* JavaScript logic
+* Backend controllers
+* DTOs
+* Existing APIs
+* Security/authentication flow
+
+---
+
+## 2. Migrate Thymeleaf Templates
+
+Convert every `.html` Thymeleaf file into:
+
+* React pages
+* Reusable React components
+
+Examples:
+
+* dashboard.html → Dashboard.jsx
+* users/list.html → UsersPage.jsx
+* fragments/sidebar.html → Sidebar.jsx
+* fragments/navbar.html → Navbar.jsx
+
+Preserve:
+
+* CSS classes
+* Theme
+* Responsiveness
+* Existing visual identity
+
+DO NOT redesign the application.
+
+---
+
+## 3. Create React Project Structure
+
+Create a professional scalable architecture:
+
+src/
+├── api/
+├── app/
+├── assets/
+├── components/
+├── features/
+├── hooks/
+├── layouts/
+├── pages/
+├── redux/
+├── routes/
+├── services/
+├── utils/
+└── styles/
+
+---
+
+## 4. Redux Migration
+
+Create Redux Toolkit implementation for:
+
+* Authentication
+* Users
+* Dashboard
+* Notifications
+* Settings
+* Any business modules
+
+Requirements:
+
+* slices
+* async thunks
+* centralized store
+* loading/error handling
+* token persistence
+
+---
+
+## 5. API Layer
+
+Create complete API integration using Axios:
+
+* authentication APIs
+* CRUD APIs
+* pagination
+* filtering
+* upload/download
+* error interceptors
+* JWT token handling
+* refresh token logic if needed
+
+Generate:
+
+* api services
+* reusable request handlers
+* environment configuration
+
+---
+
+## 6. Authentication & Security
+
+Migrate:
+
+* Spring Security logic
+* JWT/session authentication
+* Role-based access
+* Protected routes
+* Permission handling
+
+Implement:
+
+* PrivateRoute
+* Role guards
+* Auth persistence
+
+---
+
+## 7. Layout Preservation
+
+IMPORTANT:
+
+* Keep EXACT same sidebar behavior
+* Keep EXACT same menu structure
+* Keep EXACT same dashboard layout
+* Keep EXACT same color palette
+* Keep EXACT same responsive behavior
+
+The React version must visually match the Thymeleaf application.
+
+---
+
+## 8. Form Migration
+
+Convert Thymeleaf forms into React forms:
+
+* controlled components
+* validation
+* API submission
+* error handling
+* loading states
+
+Use reusable form components whenever possible.
+
+---
+
+## 9. Data Tables
+
+Migrate all tables with:
+
+* pagination
+* sorting
+* filtering
+* actions
+* modals
+* export buttons if existing
+
+---
+
+## 10. Code Quality
+
+Requirements:
+
+* clean architecture
+* reusable components
+* no duplicated code
+* optimized rendering
+* maintainable structure
+* production-ready code
+
+---
+
+## 11. Deliverables
+
+Generate:
+
+* React pages
+* Components
+* Redux store
+* API services
+* Routing
+* Protected routes
+* Hooks
+* Layouts
+* Full migration structure
+
+For every migrated page:
+
+* explain original Thymeleaf mapping
+* explain API integration
+* explain Redux logic
+* preserve all functionality
+
+---
+
+# Important Constraints
+
+* DO NOT change the design.
+* DO NOT simplify business logic.
+* DO NOT remove features.
+* DO NOT create placeholder code.
+* DO NOT generate pseudo code.
+* Generate real production-ready React code.
+
+The migration must feel like the SAME application rebuilt in React.

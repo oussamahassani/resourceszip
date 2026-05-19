@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorator="layout">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+	<title>Crm Chifco</title>
+</head>
+
+<body>
+	<section layout:fragment="content">
+		<!-- Loader -->
+		<div th:replace="/fragments/loader.html :: loader"></div>
+
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row mb-2">
+					<div class="col-sm-12" th:if="${bordereau.status} == 'En attente de justificatif'">
+						<h1 class="m-0">En attente de justificatif Bordereau</h1>
+					</div>
+					<div class="col-sm-12" th:if="${bordereau.status} == 'versement en instance'">
+						<h1 class="m-0">En attente de validation</h1>
+					</div>
+					<div class="col-sm-12"
+						th:if="${bordereau.status} != 'versement en instance' or  ${bordereau.status} != 'en instance'">
+						<h1 class="m-0">Details Bordereau</h1>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<div class="row">
+			<div class="col-md-8">
+				<div class="col-sm-12">
+					<div class="card-block">
+						<h4>Informations Bordereau <button onclick="pdfBordereauform()"
+								class="d-inline-block btn btn-sm btn-info shadow-sm mb-3" style="margin-top: 11px;"><i
+									class="fa fa-download"></i>
+								<input id="idbordereau" type="hidden" th:value="${bordereau.bordereauId}">Télécharger
+								PDF Bordereau </button>
+						</h4>
+
+						<div class="row">
+							<label class="col-sm-4 col-form-label">Date de création:</label>
+							<div class="col-sm-8" th:text="${#dates.format(bordereau.createdDate, 'dd-MM-yyyy')}"></div>
+
+						</div>
+
+						<div class="row">
+							<label class="col-sm-4 col-form-label">Crée par:</label> <span class="col-sm-2"
+								name="creepar" th:text="${bordereau.user.firstName}"></span> <span class="col-sm-2"
+								name="categories" th:text="${bordereau.user.lastName}"></span>
+						</div>
+
+						<div class="row">
+							<label class="col-sm-4 col-form-label">Montant:</label>
+							<div class="col-sm-8" name="montant"
+								th:text="${#numbers.formatDecimal(bordereau.montant, 1, 'COMMA', 3, 'POINT')}+' DTN'">
+							</div>
+						</div>
+						<div class="row">
+							<label class="col-sm-4 col-form-label">Nombre des factures total:</label>
+							<div class="col-sm-8" th:text="${bordereau.numfacure}"></div>
+
+						</div>
+						<div th:if="${avance != null }">
+							<div class="row" th:if="${avance != null }">
+								<label class="col-sm-4 col-form-label">Nombre des factures appliquer a l'avance
+									:</label>
+								<div class="col-sm-8" th:text="${avance.nbrPermiereFacture}"></div>
+
+							</div>
+
+							<div class="row" th:if="${bordereau.status !=  'versement confirmé' }">
+								<label class="col-sm-4 col-form-label">Status Avance Commision :</label>
+								<div class="col-sm-8"
+									th:text="${avance.statut == 'NOT_PAYED' ? 'non payee' : avance.statut == 'DEMANDE_IN_PROGRESS' ? 'encours' : 'Payee' }">
+								</div>
+
+							</div>
+
+
+						</div>
+						<div class="row"
+							th:if="${bordereau.status !=  'versement confirmé' } and ${totalCommission} > 0.0">
+							<label class="col-sm-4 col-form-label">Avance Commision montant :</label>
+							<div class="col-sm-8" th:text="${totalCommission}"></div>
+
+						</div>
+						<div th:if="${avanceEnCours} and ${resteApayee} != null">
+							<div class="row">
+								<label class="col-sm-4 col-form-label">Net à Reverser:</label>
+								<div class="col-sm-8" th:text="${resteApayee}"></div>
+							</div>
+							<div class="row">
+								<label class="col-sm-4 col-form-label">Avance a Validée :</label>
+								<div class="col-sm-8" th:text="${monatantAvanceValide}"></div>
+							</div>
+						</div>
+
+						<div class="col-sm-12"
+							th:if="${bordereau.status} == 'versement confirmé' and ${avancepayee} != null">
+							<div class="row">
+								<label class="col-sm-4 col-form-label">Avance Validée :</label>
+								<div class="col-sm-8" th:text="${avancepayee}"></div>
+							</div>
+							<div class="row" th:if=" ${resteApayee} != null">
+								<label class="col-sm-4 col-form-label">Net à Reverser:</label>
+								<div class="col-sm-8" th:text="${resteApayee}"></div>
+							</div>
+						</div>
+						<div class="row" th:if="${bordereau.photoRecu} != null ">
+							<label class="col-sm-4 col-form-label">Justificatif de versement :</label> <a
+								th:href="@{/{urljustification}(urljustification=${urljustification})}">
+								<img th:src="@{${'/bordereau/'+bordereau.bordereauId+'/'+bordereau.photoRecu}}"
+									id="prev4" style="height: 200px; width: 200px" />
+							</a>
+
+						</div>
+
+						<div class="col-sm-12"
+							th:if="(${bordereau.status} == 'En attente de justificatif' )  and ( ${avance} != null or  ${totalCommission} > 0.0 ) ">
+
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-primary" data-toggle="modal"
+								data-target="#exampleModal">
+								Valider l'avance sur commission
+							</button>
+							<form id="Avancecommission" th:action="@{/bordereau/demandeAvance}">
+
+								<input name="idbordereau" id="idbordereau" type="hidden" th:value="${idbordereau}">
+								<!-- Modal -->
+								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+									aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Valider Avance commission
+													d'acquisition </h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												Souhaitez-vous vraiment valider l'avance sur commission d'acquisition ?
+											</div>
+											<div class="modal-footer">
+												<input type=cancel class="btn btn-secondary" data-dismiss="modal"
+													value="Fermer"></input>
+												<input type="submit" class="btn btn-primary" value="Valider"></input>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>Type</th>
+								<th>Reference</th>
+								<th>Montant à payer (DTN)</th>
+								<th>Date echeance</th>
+								<th>Appliquer au avance </th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="ob:${listeentryBordereau}">
+								<td th:if="${ob.encaissement.facture} != null">Facture</td>
+								<td th:if="${ob.encaissement.AvoirClient} != null">Avoir</td>
+
+								<td th:if="${ob.encaissement.facture} != null"
+									th:text=${ob.encaissement.facture.ref_facture} name="ref"></td>
+								<td th:if="${ob.encaissement.AvoirClient} != null"
+									th:text=${ob.encaissement.AvoirClient.refAvoirClient} name="ref"></td>
+
+								<td th:if="${ob.encaissement.facture} != null"
+									th:text="${#numbers.formatDecimal(ob.encaissement.facture.montant_payer, 1, 'COMMA', 3, 'POINT')}">
+								</td>
+								<td th:if="${ob.encaissement.AvoirClient} != null"
+									th:text="'-'+${#numbers.formatDecimal(ob.encaissement.AvoirClient.montantAvoir, 1, 'COMMA', 3, 'POINT')}">
+								</td>
+
+								<td th:if="${ob.encaissement.facture} != null"
+									th:text="${#dates.format(ob.encaissement.facture.date_echeance, 'dd-MM-yyyy')}">
+								</td>
+								<td th:if="${ob.encaissement.AvoirClient} != null">---</td>
+								<td th:if="${ob.encaissement.facture} != null"
+									th:text="${ob.encaissement.facture != null ? (ob.eligibleCommision ? 'oui' : 'false') : ''}">
+								</td>
+
+
+								<td th:if="${ob.encaissement.avoirClient?.canRevendeurViewed} == null"></td>
+								<td th:if="${ob.encaissement.avoirClient?.canRevendeurViewed} != null">
+									<div sec:authorize="hasAnyAuthority('CREATE_INVOICE_AVOIR')"
+										th:if="${ob.encaissement.avoirClient.canRevendeurViewed} == false">
+										<a href="#" id="supprimerAvoir" nom="supprimerAvoir"
+											th:href="@{|/bordereau/deleteAvoirByBordereau/${ob.encaissement.idbordaureau.bordereauId}/${ob.encaissement.avoirClient.avoirId}|}"
+											class="text-danger">
+											<i class="fa fa-trash"></i> Supprimer
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+			<div th:if="${bordereau.photoRecu} == null and ${bordereau.status} eq 'En attente de justificatif' "
+				class="col-md-4" sec:authorize="hasAnyAuthority('CREATE_SLIP')">
+				<form id="myForm2" th:action="@{/bordereau/addjustification}" enctype="multipart/form-data"
+					method="POST">
+
+
+					<div class="row">
+						<input name="idbordereau" type="hidden" th:value="${idbordereau}">
+						<div th:if="${bordereau.photoRecu} == null" class="col-md-6">
+							<div class="form-group">
+
+								<label>Veuillez choisir le mode de paiement </label>
+
+							
+							<button th:if=" (${resteApayee} != null and ${resteApayee} > 0 ) or (${resteApayee} == null)" id="sendPayementButton" class="btn btn-primary m-2"
+									onclick="sendPayementClickToPay(event)">Paiement en ligne (clictToPay) </button>
+
+						<!-- 	 <button th:if=" (${resteApayee} != null and ${resteApayee} > 0 ) or (${resteApayee} == null)" id="sendPayementButton" class="btn btn-success m-2"
+									onclick="sendPayement(event)">Paiement en ligne (Paymee) </button>
+									 <button th:if=" (${resteApayee} != null and ${resteApayee} > 0 ) or (${resteApayee} == null)" id="sendPayementButtonkonnect" class="btn btn-warning m-2"
+									onclick="sendPayementsendPayementButtonkonnect(event)">Paiement en ligne (konnect) </button> -->
+								 <button id="virementBancaireButton" class="btn btn-info m-2"
+									onclick="virementBancaire(event)"> Virement bancaire/Cash </button> 
+								<div id="showMe3">
+									<label>Ajouter justificatif </label>
+									<div class="custom-file">
+										<input type="file" accept="image/*" className="form-control" id="imageFile2"
+											name="imageFile2" th:required="true" required />
+										<label class="custom-file-label" for="imageFile2">Télécharger
+											le fichier</label>
+									</div>
+									<img src="/img/faces/choisiruneimage.png" id="prev2"
+										style="height: 200px; width: 200px" />
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div>
+
+						<button type="submit" class="btn btn-primary">Valider</button>
+					</div>
+
+				</form>
+
+			</div>
+			<div class="col-md-4 card pt-5" sec:authorize="hasAnyAuthority('CREATE_INVOICE_AVOIR')">
+				<label for="cars">Ajouter des avoirs : </label>
+
+				<div class="alert alert-danger" id="avoirAlert" style="display: none;" role="alert">
+					Aucune avoir sélectionnée.
+				</div>
+				<table class="table mb-0">
+					<thead class="table-bordered">
+						<th></th>
+						<th>Reference</th>
+						<th>Montant</th>
+						<th></th>
+					</thead>
+				</table>
+				<div class="overflow-auto" style="max-height: 400px;">
+					<table class="table">
+						<tbody>
+							<td th:if="${avoirList.size() == 0}" colspan="4" class="text-center">Aucune avoir trouvée
+							</td>
+							<tr th:each="av:${avoirList}">
+								<td><input type="checkbox" th:id="${av.avoirId}"
+										th:onclick="calcul('[[${av.montantAvoir}]]','[[${av.avoirId}]]')"></td>
+								<td th:text="${av.refAvoirClient}"></td>
+								<td th:text="${#numbers.formatDecimal(-av.montantAvoir, 1, 'COMMA', 3, 'POINT')}" }>
+								</td>
+								<td>
+									<button class="btn btn-primary" data-toggle="modal"
+										th:data-target="'#modalDetails' + ${av.avoirId}"
+										data-montantavoir="${av.montantAvoir}">
+										<i class="fas fa-eye"></i>
+									</button>
+									<!-- Boîte de dialogue modale -->
+									<div class="modal fade" th:id="'modalDetails' + ${av.avoirId}" tabindex="-1"
+										role="dialog" aria-labelledby="modalDetailsLabel" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="modalDetailsLabel">Détails de l'avoir
+													</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Fermer">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<!-- Contenu des détails de l'avoir -->
+													<div class="row">
+														<div class="col-sm-12">
+															<div class="card-block">
+																<div class="card-block-header">
+
+																	<div class="card-block-body">
+																		<div class="row">
+																			<label
+																				class="col-sm-4 col-form-label">montant
+																				TTC:</label>
+																			<div class="col-sm-8"
+																				th:text="${#numbers.formatDecimal(-av.montantAvoir, 1, 'COMMA', 3, 'POINT')}">
+																			</div>
+
+																		</div>
+																		<div class="row">
+																			<label
+																				class="col-sm-4 col-form-label">montant
+																				Ht:</label>
+																			<div class="col-sm-8"
+																				th:text="${#numbers.formatDecimal(-av.montantHt, 1, 'COMMA', 3, 'POINT')}">
+																			</div>
+
+
+																		</div>
+
+																		<div class="row">
+																			<label
+																				class="col-sm-4 col-form-label">montant
+																				Tva:</label>
+																			<div class="col-sm-8"
+																				th:text="${#numbers.formatDecimal(-av.montantTva, 1, 'COMMA', 3, 'POINT')}">
+																			</div>
+
+																		</div>
+
+																		<div class="row">
+																			<label class="col-sm-4 col-form-label">%
+																				Tva:</label>
+																			<div class="col-sm-8"
+																				th:text="${#numbers.formatDecimal(av.baseTva, 1, 'COMMA', 3, 'POINT')}">
+																			</div>
+
+																		</div>
+
+
+
+																		<div class="row">
+																			<label class="col-sm-4 col-form-label">motif
+																				Avoir:</label>
+																			<div class="col-sm-8"
+																				th:text="${av.motifAvoir}"></div>
+
+																		</div>
+
+																		<div class="row">
+																			<label class="col-sm-4 col-form-label">ref
+																				client:</label>
+																			<div class="col-sm-8"
+																				th:text="${av.abonnement.referenceClient}">
+																			</div>
+
+																		</div>
+																		<div class="row">
+																			<label
+																				class="col-sm-4 col-form-label">Téléphone
+																				fixe client:</label>
+																			<div class="col-sm-8"
+																				th:text="${av.abonnement.telFixe}">
+																			</div>
+
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Fermer</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mt-5 mb-5">
+					<h3><b>Montant :</b> <span id="montant"></span> TND</h3>
+				</div>
+				<div class="col-md-3" th:if="${avoirList.size() != 0}">
+					<button id="ajouterAvoir" class="btn btn-primary">Ajouter</button>
+				</div>
+
+			</div>
+		</div>
+
+		<div th:if="${bordereau.photoRecu} != null  and ${bordereau.status} eq 'versement en instance'"
+			class=" p-5 col-md-8">
+
+			<form sec:authorize="hasAnyAuthority('VALIDATE_SLIP')" id="anulationbordauraux"
+				th:action="@{/bordereau/anulationBordereaux}" enctype="multipart/form-data" method="POST"
+				class=" card row p-3">
+				<input name="idbordereau" type="hidden" th:value="${idbordereau}">
+				<label>Annuler Bordereau</label>
+
+				<div class="d-flex justify-content-between align-items-center">
+					<label class="col-sm-4">commentaire</label>
+					<textarea id="commentaire" class="w-75 p-3 col-sm-4" name="commentaire" rows="2" cols="50"
+						placeholder="Ajouter un commentaire"></textarea>
+
+
+					<button type="submit" class="btn btn-primary col-sm-3">Annuler</button>
+				</div>
+
+			</form>
+
+
+			<form sec:authorize="hasAnyAuthority('VALIDATE_SLIP')" id="myForm2"
+				th:action="@{/bordereau/validationBordereaux}" enctype="multipart/form-data" method="POST"
+				class=" mt-3 card p-3 row">
+				<input name="idbordereau" type="hidden" th:value="${bordereau.bordereauId}">
+				<label class="col-sm-4">Valider Bordereau</label>
+				<div class="d-flex justify-content-between align-items-center">
+					<label>Date réelle de versement</label>
+					<input type="date" name="dateVersement" id="dateVersement" th:value="${bordereau.dateVersement}"
+						required />
+				</div>
+				<div class="d-flex justify-content-between align-items-center">
+					<label class="col-sm-4">commentaire</label>
+					<textarea id="commentaire" class="w-75 p-3 col-sm-4" name="commentaire" rows="2" cols="50"
+						placeholder="Ajouter un commentaire"></textarea>
+				</div>
+				<div class="d-flex justify-content-between align-items-center">
+
+					<span></span>
+
+					<button type="submit" class="btn btn-primary col-sm-3">Valider</button>
+				</div>
+
+			</form>
+
+		</div>
+		<input type="hidden" name="message" id="message" th:value="message ?  ${message}  : ''" />
+	</section>
+
+</body>
+
+</html>
+<script th:inline="javascript">
+	montantTotal = /*[[${bordereau.montant}]]*/ 0;
+	bordereauId = /*[[${bordereau.bordereauId}]]*/ 0;
+	resteApayee = /*[[${resteApayee}]]*/ null;
+	var idsAvoir = []
+	let calculeMontantTotal = 0
+	let options = {
+		minimumFractionDigits: 3,
+		maximumFractionDigits: 3
+	};
+
+	if (resteApayee) {
+		document.getElementById('montant').innerHTML = resteApayee.toLocaleString(undefined, options)
+		calculeMontantTotal = resteApayee;
+	}
+	else {
+		document.getElementById('montant').innerHTML = montantTotal.toLocaleString(undefined, options)
+		calculeMontantTotal = montantTotal;
+	}
+
+
+
+
+	function pdfBordereauform() {
+
+		var idbordereau = document.getElementById("idbordereau").value;
+		let a = document.createElement("a");
+		a.setAttribute("style", "display: none");
+		a.href = "/bordereau/imprimerBordereauA4/" + idbordereau;
+		a.target = "_blank";
+		a.click();
+
+	}
+
+
+	var messagenotif = document.getElementById("message").value;
+	if (messagenotif !== "" && messagenotif == "justificationBordereauxx") {
+		$(document).Toasts("create", {
+			title: "Justificatif bordereaux",
+			body: "Impossible  ",
+			class: "bg-danger",
+			autohide: true,
+			delay: 10000,
+		});
+	}
+	if (messagenotif !== "" && messagenotif == "AVANCE_DEJA_DEMANDER") {
+		$(document).Toasts("create", {
+			title: "Avance Commision",
+			body: "Impossible",
+			class: "bg-danger",
+			autohide: true,
+			delay: 10000,
+		});
+	}
+	if (messagenotif !== "" && messagenotif == "justificationBordereaux") {
+		$(document).Toasts("create", {
+			title: "Justificatif bordereaux",
+			body: "ok ",
+			class: "bg-success",
+			autohide: true,
+			delay: 10000,
+		});
+	}
+
+	if (messagenotif !== "" && messagenotif == "DELETE_AVOIR") {
+		$(document).Toasts("create", {
+			title: "Suppression avoir",
+			body: "Avoir supprimé avec succès",
+			class: "bg-success",
+			autohide: true,
+			delay: 10000,
+		});
+	}
+
+	if (messagenotif !== "" && messagenotif == "ADD_AVOIR") {
+		$(document).Toasts("create", {
+			title: "Ajouter avoir",
+			body: "Avoir ajouté avec succès",
+			class: "bg-success",
+			autohide: true,
+			delay: 10000,
+		});
+	}
+
+	if (messagenotif !== "" && messagenotif == "ADD_AVOIR_ERROR") {
+		$(document).Toasts("create", {
+			title: "Ajouter avoir",
+			body: "Il semble qu'un avoir ait déjà été ajouté.",
+			class: "bg-danger",
+			autohide: true,
+			delay: 10000,
+		});
+	}
+	var reader2 = new FileReader();
+	reader2.onload = function (r_event) {
+		document.getElementById('prev2').setAttribute('src',
+			r_event.target.result);
+	}
+
+	if (document.getElementsByName('imageFile2').length > 0) {
+		document.getElementsByName('imageFile2')[0].addEventListener('change',
+			function (event) {
+				if (this.files[0])
+					reader2.readAsDataURL(this.files[0]);
+				else
+					document.getElementById('prev2').setAttribute('src',
+						"/img/faces/choisiruneimage.png");
+			})
+	}
+
+	function calcul(montant, id) {
+		let checkbox = document.getElementById(id)
+		//let calculeMontantTotal  = document.getElementById('montant').textContent;
+		console.log(calculeMontantTotal)
+		if (checkbox.checked) {
+			addAvoirId(id)
+			calculeMontantTotal = Number(calculeMontantTotal) - Number(montant);
+		} else {
+			removeAvoirId(id)
+
+
+			calculeMontantTotal = Number(calculeMontantTotal) + Number(montant);
+		}
+		let options = {
+			minimumFractionDigits: 3,
+			maximumFractionDigits: 3
+		};
+		document.getElementById('montant').innerHTML = calculeMontantTotal.toLocaleString(undefined, options)
+	}
+
+	//définir la fonction pour ajouter id avoir au tableau
+	function addAvoirId(avoirId) {
+		idsAvoir.push(avoirId);
+	}
+
+	//définir la fonction pour supprimer id avoir du tableau
+	function removeAvoirId(avoirId) {
+		var index = idsAvoir.findIndex(element => element == avoirId)
+		if (index > -1) {
+			idsAvoir.splice(index, 1);
+		}
+	}
+
+
+
+
+	$(document).ready(function () {
+		$('#ajouterAvoir').click(function () {
+			if (idsAvoir.length == 0) {
+				document.getElementById('avoirAlert').style.display = "block"
+				return;
+			} else {
+				document.getElementById('avoirAlert').style.display = "none"
+			}
+			// Création du formulaire
+			var form = $('<form></form>');
+
+			form.attr('method', 'post');
+			// Utilisation de la syntaxe Thymeleaf pour générer l'URL
+			form.attr('action', /*[[@{/bordereau/ajouterAvoir}]]*/ '');
+
+			// Ajout d'un champ input de type hidden pour stocker le tableau avoirIds
+			var avoirIdsField = $('<input></input>');
+			avoirIdsField.attr('type', 'hidden');
+			avoirIdsField.attr('name', 'avoirIdsField');
+			avoirIdsField.val(idsAvoir.join(','));
+			form.append(avoirIdsField);
+
+			// Ajout d'un champ input de type hidden pour stocker le tableau avoirIds
+			var bordereauIdField = $('<input></input>');
+			bordereauIdField.attr('type', 'hidden');
+			bordereauIdField.attr('name', 'bordereauIdField');
+			bordereauIdField.val(bordereauId);
+			form.append(bordereauIdField);
+
+			//loeader 
+			$('.loader-container').show();
+
+			// Ajout du formulaire à la page et soumission automatique
+			$('body').append(form);
+			form.submit();
+		});
+	});
+
+	$('a[nom="supprimerAvoir"]').click(function () {
+		// loader 
+		$('.loader-container').show();
+	});
+
+	function sendPayement(event) {
+		let element = document.getElementById("virementBancaireButton");
+		if(element){
+			element.classList.toggle("showMe3");	
+		}
+		
+		let element2 = document.getElementById("sendPayementButton")
+	if(element2){
+		element2.classList.toggle("showMe3");
+	}
+	
+		var form = $('<form></form>');
+		form.attr('method', 'post');
+		// Utilisation de la syntaxe Thymeleaf pour générer l'URL
+		form.attr('action', /*[[@{/payment/paymee/payement}]]*/ '');
+
+		// Ajout d'un champ input de type hidden pour stocker le tableau avoirIds
+		var brdField = $('<input></input>');
+		brdField.attr('type', 'hidden');
+		brdField.attr('name', 'montantBd');
+		brdField.val(/*[[${bordereau.montant}]]*/);
+		if(resteApayee){
+			brdField.val(/*[[${resteApayee}]]*/);
+		}
+		form.append(brdField);
+
+		// Ajout d'un champ input de type hidden pour stocker le reference bordereau
+		var refbordereauField = $('<input></input>');
+		refbordereauField.attr('type', 'hidden');
+		refbordereauField.attr('name', 'refBordereau');
+		refbordereauField.val(/*[[${bordereau.referenceBordereau}]]*/);
+		form.append(refbordereauField);
+
+		//loeader 
+		$('.loader-container').show();
+
+		// Ajout du formulaire à la page et soumission automatique
+		$('body').append(form);
+		form.submit();
+	}
+	function sendPayementClickToPay(event){
+		let element = document.getElementById("virementBancaireButton");
+		if(element){
+			element.classList.toggle("showMe3");	
+		}
+		
+		let element2 = document.getElementById("sendPayementButton")
+	if(element2){
+		element2.classList.toggle("showMe3");
+	}
+	
+		var form = $('<form></form>');
+		form.attr('method', 'post');
+		// Utilisation de la syntaxe Thymeleaf pour générer l'URL
+		form.attr('action', /*[[@{/payment/clictopay-provider/checkout}]]*/ '');
+
+		// Ajout d'un champ input de type hidden pour stocker le tableau avoirIds
+		var brdField = $('<input></input>');
+		brdField.attr('type', 'hidden');
+		brdField.attr('name', 'montantBd');
+		brdField.val(/*[[${bordereau.montant}]]*/);
+		if(resteApayee){
+			brdField.val(/*[[${resteApayee}]]*/);
+		}
+		form.append(brdField);
+
+		// Ajout d'un champ input de type hidden pour stocker le reference bordereau
+		var refbordereauField = $('<input></input>');
+		refbordereauField.attr('type', 'hidden');
+		refbordereauField.attr('name', 'refBordereau');
+		refbordereauField.val(/*[[${bordereau.referenceBordereau}]]*/);
+		form.append(refbordereauField);
+
+		//loeader 
+		$('.loader-container').show();
+
+		// Ajout du formulaire à la page et soumission automatique
+		$('body').append(form);
+		form.submit();
+	}
+	function sendPayementsendPayementButtonkonnect(event){
+		
+		let element = document.getElementById("virementBancaireButton");
+		if(element){
+			element.classList.toggle("showMe3");	
+		}
+		
+		let element2 = document.getElementById("sendPayementButton")
+	if(element2){
+		element2.classList.toggle("showMe3");
+	}
+	
+		var form = $('<form></form>');
+		form.attr('method', 'post');
+		// Utilisation de la syntaxe Thymeleaf pour générer l'URL
+		form.attr('action', /*[[@{/payment/clictopay/konnectPayement}]]*/ '');
+
+		// Ajout d'un champ input de type hidden pour stocker le tableau avoirIds
+		var brdField = $('<input></input>');
+		brdField.attr('type', 'hidden');
+		brdField.attr('name', 'montantBd');
+		brdField.val(/*[[${bordereau.montant}]]*/);
+		if(resteApayee){
+			brdField.val(/*[[${resteApayee}]]*/);
+		}
+		form.append(brdField);
+
+		// Ajout d'un champ input de type hidden pour stocker le reference bordereau
+		var refbordereauField = $('<input></input>');
+		refbordereauField.attr('type', 'hidden');
+		refbordereauField.attr('name', 'refBordereau');
+		refbordereauField.val(/*[[${bordereau.referenceBordereau}]]*/);
+		form.append(refbordereauField);
+
+		//loeader 
+		$('.loader-container').show();
+
+		// Ajout du formulaire à la page et soumission automatique
+		$('body').append(form);
+		form.submit();
+	}
+	function virementBancaire(event) {
+		let element = document.getElementById("virementBancaireButton");
+		if(element){
+		element.classList.toggle("showMe3");
+		$("#showMe3").toggle();
+		}
+	}
+</script>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Facture</title>
+
+</head>
+
+
+<body id="page-top">
+<section layout:fragment="content">
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Visualisation Facture</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+
+
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+
+                <div class="card-body p-3 ">
+
+                    <form th:action="@{/imprimer_facture_A4/{id}(id=${facture.factureId})}" target="_blank" method="post">
+                        <div class="row">
+                        <div class="col-md-6">
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h3 class="h3 mb-0 text-gray-800">Details Facture : </h3>
+
+                        </div>
+                        <div>
+
+
+
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Numero
+                                    Facture :</label>
+                                <label for="name" class="col-form-label"
+                                       th:utext="${facture.ref_facture}"></label>
+                            </div>
+
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Date Creation
+                                    : </label>
+                                    <label for="name" class="col-form-label" th:text="${#dates.format(facture.CreatedDate, 'dd-MM-yyyy')}"></label>
+                            </div>
+
+                          
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Date Echéance
+                                    : </label>
+                                <label for="name" class="col-form-label"
+                                       th:utext="${#dates.format(facture.date_echeance, 'dd-MM-yyyy')}"></label>
+                            </div>
+
+                        </div>
+                        </div>
+                          <div class="col-md-6">
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h3 class="h3 mb-0 text-gray-800">Details Client : </h3>
+
+                        </div>
+                        <div>
+
+
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Nom Client
+                                    :</label>
+                                <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.firstName}"></label>
+                                       <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.lastName}"></label>
+                            </div>
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Identifiant Client
+                                    :</label>
+                                <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.cin}"></label>
+                            </div>
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Code Client
+                                    :</label>
+                                <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.referenceClient}"></label>
+                            </div>
+        
+
+                            <div class="form-group col col-md-auto">
+                                <label for="name" class="col-form-label font-italic" style="font-weight:bold;">Adresse
+                                    Client:</label>
+                                <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.adresse}"></label>
+                                       <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.gouvernorat.gouvernoratName}"></label>
+                                       <label for="name" class="col-form-label"
+                                       th:utext="${abonnement.codePostale?.code}"></label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <!--                    <h1 class="h3 mb-0 text-gray-800">Details Abonnement</h1> -->
+
+                        </div>
+                        <div class="row">
+
+                            <h3 class="h3 mb-0 text-gray-800">Produit :</h3>
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+
+                                    <th>Designation</th>
+                                    <th>Date Debut</th>
+                                    <th>Date Echeance</th>
+                                    <th>Date de Fin</th>
+                                    <th>Prix HT (TND)</th>
+                                    <!-- <th>Taux TVA(%)</th> -->
+                                    <!-- 						<th>Quantité</th> -->
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr th:each="entriesfacture: ${facture.entriesFacture} ">
+                                    <td>
+                                        
+                                    
+                                        <label for="name" class="col-form-label"
+                                               th:utext="${entriesfacture.productName}"></label>
+                                       
+                                    </td>
+                                     <td th:text="${#dates.format(facture.dateDeDebut, 'dd-MM-yyyy')}"></td>
+                                    <td th:text="${#dates.format(facture.date_echeance,'dd-MM-yyyy')}"></td>
+                                    <td th:text="${#dates.format(facture.dateDeFin,'dd-MM-yyyy')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(entriesfacture.prixTotalHT, 1, 'COMMA', 3, 'POINT')}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="row">
+
+                            <h3 class="h3 mb-0 text-gray-800">Prix :</h3>
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Total Prix HT (TND)</th>
+                                    <!-- <th>Taux TVA(%)</th> -->
+                                    <th>Prix TTC (TND)</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+
+                                    <td th:text= "${#numbers.formatDecimal(facture.montantHt, 1, 'COMMA', 3, 'POINT')}"></td>
+                                    <!-- <td th:text=${facture.tauxTva}></td> -->
+                                    <td th:text="${#numbers.formatDecimal(facture.montant_payer, 1, 'COMMA', 3, 'POINT')}" ></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input data-toggle="modal" data-target="#confirmerimpression"
+                                   class="btn btn-primary" value=" Imprimer ">
+							<a><span onclick="rtn()" class="btn btn-danger">Retourner</span> </a>											
+                       </div>
+
+                        <div class="modal fade" id="confirmerimpression" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Imprimer Facture</h5>
+                                        <button class="close" type="button" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">Cliquez sur Confirmer si vous voulez continuer
+                                        l'impression.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                                            Annuler
+                                        </button>
+                                        <input type="submit" class="btn btn-primary" value="Confirmer"> </input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</section>
+</body>
+
+</html>
+<script>
+
+function rtn() {
+
+		if( window.history.back())
+   window.history.back();
+		else
+			 window.close()
+}
+</script>

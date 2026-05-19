@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Modifier une Réclamation</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Modifier la réclamation</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                           <form class="form-sample" 
+      th:action="@{/reclamations/editreclamation/{reclamationid}(reclamationid=${reclamation.reclamationid})}" 
+      method="POST" 
+      enctype="multipart/form-data" 
+      th:object="${reclamation}">
+
+                                <!-- Category Type (Select option for Servicetype) -->
+                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Catégorie</label>
+                                            <div class="col-sm-9" th:if="${isAdmin}">
+												  <select  id="category"  name="category" data-control="select2" class="form-control js-select2"
+							                data-placeholder="Choisissez une catégorie" >
+							                          <option value="">Choisissez une catégorie</option>
+							                        <option value="">Choisissez une catégorie</option>                                                
+                                                    <option th:value="Client" th:selected="${reclamation.category == 'Client'}">Client</option>
+                                                    <option th:value="Revendeur" th:selected="${reclamation.category == 'Revendeur'}">Revendeur</option>
+                                                    <option th:value="chefsecteur" th:selected="${reclamation.category == 'chefsecteur'}">Chef secteur</option>
+							                        </select>
+												
+                                            </div>
+                                            <div class="col-sm-9" th:if="${isRevendeur}">
+												  <select  id="category"  name="category" data-control="select2" class="form-control js-select2"
+							                 data-placeholder="Choisissez une catégorie">
+							                          <option value="">Choisissez une catégorie</option>
+							                        <option value="">Choisissez une catégorie</option>                                                
+                                                    <option th:value="Client" th:selected="${reclamation.category == 'Client'}">Client</option>
+                                                    <option th:value="Revendeur" th:selected="${reclamation.category == 'Revendeur'}">Revendeur</option>
+                                            
+							                        </select>
+											
+                                            </div>
+                                            <div class="col-sm-9" th:if="${isDistributeur}">
+												  <select  id="category"  name="category" data-control="select2" class="form-control js-select2"
+							                 data-placeholder="Choisissez une catégorie" >
+							                          <option value="">Choisissez une catégorie</option>
+							                        <option value="">Choisissez une catégorie</option>                                                
+                                                    <option th:value="Revendeur" th:selected="${reclamation.category == 'Revendeur'}">Revendeur</option>
+                                                    <option th:value="chefsecteur"  th:selected="${reclamation.category == 'chefsecteur'}">Chef secteur</option>
+							                        </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Type de Catégorie</label>
+                                            <div class="col-sm-9">
+												 <select
+								                    name="servicetypeId" id="servicetypeId" th:required="required"
+								                          data-control="select2"
+								                          class="form-control js-select2"
+								                          data-placeholder="Choisissez un type de service"
+								                        >
+								                     <option value="">Choisissez un type de service</option>
+								                     <option
+								                      th:each="service : ${servicetypeList}"
+								                      th:value="${service.servicetypeId}" th:text="${service.categorytype}" 
+								                      th:selected="${reclamation.serviceType.servicetypeId == service.servicetypeId}" ></option>
+								                  </select>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row" >
+                                            <label class="col-sm-3 col-form-label">Motif</label>
+                                            <div class="col-sm-9">
+												<select
+								                   name="motifId" id="motifId" 
+								                          data-control="select2"
+								                          class="form-control js-select2"
+								                          data-placeholder="Choisissez un motif" >
+>
+								                       <option value="" disabled>Choisissez un motif</option> 
+								                </select>
+                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                           <div class="row" id="autreFormGroup" style="display: none;">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Autre</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" name="autre"  rows="4" placeholder="Placez votre motif" th:value="${reclamation.autre}"></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>	
+								 
+                                <!-- Client (Select option for User) -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Personne</label>
+                                            <div class="col-sm-9">
+												 <select  name="clientId" id="clientId"
+								                          data-control="select2"
+								                          class="form-control js-select2"
+								                          data-placeholder="Choisissez la personne réclamée" >
+								                          <option value="" disabled>Choisissez la personne réclamée</option>  								                      
+								                </select>                                         
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Description</label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" name="description"  rows="4" placeholder="Description de la réclamation"  th:text="${reclamation.description}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="reclamation.motif.motifId" th:value="${reclamation.motif != null ? reclamation.motif.motifId : ''}">
+                                <input type="hidden" name="reclamation.client.clientid" th:value="${reclamation.client != null ? reclamation.client.clientid : ''}">
+                                  <input type="hidden" name="reclamation.user.userid" th:value="${reclamation.user != null ? reclamation.user.userid : ''}">
+
+                                <div class="row">
+                                 <div class="col-md-6">
+					              <div class="form-group row">
+					                    <label class="col-sm-3 col-form-label" for="justificatif">Pièces justificatives</label>
+					                <div class="col-sm-9">
+					                  <div class="custom-file">
+					                    <input
+					                      type="file"
+					                      accept=".jpg, .jpeg, .JPG, .JPEG, .png, .PNG, .pdf, .PDF"
+					                      class="custom-file-input"
+					                      id="imageFile2"
+					                      name="justificatif"
+					                      multiple
+					                    />
+					                    <label class="custom-file-label" for="imageFile2"
+					                      >Choisir une image</label
+					                    >
+					                  </div>
+					                </div>
+					                <img
+					                  src="/img/faces/choisiruneimage.png"
+					                  id="prev2"
+					                  class="bloc_imgUpload"
+					                />
+					              </div>
+					            </div>
+					            </div>
+<script>
+$(document).ready(function () {
+    function toggleAutreInput() {
+        var selectedText = $("#motifId option:selected").text().trim();
+        if (selectedText === "Autre") {
+            $('#autreFormGroup').show();
+        } else {
+            $('#autreFormGroup').hide(); 
+        }
+    }
+    toggleAutreInput();
+    $('#motifId').on('change', function () {
+        toggleAutreInput();
+    });
+    let lastCategory = null;
+    let lastServiceTypeId = null;
+
+    $('.js-select2').select2({ allowClear: true });
+
+    var category = $('#category').val();
+    var serviceTypeId = $('#servicetypeId').val();
+    if (category && serviceTypeId) {
+        var defaultServiceType = $("#servicetypeId option:selected").text();
+        if (defaultServiceType !== "Autre") {
+            loadMotifsByServiceType(serviceTypeId, category);
+        }
+    }
+
+});
+
+	 let lastCategory = null;
+    let lastServiceTypeId = null;
+$(document).ready(function () {
+    $('.js-select2').select2({ allowClear: true });
+    var category = $('#category').val(); 
+    var serviceTypeId = $('#servicetypeId').val(); 
+    if (category && serviceTypeId) {   
+		 var defaultServiceType = $("#servicetypeId option:selected").text();	 
+        loadMotifsByServiceType(serviceTypeId, category);
+    }
+    if (category) {
+        loadClientsByCategory(category);
+    }
+});
+    $('#category').on('change', function() {
+        var category = $(this).val();
+        if (category === 'Client' || category === 'Revendeur'|| category === 'chefsecteur') {
+            $('#clientRow').show();
+            loadClientsByCategory(category); 
+        } else {
+            $('#clientRow').hide();
+        }
+    });
+    $('#servicetypeId, #category').on('change', function () {
+        const serviceTypeId = $('#servicetypeId').val(); 
+        const category = $('#category').val();
+        if (serviceTypeId && category && (serviceTypeId !== lastServiceTypeId || category !== lastCategory)) {
+            lastCategory = category;
+            lastServiceTypeId = serviceTypeId;
+            loadMotifsByServiceType(serviceTypeId, category);
+          
+        } else if (!serviceTypeId || !category) {
+            clearMotifDropdown();
+        }
+    });
+     function clearMotifDropdown() {
+        const motifSelect = $('#motifId');
+        motifSelect.empty();
+        motifSelect.append('<option value="" disabled selected>Choisissez un motif</option>'); // Reset default
+    }
+
+   function loadMotifsByServiceType(serviceTypeId, category) {
+    $.ajax({
+        url: '/reclamations/motifs/' + serviceTypeId + '/' + category, 
+        method: 'GET',
+        success: function (data) {
+			 
+            var motifSelect = $('#motifId');
+          
+            motifSelect.empty(); 
+            motifSelect.append('<option value="" disabled selected>Choisissez un motif</option>');            
+              var currentMotifId = $('input[name="reclamation.motif.motifId"]').val();
+           data.forEach(function (motif) {
+			    motifSelect.append('<option value="' + motif.motifId + '"' 
+			        + (currentMotifId == motif.motifId ? ' selected' : '') 
+			        + '>' + motif.nomMotif + '</option>');
+			});
+			 handleAutreInput();
+        },
+        error: function (error) {
+            console.log('Error loading motifs: ', error);
+        }
+    });
+}
+function handleAutreInput() {
+    var selectedText = $("#motifId option:selected").text().trim();
+    if (selectedText === "Autre") {
+        $('#autreFormGroup').show(); 
+    } else {
+        $('#autreFormGroup').hide(); 
+    }
+}
+
+$('#motifId').on('change', function () {
+    handleAutreInput(); 
+});
+function loadClientsByCategory(category) {
+    $.ajax({
+        url: '/reclamations/clients/' + category,
+        method: 'GET',
+        success: function(data) {
+            var clientSelect = $('#clientId');
+            clientSelect.empty();
+            if(category == "Client"){
+             var currentClientId = $('input[name="reclamation.client.clientid"]').val();
+             }else{
+				   var currentClientId = $('input[name="reclamation.user.userid"]').val();
+			 }
+            clientSelect.append('<option value="" disabled selected>Choisissez la personne réclamée</option>'); 
+		       data.forEach(function (client) {
+		    clientSelect.append('<option value="' + client.clientId + '"' 
+		        + (currentClientId == client.clientId ? 'selected' : '') 
+		        + '>' + client.lastName + ' ' + client.firstName + '</option>');
+		});
+        },
+        error: function(error) {
+            console.error('Error loading clients: ', error);
+        }
+    });
+}
+</script>
+                                <div class="card-footer" style="margin-top: 20px; text-align: center;">
+                                    <button type="submit" class="btn btn-success" style="margin-right: 20px;">
+                                        Sauvegarder
+                                    </button>
+                                    <button type="reset" class="btn btn-danger" style="margin-left: 20px;">
+                                        Réinitialiser
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <input type="hidden" name="message" id="message" th:value="${message != null ? message : ''}" />
+    </section>
+</section>
+
+
+</body>
+</html>
+<script>
+	var messagenotif = document.getElementById("message").value;
+if (messagenotif !== "" && messagenotif == "Reclamationmodif") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une réclamation a été modifié avec succées",
+        class: "bg-success",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "Failed to upload one or more justificatif files.") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Une erreur est survenue lors de la modification",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+if (messagenotif !== "" && messagenotif == "Vous avez une autre réclamation technique encours") {
+    $(document).Toasts("create", {
+        title: "Réclamation",
+        body: "Vous avez une autre réclamation technique encours",
+        class: "bg-danger",
+        autohide: true,
+        delay: 10000,
+    });
+}
+    $(document).ready(function() {
+        $('.js-select2').select2({ allowClear: true });
+    });
+</script>

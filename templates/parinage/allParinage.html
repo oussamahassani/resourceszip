@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+  layout:decorator="layout"
+>
+  <head>
+    <title>Status</title>
+       <link rel="stylesheet" th:href="@{/css/customvariablestyle.css}" />
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Content Header (Page header) -->
+          <div class="content-header">
+        
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <h1 class="m-0">Liste des Parrainages</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+               <div class="blocFilter">
+                   <button
+                    id="togglebutton"
+                    class="d-none d-sm-inline-block btn btn-sm bg-oronge shadow-sm mb-3"
+                  >
+                    Filtre
+                  </button>
+                </div>
+                <form id="showMe3" method="get" >
+                <div class="row">
+                                   <div class="col-sm-6 col-md-4">
+                        <label class="col-form-label" for="statutListfiltre"
+                          >Status </label
+                        >
+                        <select
+                          id="statutstfiltre"
+                          name="statutfiltre"
+                          class="form-control"
+                          th:onchange="|onchangeSearch(event)|"
+                        >
+                      <option value = ''>Statut</option>on>
+                      <option value="VALIDATE">Validée</option>
+                      <option value="CANCAL">Annulée </option>
+                      <option value="ATTENTE">En Attente </option>
+                      </select>
+                      </div>
+                </div>
+                <div class="row w-100 ml-2">
+              
+                       <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-5 col-form-label"> Date de création: du</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de début"
+                                                        name="datedebut" id="datedebut"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                      <div class="col-sm-6 col-md-3  mt-3">
+                                         <div class="form-group row">
+                                             <label class="col-sm-2 col-form-label">au</label>
+                                             <div class="col-sm-7">
+                                                 <input type="date" class="form-control"
+                                                        placeholder="Choisissez une date de fin"
+                                                        name="datefin" id="datefin"    th:onchange="|onchangeSearch(event)|"/>
+                                             </div>
+                                         </div>
+                       </div>
+                       </div>
+                       <div class="col-sm-3 mt-3">
+                        <button
+                          class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                          th:onclick="onclicksherh(event)"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                </form>
+                 <button    id="downloadenmasse" class="btn btn-outline-info"> <i
+                            class="fas fa-download fa-sm">Exporter Parrainages</i></button>
+                  <form id="ExportermyForm" class="d-none d-sm-inline-block btn btn-sm shadow-sm" action="#"
+														 method="GET">
+													
+															
+															<input type="hidden" name="datedebut" id="datedebut"   />
+															<input type="hidden" name="datefin" id="datefin"/>
+															<input type="hidden" name="statutfiltre" id="statutfiltre" />
+															
+														   
+															
+												  
+													</form> 
+          <div class="row">
+            <div class="col-12 grid-margin">
+              <div class="card shadow mb-4">
+
+                <div class="card-body">
+                  <div>
+                    <table id="tutorialTable" class="table table-bordered display supertable  table-striped  no-footer dtr-inline">
+                      <!-- Header Table -->
+                       <thead class="table">
+                       
+                          <th>Réference</th>
+                          <th>Date de Création</th>
+                          <th>Nom et prénom du Parrain</th>
+                          <th>CIN du Parrainé</th>
+                         <th>Statut</th>
+                          <th>Action</th>
+                   
+                    </thead>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="hasediterole" th:value="${hasediterole}" id="hasediterole"/>
+        </div>
+      </section>
+    </section>
+  </body>
+</html>
+<script th:inline="javascript">
+  var oTable;
+  let datedebut = "" ; 
+  let datefin ="" ;
+  let statutfiltre = "";
+
+  function onchangeSearch(event) {
+	    let name = event.target.name;
+	    console.log(name)
+	    switch (name) {
+	      case "datedebut": {
+	    	  datedebut = event.target.value;
+	        break;
+	      }
+	      case "datefin": {
+	    	  datefin = event.target.value;
+	        break;
+	      }
+	      case "statutfiltre": {
+	    	  statutfiltre = event.target.value;
+
+	        break;
+	      }
+	    }
+  }
+  function onclicksherh(event) {
+	    //event.preventdefault()
+	    console.log(statutfiltre)
+	    event.preventDefault();
+$("#tutorialTable")
+.DataTable()
+.column(0)
+.search(
+  JSON.stringify({
+  	datefin ,
+  	datedebut,
+  	statutfiltre
+  }) 
+  )
+  .draw();
+}
+  var hasediterole = document.getElementById("hasediterole").value;
+  function updateModalajax(column) {
+    var data = oTable.row($(column).parents("tr")).data();
+    let href = "/parinage/updateStatusParinage/" + data.idParinage;
+    window.location.href = href;
+  }
+  $(document).ready(function () {
+    oTable = $("#tutorialTable").DataTable({
+      language: {
+        lengthMenu: "Affichage _MENU_ enregistrements par page",
+        zeroRecords: "Rien trouvé - désolé",
+        info: "Afficher la page _PAGE_ de _PAGES_",
+        infoEmpty: "Aucun enregistrement disponible",
+        paginate: {
+          first: "Première",
+          last: "Dernière",
+          next: ">>",
+          previous: "<<",
+        },
+      },
+      processing: true,
+      serverSide: true,
+      ordering: true,
+     
+      searching: true,
+     // scrollY: 500,
+      ajax: "/parinage/dataparinage",
+      lengthMenu: [
+        [20, 30, 50],
+        [20, 30, 50],
+      ],
+      columnDefs: [
+        {
+          orderable: false,
+          targets: [2, 3],
+        },
+      ],
+
+      columns: [
+        {
+          data: null,
+          render: function (data, type, row) {
+
+            return row.referenceParinage;
+          },
+        },
+        {
+          data: null,
+          render: function (data, type, row) {
+            return new Date(row.createdDate).toLocaleDateString("en-GB");
+          },
+        },
+        {
+            data: null,
+            render: function (data, type, row) {
+              return row.nomParrain ; 
+            },
+          },
+          {
+              data: null,
+              render: function (data, type, row) {
+                return row.cinParinee ; 
+              },
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                	
+                    return row.statut == "VALIDATE" ?  "Validé":row.statut == "CANCAL"?"Annulée" :"En Attente" ; 
+                },
+              },
+          {
+            data: null,
+            render: function (data, type, row) {
+              //if(hasediterole == "true"){
+              return "<div>" +
+            " <i style='cursor:pointer' onclick='updateModalajax(this)' " +
+            "class='fa  fa-edit  fa-2x icons-header-color d-none d-sm-inline-block btn btn-sm btn-info shadow-sm' " +
+            "aria-hidden='true'></i>" +
+            "</div> <a href=/parinage/viewparinage/"+row.idParinage +"><i class='fa fa-eye fa-2x' aria-hidden='true'></i> </a>";
+            //}
+           // else
+            //return " "
+            
+          },
+          },
+      ],
+    });
+    //$('.dataTables_paginate').addClass('btn btn-sm btn-dark');
+   /* $("#pageSizeSelect").change(function () {
+      var pagesizeselected = $("#pageSizeSelect").val();
+      window.location.replace("/statut/allstatus/1/" + pagesizeselected);
+    });*/
+  });
+  $("#togglebutton").click(function () {
+
+	    $("#showMe3").toggle();
+	  });
+  $("#downloadenmasse").click(function (e) {
+	    e.preventDefault();
+	    document.getElementById("datedebut").value = datedebut;
+	    document.getElementById("datefin").value = datefin;
+	    document.getElementById("statutfiltre").value = statutfiltre;
+	    var url = "/parinage/extractenmasse";
+	      $("#ExportermyForm").attr("action", url);
+	      $("#ExportermyForm").submit();
+  }
+  )
+</script>

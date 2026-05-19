@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorator="~{layout.html}">
+
+<head>
+
+	<title>Commissions</title>
+
+</head>
+
+<body>
+	<section layout:fragment="content">
+
+		<!-- Loader -->
+		<div th:replace="/fragments/loader.html :: loader"></div>
+
+		
+		<section class="card m-2 p-2">
+		<img th:src="@{/img/comission.png}"  />
+		
+		
+		</section>
+	</section>
+</body>
+
+</html>
+<script th:inline="javascript">
+
+	
+</script>

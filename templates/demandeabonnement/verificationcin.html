@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title>Verification Client</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Verification CIN</h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <div class="row">
+            
+                <div class="col-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <form class="form-sample" action="#" th:action="@{/demandeabonnement/verifcin}"
+                                  method="POST">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Cin</label>
+                                            <div class="col-sm-9">
+                                                <input type="tel" pattern="[0-9]{8}" class="form-control" name="cin"
+                                                       placeholder="CIN"
+                                                       th:required="required"   th:onchange="|onchangeCin(event)|"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer" style="margin-top: 20px; text-align: center;">
+                                    <button type="submit" class="btn btn-success" style="margin-right: 20px;" >
+                                        Vérifier
+                                    </button>
+                                    <button type="reset" class="btn btn-danger" style="margin-left: 20px;">
+                                        Réinitialiser
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+</html>
+<script th:inline="javascript" >
+function onchangeCin(e) {
+   
+     sessionStorage.setItem('cin', e.target.value);
+    
+    };
+
+</script>
+

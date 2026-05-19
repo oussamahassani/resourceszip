@@ -1,0 +1,78 @@
+
+<div th:fragment="commission">
+
+<div class="card p-3">
+<h1 class="mb-3">Liste des Commissions</h1>
+<table id="commissionTable" class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Référence</th>
+      <th>Année/Mois</th>
+      <td class="bg-primary">Demandes Acceptées</td>
+      <td class="bg-primary">Demandes Rejetées</td>
+      <td class="bg-primary">Commission Demandes</td>
+      <td class="bg-success">Demandes Activées</td>
+      <td class="bg-success">Commission activation</td>
+      <td class="bg-info">Factures Payées</td>
+      <td class="bg-info">Commission Paiements</td>
+      <th>Total</th>
+      <th>Statut</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="commission : ${lCommissions}">
+      <td >
+      	<a th:href="@{'/commission/details_commission_page/' + ${commission.id}}" th:text="${commission.refCommission}" target="_blank"></a>     
+      </td>
+      <td th:text="${#dates.format(commission.annee+'/'+commission.mois+'/01', 'MMMM/yyyy')}"></td>
+      <td th:text="${commission.nbrDemandesAcceptees}"></td>
+      <td th:text="${commission.nbrDemandesRejetees}"></td>
+      <td th:text="${#numbers.formatDecimal(commission.montantCommissionDemandes, 1, 'COMMA', 3, 'POINT')+' TND'}"></td>
+      <td th:text="${commission.nbrDemandesActivees}"></td>
+	  <td th:text="${#numbers.formatDecimal(commission.montantCommissionPremiereFacture, 1, 'COMMA', 3, 'POINT')} + ' TND'"></td>
+      <td th:text="${commission.nbrFacturesPayees}"></td>
+      <td th:text="${#numbers.formatDecimal(commission.montantCommissionPaiements, 1, 'COMMA', 3, 'POINT')} + ' TND'"></td>
+      <td>
+		    <span th:with="totalCommission=${commission.montantCommissionDemandes + commission.montantCommissionPremiereFacture + commission.montantCommissionPaiements}">
+		        <span th:text="${#numbers.formatDecimal(totalCommission, 1, 'COMMA', 3, 'POINT')} + ' TND'"></span>
+		    </span>
+	  </td>
+      <td>
+					    <span th:if="${commission.statut == 'PAID'}">
+					        <span class="badge badge-success">Payé</span>
+					    </span>
+					    <span th:if="${commission.statut == 'IN_PROGRESS'}">
+					        <span class="badge badge-warning">En attente</span>
+					    </span>
+					    <span th:if="${commission.statut == 'NOT_PAID'}">
+					        <span class="badge badge-danger"> En attente de Facture</span>
+					    </span>
+					    <span th:if="${commission.statut == 'CANCELLED'}">
+					        <span class="badge badge-dark">Annulé</span>
+					    </span>
+	  </td>
+    </tr>
+  </tbody>
+</table>  
+</div>
+
+                        
+<script>
+    $(document).ready(function () {
+        $('#commissionTable').DataTable({
+            "language": {
+                "lengthMenu": "Afficher _MENU_ entrées par page",
+                "zeroRecords": "Aucun résultat trouvé",
+                "info": "Affichage de _START_ à _END_ sur un total de _TOTAL_ entrées",
+                "infoEmpty": "Affichage de 0 à 0 sur un total de 0 entrées",
+                "infoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+                "paginate": {
+                    "first": "<<",
+                    "previous": "<",
+                    "next": ">",
+                    "last": ">>"
+                }
+            }
+        });
+    });
+</script>

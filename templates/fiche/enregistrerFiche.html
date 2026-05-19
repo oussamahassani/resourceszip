@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout.html}">
+<head>
+
+    <title>Fiche</title>
+
+    <!--    <link th:href="@{/vendors/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">-->
+
+    <style type="text/css">
+        :required {
+            border: 2px dotted orange;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+<section layout:fragment="content">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    
+                      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Ajouter ou Modifier Fiche</h1>
+                      
+                    </div>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                      
+                        <div class="card-body">
+                            <div class="col-md-10">
+                    <form action="#" th:action="@{/createFiche}" th:object="${fiche}" method="post">
+                        <div class="row">
+                        
+                           <div class="form-group col-md-8">
+                                <label for="name" th:field="*{IdFiche}" class="col-form-label">Id Fiche : </label> 
+                                <label for="name" th:text="*{IdFiche}" class="col-form-label"> </label>
+                            </div>
+                            
+                            <div class="form-group col-md-8">
+                                <label for="name" class="col-form-label">Reference Fiche</label> 
+                                <input type="text" th:field="*{ref_fiche}" class="form-control"
+                                            id="Reference" placeholder="Reference" required="required"/>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="name" class="col-form-label">Choisir le Model</label> 
+                                <input type="text" th:field="*{ref_modems}" class="form-control"
+                                            id="typefiche" placeholder="Code type de Fiche" />
+                            </div>
+                            
+                             <div class="form-group col-md-8">
+                                <label for="name" class="col-form-label">Quantité à affecter </label> 
+                                <input type="text" th:field="*{affectequantite}" class="form-control"
+                                            id="quantite" placeholder="Quantite " />
+                            </div>
+                            
+                     
+                            <div class="form-group col-md-8">
+                                <label class="col-form-label">Affecter à </label> 
+                                <input type="text" th:field="*{affecteID}" class="form-control"
+                                            id="affecteID" placeholder="Affecter à" />
+                            </div>
+ 
+<!--                           <div class="form-group col-md-8"> -->
+<!--                                 <label class="col-form-label">Liste des modems</label>  -->
+                                
+
+<!--                                 <select class="form-control"  th:field="*{ref_modems}"> -->
+<!--                             <option value="">--</option> -->
+<!--                          <option th:each="p:${modems}"  -->
+<!--                             th:value="${p.reference }" -->
+<!--                             th:utext="${p.reference}"></option> -->
+<!--                               </select> -->
+                                     
+
+<!--                             </div> -->
+                 
+                          
+                  
+                            <div class="col-md-6">
+                                <input type="submit" class="btn btn-primary" value=" Submit ">
+                            </div>
+                             <div class="col-md-6">
+                                    <a th:href="@{/fiches}" class="btn btn-danger">
+                                        <span class="text">Annuler</span>
+                                    </a>
+                             </div>
+ 
+                        <input type="hidden" id="id" th:field="*{IdFiche}"> 
+     
+                        </div>
+                    </form>
+                </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+         
+            </div>
+            <!-- End of Main Content -->
+
+
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+<!--   -->
+<!--    &lt;!&ndash; Bootstrap core JavaScript&ndash;&gt;-->
+<!--    <script type="text/javascript" th:src="@{../vendor/jquery/jquery.min.js}"></script>-->
+<!--    <script type="text/javascript" th:src="@{../vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>-->
+
+<!--    &lt;!&ndash; Core plugin JavaScript&ndash;&gt;-->
+<!--   &lt;!&ndash;  <script src="vendor/jquery-easing/jquery.easing.min.js"></script> &ndash;&gt;-->
+<!--    <script type="text/javascript" th:src="@{../vendor/jquery-easing/jquery.easing.min.js}"></script>-->
+
+<!--    &lt;!&ndash; Custom scripts for all pages&ndash;&gt;-->
+<!--&lt;!&ndash;     <script src="js/sb-admin-2.min.js"></script> &ndash;&gt;-->
+<!--   <script type="text/javascript" th:src="@{js/sb-admin-2.min.js}"></script>-->
+
+<!--    &lt;!&ndash; Page level plugins &ndash;&gt;-->
+<!--&lt;!&ndash;     <script src="vendor/datatables/jquery.dataTables.min.js"></script> &ndash;&gt;-->
+<!--     <script type="text/javascript" th:src="@{../vendor/datatables/jquery.dataTables.min.js}"></script>-->
+<!--&lt;!&ndash;     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script> &ndash;&gt;-->
+<!--     <script type="text/javascript" th:src="@{../vendor/datatables/dataTables.bootstrap4.min.js}"></script>-->
+
+<!--    &lt;!&ndash; Page level custom scripts &ndash;&gt;-->
+<!--&lt;!&ndash;     <script src="js/demo/datatables-demo.js"></script> &ndash;&gt;-->
+<!--     <script type="text/javascript" th:src="@{../js/demo/datatables-demo.js}"></script>-->
+</section>
+</body>
+
+</html>
