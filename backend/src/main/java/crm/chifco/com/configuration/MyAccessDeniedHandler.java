@@ -24,11 +24,13 @@ public class MyAccessDeniedHandler implements AccessDeniedHandler {
       AccessDeniedException accessDeniedException) throws IOException, ServletException {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    // if(request.getRequestURI().startsWith(null))
     if (auth != null) {
       logger.info("User '" + auth.getName() + "' attempted to access the protected URL: "
           + request.getRequestURI());
     }
-    response.sendRedirect(request.getContextPath() + "/403");
+
+    response.setContentType("application/json");
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    response.getWriter().write("{\"success\":false,\"message\":\"Access denied\",\"data\":null}");
   }
 }

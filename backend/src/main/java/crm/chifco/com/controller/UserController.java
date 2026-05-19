@@ -53,7 +53,7 @@ import crm.chifco.com.utils.CrmUtils;
 import crm.chifco.com.utils.UserTypeConstant;
 
 @Controller
-@RequestMapping(value = "admin/*")
+@RequestMapping(value = "/admin")
 public class UserController {
   @Autowired
   UserRepository userRepository;
@@ -664,23 +664,42 @@ public class UserController {
     return "redirect:/admin/users/allusers/" + 1;
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "usersSystem/getusers")
+  @RequestMapping(method = RequestMethod.GET, value = "/usersSystem/getusers")
   public String updateUser(Model model) {
     userService.returnInfoUserConnected(model);
     return "admin/users/usersSystem";
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "getAllUserSystem")
+  @GetMapping("/getAllUserSystem")
   @ResponseBody
-  public HashMap<String, Object> getAllUserSystem(@RequestParam("draw") int draw,
-      @RequestParam("start") int start, @RequestParam("length") int length) {
-    int page = start / length;
-    HashMap<String, Object> myGreetings = new HashMap<String, Object>();
-    Page<User> responseData = userService.findPaginatedUserByType(page + 1, length, "SYSTEM");
+  public HashMap<String, Object> getAllUserSystem(
+      @RequestParam(value = "draw", required = false) Integer draw,
+      @RequestParam(value = "start", required = false) Integer start,
+      @RequestParam(value = "length", required = false) Integer length,
+      @RequestParam(value = "page", required = false) Integer page,
+      @RequestParam(value = "size", required = false) Integer size,
+      @RequestParam(value = "nom", required = false) String nom,
+      @RequestParam(value = "prenom", required = false) String prenom,
+      @RequestParam(value = "codeUser", required = false) String codeUser) {
+
+    int currentPage;
+    int pageSize;
+    boolean isDatatablesRequest = draw != null && start != null && length != null;
+
+    if (isDatatablesRequest) {
+      currentPage = start / length;
+      pageSize = length;
+    } else {
+      currentPage = (page != null && page >= 0) ? page : 0;
+      pageSize = (size != null && size > 0) ? size : 20;
+    }
+
+    HashMap<String, Object> myGreetings = new HashMap<>();
+    Page<User> responseData = userService.findPaginatedUserByType(currentPage + 1, pageSize, "SYSTEM");
 
     myGreetings.put("data", responseData.getContent());
-    myGreetings.put("draw", draw);
-    myGreetings.put("start", start);
+    myGreetings.put("draw", draw != null ? draw : 1);
+    myGreetings.put("start", isDatatablesRequest ? start : currentPage * pageSize);
     myGreetings.put("recordsTotal", responseData.getTotalElements());
     myGreetings.put("recordsFiltered", responseData.getTotalElements());
     return myGreetings;

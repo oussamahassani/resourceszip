@@ -36,10 +36,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import com.lowagie.text.DocumentException;
 import crm.chifco.com.model.AvanceCommissionAcquisition;
 import crm.chifco.com.model.AvoirClient;
@@ -242,38 +238,29 @@ public class BordereauServiceimpl implements BordereauService {
   }
 
   public String parseThymeleafTemplate(Double Montant, User revendeur, List<Facture> facturelist) {
-    ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(); // ClassLoaderTemplateResolver
+    StringBuilder html = new StringBuilder();
+    html.append("<html><body>");
+    html.append("<h2>Bordereau de paiement</h2>");
+    html.append("<p><strong>Revendeur :</strong> ").append(revendeur.getFirstName()).append("</p>");
+    html.append("<p><strong>Adresse :</strong> ").append(revendeur.getAdresse()).append("</p>");
+    html.append("<p><strong>Code postal :</strong> ").append(revendeur.getCodePostale()).append("</p>");
+    html.append("<p><strong>Total payé :</strong> ").append(Montant).append("</p>");
+    html.append("<table border='1' cellpadding='6' cellspacing='0' style='border-collapse:collapse;width:100%;'>");
+    html.append("<thead><tr><th>Référence facture</th><th>Date échéance</th><th>Montant</th></tr></thead>");
+    html.append("<tbody>");
 
-    List<Map<String, Object>> array = new ArrayList<Map<String, Object>>(); // traiter
-    templateResolver.setPrefix("templates/bordereaux/"); // set l'empacement d'une template
-    templateResolver.setSuffix(".html"); // set le type de cet template
-    templateResolver.setTemplateMode(TemplateMode.HTML);
+    for (Facture facture : facturelist) {
+      html.append("<tr>");
+      html.append("<td>").append(facture.getRef_facture()).append("</td>");
+      html.append("<td>").append(facture.getDate_echeance()).append("</td>");
+      html.append("<td>").append(facture.getMontant_payer()).append("</td>");
+      html.append("</tr>");
+    }
 
-    templateResolver.setCharacterEncoding("UTF-8"); // set le codage de ce fichier html
-    templateResolver.setOrder(0);
-
-    facturelist.forEach(el -> {
-      Map<String, Object> objentry = new HashMap<>();
-      objentry.put("reffacture", el.getRef_facture());
-      objentry.put("dateechance", el.getDate_echeance());
-      objentry.put("montant", el.getMontant_payer());
-      if (!objentry.isEmpty()) {
-
-        array.add(objentry);
-      }
-    });
-
-    TemplateEngine templateEngine = new TemplateEngine();
-
-    templateEngine.setTemplateResolver(templateResolver);
-    Context context = new Context();
-    context.setVariable("date", "CreatedDate");
-    context.setVariable("totalpayement", Montant);
-    context.setVariable("factures", array);
-    context.setVariable("revendeur_name", revendeur.getFirstName());
-    context.setVariable("revendeur_adresse", revendeur.getAdresse());
-    context.setVariable("revendeur_codepostale", revendeur.getCodePostale());
-    return templateEngine.process("bordereaux_template", context);
+    html.append("</tbody>");
+    html.append("</table>");
+    html.append("</body></html>");
+    return html.toString();
   }
 
   public Double calculepaymentmultiple(List<String> factureids) {

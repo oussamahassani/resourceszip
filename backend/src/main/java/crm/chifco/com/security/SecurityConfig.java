@@ -1,11 +1,17 @@
 package crm.chifco.com.security;
 
+import crm.chifco.com.configuration.MySimpleUrlAuthenticationSuccessHandler;
+import crm.chifco.com.crmMobile.JwtService;
+import crm.chifco.com.crmMobile.NewAppJwtAuthenticationFilter;
+import crm.chifco.com.netyTv.JwtAuthenticationFilterNetyTV;
+import crm.chifco.com.netyTv.JwtServiceNetyTv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,21 +24,12 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import crm.chifco.com.configuration.MySimpleUrlAuthenticationSuccessHandler;
-import crm.chifco.com.crmMobile.JwtService;
-import crm.chifco.com.crmMobile.NewAppJwtAuthenticationFilter;
-import crm.chifco.com.netyTv.JwtAuthenticationFilterNetyTV;
-import crm.chifco.com.netyTv.JwtServiceNetyTv;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -47,7 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private AccessDeniedHandler accessDeniedHandler;
 
-  @Value("${security.enable-csrf}")
+  @Autowired
+  private AuthEntryPointJwt unauthorizedHandler;
+
+  @Value("${security.enable-csrf:false}")
   private boolean csrfEnabled;
 
   @Autowired
@@ -104,66 +104,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       http.csrf().disable();
     }
 
-    http.sessionManagement().maximumSessions(1)
-        .expiredUrl("/sessionExpired.html")
-        .sessionRegistry(sessionRegistry());
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        .invalidSessionUrl("/login?invalidsession=true")
-        .sessionFixation().migrateSession();
+    http.exceptionHandling()
+        .authenticationEntryPoint(unauthorizedHandler)
+        .accessDeniedHandler(accessDeniedHandler)
+        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeRequests()
+        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .antMatchers("/api/auth/**", "/mobileapp/auth/**", "/netytv/auth/**", "/actuator/**").permitAll()
+        .antMatchers("/admin/**").permitAll()
 
-    http.addFilterBefore(newAppJwtAuthenticationFilter(),
-        UsernamePasswordAuthenticationFilter.class).authorizeRequests()
-        .antMatchers("/mobileapp/auth/**", "/mobileapp/test/public").permitAll()
-        .antMatchers("/mobileapp/**").authenticated().and().sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .antMatchers("/api/**").authenticated()
+        .anyRequest().permitAll();
 
-    http.addFilterBefore(jwtAuthenticationFilterNetyTV(),
-        UsernamePasswordAuthenticationFilter.class).authorizeRequests()
-        .antMatchers("/netytv/auth/**", "/netytv/test/public").permitAll()
-        .antMatchers("/netytv/**").authenticated().and().sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    http.addFilterBefore(webJwtAuthFilter(),
-        UsernamePasswordAuthenticationFilter.class);
-
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-    http.sessionManagement().sessionFixation().migrateSession();
-    http.sessionManagement().invalidSessionUrl("/login?invalidsession=true").maximumSessions(1)
-        .expiredUrl("/sessionExpired.html").sessionRegistry(sessionRegistry());
-
-    http.authorizeRequests()
-        .antMatchers("/actuator/**", "/css/**", "/js/**", "/img/**", "/vendor/**", "/wss/**",
-            "/ws/**", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.pdf")
-        .permitAll()
-        .antMatchers("/", "/validateToken").permitAll()
-        .antMatchers("/api/auth/**").permitAll()
-        .antMatchers("/auth/**").permitAll()
-        .antMatchers("/api/**", "/acs/**", "/Smstemplate/**").permitAll()
-        .antMatchers("/admin/**", "/role/**")
-        .hasAnyAuthority("WRITE_ADMINISTRATEUR", "READ_USER_LIST", "ADD_USER", "VIEW_DASHBORD_ADMIN")
-        .antMatchers("/payement/**")
-        .hasAnyAuthority("READ_PAYED_INVOICE_ALL", "INVOICE_PAYMENT",
-            "READ_RETAIL_SUMMARY_LIST_ALL", "READ_RETAIL_SUMMARY_LIST_AREA",
-            "VIEW_MONTANT_ENCAISSE", "CREATE_SLIP")
-        .antMatchers("/others/**").hasAnyAuthority("READ_DASHBORD_OTHER", "VIEW_DASHBORD_OTHER")
-        .anyRequest().authenticated()
-        .and().formLogin().loginPage("/login").loginProcessingUrl("/login")
-        .successHandler(myAuthenticationSuccessHandler()).failureUrl("/login?error=true")
-        .permitAll()
-        .and().logout()
-        .deleteCookies("JSESSIONID").logoutUrl("/logout")
-        .logoutSuccessHandler(logoutSuccessHandler()).permitAll()
-        .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
-  }
-
-  @Bean
-  public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
-    return new MySimpleUrlAuthenticationSuccessHandler();
-  }
-
-  @Bean
-  public LogoutSuccessHandler logoutSuccessHandler() {
-    return (request, response, authentication) -> response.sendRedirect("/login");
+    http.addFilterBefore(newAppJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtAuthenticationFilterNetyTV(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(webJwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Override
@@ -178,18 +135,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
+
+  @Bean
   @Override
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
-  }
-
-  @Bean
-  public HttpSessionEventPublisher httpSessionEventPublisher() {
-    return new HttpSessionEventPublisher();
-  }
-
-  @Bean
-  public SessionRegistry sessionRegistry() {
-    return new SessionRegistryImpl();
   }
 }
