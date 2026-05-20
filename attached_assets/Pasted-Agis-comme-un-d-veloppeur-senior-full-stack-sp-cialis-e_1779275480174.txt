@@ -1,0 +1,136 @@
+Agis comme un développeur senior full-stack spécialisé en Spring Boot + React.js avec architecture API REST moderne.
+
+Contexte :
+- Le backend Spring Boot existe déjà.
+- Le frontend est maintenant entièrement en React.js.
+- Toutes les anciennes pages/frontend Thymeleaf ont été supprimées.
+- Cependant, le backend contient encore :
+  - des controllers MVC inutiles
+  - des redirections de pages
+  - des return "page"
+  - des mappings conçus pour Thymeleaf
+- Certaines APIs/backend controllers sont incomplètes.
+- Certaines fonctionnalités React ne communiquent pas correctement avec le backend.
+- Il existe des incohérences entre les modèles, DTOs, routes, services et le frontend React.
+
+Objectif :
+Transformer complètement le backend Spring Boot en backend API REST pur compatible React.js, en supprimant toute logique restante liée aux pages Thymeleaf ou au rendu serveur.
+
+Travail demandé :
+
+1. Analyser toute l’architecture backend existante :
+   - Controllers
+   - Services
+   - Repositories
+   - DTOs
+   - Entities
+   - routes
+   - APIs REST existantes
+   - sécurité
+   - configuration Spring
+
+2. Identifier :
+   - les endpoints manquants
+   - les APIs incomplètes
+   - les méthodes non implémentées
+   - les anciens controllers MVC
+   - les return "page"
+   - les redirections inutiles
+   - les mappings obsolètes liés à Thymeleaf
+   - les erreurs de mapping
+   - les problèmes de validation
+   - les incohérences entre React et le backend
+
+3. Supprimer/refactoriser toute la logique MVC/Thymeleaf restante :
+   - supprimer tous les :
+     return "page";
+   - supprimer les redirections serveur inutiles
+   - supprimer les ModelAndView
+   - supprimer les mappings de rendu HTML
+   - supprimer les dépendances inutiles à Thymeleaf
+   - convertir tous les anciens controllers MVC en APIs REST propres
+
+4. Transformer complètement le backend en architecture REST API :
+   - ResponseEntity
+   - JSON responses
+   - DTOs standardisés
+   - validation backend
+   - gestion des erreurs
+   - pagination
+   - filtres
+   - upload/download fichiers
+   - CRUD complets
+   - APIs authentication/authorization
+
+5. Compléter toutes les APIs manquantes nécessaires au frontend React.
+
+6. Adapter complètement le backend pour React.js :
+   - endpoints REST cohérents
+   - structures JSON propres
+   - gestion CORS
+   - JWT/session auth si nécessaire
+   - APIs async compatibles Axios/fetch
+   - codes HTTP corrects
+   - pagination REST
+   - recherche et filtrage
+
+7. Corriger tous les flux backend/frontend :
+   - GET
+   - POST
+   - PUT
+   - DELETE
+   - upload/download
+   - authentification
+   - refresh token
+   - récupération des données
+   - soumission des formulaires
+
+8. Vérifier et corriger :
+   - DTO mappings
+   - sérialisation JSON
+   - lazy loading JPA
+   - relations entities
+   - erreurs 404/500
+   - erreurs JSON
+   - problèmes CORS
+   - validation backend
+   - sécurité Spring Security
+
+9. Standardiser l’architecture :
+   - bonnes pratiques Spring Boot
+   - architecture REST moderne
+   - séparation Controller/Service/Repository
+   - DTO mapping
+   - exception handling global
+   - validation @Valid
+   - logging
+   - clean code
+   - production-ready
+
+10. Préparer le backend pour une intégration React moderne :
+   - APIs stables
+   - structure scalable
+   - réponses standardisées
+   - compatibilité SPA React
+   - endpoints optimisés frontend
+
+11. Nettoyage final :
+   - retirer toute logique de rendu HTML serveur
+   - retirer tous les anciens comportements MVC
+   - supprimer tous les endpoints inutiles
+   - conserver uniquement un backend API REST pur
+
+Contraintes :
+- Conserver l’architecture métier existante autant que possible.
+- Ne pas réécrire inutilement tout le projet.
+- Modifier uniquement ce qui est nécessaire.
+- Préserver la logique métier existante.
+- Générer un code propre, maintenable et production-ready.
+
+Résultat attendu :
+- Backend Spring Boot 100% REST API.
+- Backend totalement compatible React.js.
+- Toutes les fonctionnalités frontend communiquent correctement avec le backend.
+- Toutes les APIs nécessaires existent et fonctionnent.
+- Aucun controller MVC ou retour de vue HTML restant.
+- Architecture moderne Spring Boot + React entièrement fonctionnelle.

@@ -20,16 +20,6 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
-      '/login': {
-        target: 'http://localhost:8282',
-        changeOrigin: true,
-        secure: false
-      },
-      '/logout': {
-        target: 'http://localhost:8282',
-        changeOrigin: true,
-        secure: false
-      }
     }
   },
   build: {

@@ -27,7 +27,7 @@ const getEncaissement = async ({ year, month } = {}) => {
 }
 
 const getEncaissementPlafon = async () => {
-  const response = await axiosInstance.get('/payement/calculeencaissement')
+  const response = await axiosInstance.get('/api/payement/calculeencaissement')
   return response.data
 }
 

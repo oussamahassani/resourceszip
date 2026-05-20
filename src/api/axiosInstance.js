@@ -3,7 +3,7 @@ import { store } from '../redux/store'
 import { clearAuth } from '../redux/slices/authSlice'
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8282',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },

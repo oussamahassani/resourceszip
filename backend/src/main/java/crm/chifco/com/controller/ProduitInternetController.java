@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -448,6 +448,16 @@ public class ProduitInternetController {
     } else {
       return "redirect:/pi/allproduits/1";
     }
+  }
+
+  @GetMapping("allproduits")
+  public org.springframework.http.ResponseEntity<java.util.List<Produit>> getAllProduits() {
+    return org.springframework.http.ResponseEntity.ok(produitService.findAllProduit());
+  }
+
+  @GetMapping("allcategories")
+  public org.springframework.http.ResponseEntity<java.util.List<CategorieProduitInternet>> getAllCategories() {
+    return org.springframework.http.ResponseEntity.ok(categorieProduitInternetService.findAllCategorie());
   }
 
 }
