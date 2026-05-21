@@ -20,7 +20,7 @@ import crm.chifco.com.repository.PrivilegeRepository;
 import crm.chifco.com.repository.RoleRepository;
 
 @RestController
-@RequestMapping("role")
+@RequestMapping({"/role", "/api/role"})
 public class RoleController {
 
   private final Logger logger = LogManager.getLogger(this.getClass());

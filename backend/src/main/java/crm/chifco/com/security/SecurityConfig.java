@@ -114,7 +114,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
         .antMatchers("/api/auth/**", "/mobileapp/auth/**", "/netytv/auth/**", "/actuator/**").permitAll()
         .antMatchers("/admin/**").permitAll()
-
+        .antMatchers("/api/role/**").permitAll()
+  
         .antMatchers("/api/**").authenticated()
         .anyRequest().permitAll();
 

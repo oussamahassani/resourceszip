@@ -19,7 +19,7 @@ public class MotifRestController {
 
   @GetMapping("/allmotifs")
   public ResponseEntity<List<Motifrec>> getAllMotifs() {
-    return ResponseEntity.ok(motifrecService.findAll());
+    return ResponseEntity.ok(motifrecService.getAllMotifrec());
   }
 
   @GetMapping("/byServiceType")
